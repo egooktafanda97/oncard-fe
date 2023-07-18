@@ -1,0 +1,48 @@
+.loader {
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 4px solid #FFF;
+    border-right: 4px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  .toastify {
+    max-width:92%!important;
+    justify-content:center!important;
+    align-items:center!important;
+    border-radius:100px!important;
+    overflow:hidden;
+    font-size:12px;
+  }
+  .errorMessage {
+      background: rgb(176, 0, 71);
+      background: linear-gradient(180deg, rgba(176, 0, 71, 1) 0%, rgba(131, 32, 32, 1) 100%);
+  }
+
+  .successMessage {
+      background: linear-gradient(to right, #00b09b, #96c93d);
+  }
+  
+  .loader::after {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border-bottom: 4px solid #00b77f;
+    border-left: 4px solid transparent;
+  }
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
