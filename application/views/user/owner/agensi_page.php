@@ -60,7 +60,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/agency', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);

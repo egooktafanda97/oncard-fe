@@ -91,7 +91,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -122,7 +122,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/history?type=sell', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -164,7 +164,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/setting/get-config-trx-business', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -183,7 +183,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/produk', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);

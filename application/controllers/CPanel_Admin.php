@@ -57,6 +57,70 @@ class CPanel_Admin extends CI_Controller
             $this->load->view('loginregister/login.php', $data);
         }
     }
+    
+    public function renderKartu()
+    { //KHUSUS UNTUK CETAK KARTU SAJA!
+        if ($this->session->userdata('_token')) {
+            
+            $function = '';
+            $role = $this->session->userdata('_permission');
+            $function = 'CPanel_Admin';
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+
+            $this->load->view('user/template/header.php', $data);
+            // $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/agency/___render_kartu.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
+    public function renderKartuGeneral()
+    { //KHUSUS UNTUK CETAK KARTU SAJA!
+        if ($this->session->userdata('_token')) {
+            
+            $function = '';
+            $role = $this->session->userdata('_permission');
+            $function = 'CPanel_Admin';
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+
+            $this->load->view('user/template/header.php', $data);
+            // $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/agency/___render_kartu_general.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
 
     public function Profil()
     {
@@ -198,6 +262,38 @@ class CPanel_Admin extends CI_Controller
         }
     }
     
+    public function General()
+    {
+        if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
+            
+            $function = '';
+            $function = 'CPanel_Admin';
+            $role = $this->session->userdata('_permission');
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+
+            $this->load->view('user/template/header.php', $data);
+            $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/'.$role.'/general_list.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
     public function WD()
     {
         if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
@@ -302,6 +398,46 @@ class CPanel_Admin extends CI_Controller
         }
     }
     
+    public function generalManage()
+    {
+        if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
+            
+            $function = '';
+            $function = 'CPanel_Admin';
+            $role = $this->session->userdata('_permission');
+            $data['namaLengkap'] = $this->session->userdata('_user');
+
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+            $isUpdate = '';
+            
+            $isUpdate = $this->uri->segment(3);
+            if($isUpdate!=''){
+                $data['pageMode'] = $isUpdate;
+            }else {
+                $data['pageMode'] = 'add';
+            }
+
+            $this->load->view('user/template/header.php', $data);
+            $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/'.$role.'/general_add.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
     public function kantinManage()
     {
         if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
@@ -397,6 +533,37 @@ class CPanel_Admin extends CI_Controller
             $this->load->view('user/template/header.php', $data);
             $this->load->view('user/template/navigation.php', $data);
             $this->load->view('user/'.$role.'/mutasi_transaksi.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
+    public function Mutasi_Transaksi_General()
+    {
+        if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
+            
+            $function = '';
+            $function = 'CPanel_Admin';
+            $role = $this->session->userdata('_permission');
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+            $this->load->view('user/template/header.php', $data);
+            $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/'.$role.'/mutasi_transaksi_general.php', $data);
             $this->load->view('user/template/footer.php', $data);
         } else {
             $data['levelUser'] = "";

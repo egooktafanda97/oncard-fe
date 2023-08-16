@@ -120,7 +120,9 @@
                                         Menampilkan <font class="jmldt"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></font> data <font class="stdt">pada hari ini</font>.
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-hover mb-0" style="font-size:12px!important;">
+                                    <button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
+                                    <button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelmutasitransaksikantin');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+                                        <table class="table table-hover tabelmutasitransaksikantin mb-0" id="tabelPrint" style="font-size:12px!important;">
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>No.</th>

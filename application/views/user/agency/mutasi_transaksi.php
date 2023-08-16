@@ -120,7 +120,9 @@
                                         Menampilkan <font class="jmldt"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></font> data <font class="stdt">pada hari ini</font>.
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-hover mb-0" style="font-size:12px!important;">
+                                    <button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
+                                    <button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelmutasitransaksi');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+                                        <table class="table table-hover tabelmutasitransaksi mb-0" id="tabelPrint" style="font-size:12px!important;">
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>No.</th>
@@ -269,7 +271,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get(url, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -288,53 +290,54 @@
 
                             posts2.data.data.map((mapping,i)=>{
 
-                                invoiceDataArray.push({
-                                    invoice: mapping.invoice,
-                                    date: mapping.created_at
-                                });
-                            
-                                j++;
+                                if(mapping.user.model=='Siswa'){
+                                    invoiceDataArray.push({
+                                        invoice: mapping.invoice,
+                                        date: mapping.created_at
+                                    });
+                                
+                                    j++;
 
-                                let statusText = '';
+                                    let statusText = '';
 
-                                if(mapping.management_type.name_type=='buy'){
-                                    statusText = '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">Pembelian</span>';
-                                }else if(mapping.management_type.name_type=='adminitrasi'){
-                                    statusText = '<span class="badge bg-gradient-blooker text-white shadow-sm w-100">Biaya Admin</span>';
-                                }else if(mapping.management_type.name_type=='withdrawal'){
-                                    statusText = '<span class="badge bg-gradient-bloody text-white shadow-sm w-100">Pencairan Saldo</span>';
-                                }else if(mapping.management_type.name_type=='top_up'){
-                                    statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Pengisian Saldo</span>';
-                                }
-                                let namaNya = '';
-                                let amount ='0';
-                                let cond1 = mapping.management_type.name_type;
-                                if(cond1 =='top_up'){
-                                    namaNya = mapping.credit_account?.customers_name;
-                                    amount = mapping.credit_amount??'0';
-                                }else {
-                                    namaNya = mapping.debit_account?.customers_name;
-                                    amount = mapping.debit_amount??'0';
-                                }
-                                num += 1;
-                                tableColumn +=`
-                                    <tr>
-                                        <td width="25">
-                                            <div class="d-flex align-items-center">
-                                                <div class="ms-2">
-                                                    <h6 class="mb-0 font-14">${num}</h6>
+                                    if(mapping.management_type.name_type=='buy'){
+                                        statusText = '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">Pembelian</span>';
+                                    }else if(mapping.management_type.name_type=='adminitrasi'){
+                                        statusText = '<span class="badge bg-gradient-blooker text-white shadow-sm w-100">Biaya Admin</span>';
+                                    }else if(mapping.management_type.name_type=='withdrawal'){
+                                        statusText = '<span class="badge bg-gradient-bloody text-white shadow-sm w-100">Pencairan Saldo</span>';
+                                    }else if(mapping.management_type.name_type=='top_up'){
+                                        statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Pengisian Saldo</span>';
+                                    }
+                                    let namaNya = '';
+                                    let amount ='0';
+                                    let cond1 = mapping.management_type.name_type;
+                                    if(cond1 =='top_up'){
+                                        namaNya = mapping.credit_account?.customers_name;
+                                        amount = mapping.credit_amount??'0';
+                                    }else {
+                                        namaNya = mapping.debit_account?.customers_name;
+                                        amount = mapping.debit_amount??'0';
+                                    }
+                                    num += 1;
+                                    tableColumn +=`
+                                        <tr>
+                                            <td width="25">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="ms-2">
+                                                        <h6 class="mb-0 font-14">${num}</h6>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td width="70">${moment(mapping.created_at).format('DD-MM-YYYY')}</td>
-                                        <td width="70">${moment(mapping.created_at).format('HH:mm:ss')} WIB</td>
-                                        <td width="160">${mapping.invoice}</td>
-                                        <td>${namaNya}</td>
-                                        <td>Rp${formatRupiah(amount.toString())}</td>
-                                        <td>${statusText}</td>
-                                    </tr>
-                                `;
-
+                                            </td>
+                                            <td width="70">${moment(mapping.created_at).format('DD-MM-YYYY')}</td>
+                                            <td width="70">${moment(mapping.created_at).format('HH:mm:ss')} WIB</td>
+                                            <td width="160">${mapping.invoice}</td>
+                                            <td>${namaNya}</td>
+                                            <td>Rp${formatRupiah(amount.toString())}</td>
+                                            <td>${statusText}</td>
+                                        </tr>
+                                    `;
+                                }
                             });
 
 						$('.putContentHere').html(tableColumn);
@@ -352,7 +355,7 @@
                 const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/siswa', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);

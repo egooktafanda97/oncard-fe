@@ -120,7 +120,9 @@
                                         Menampilkan <font class="jmldt"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></font> data <font class="stdt">pada hari ini</font>.
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-hover mb-0" style="font-size:12px!important;">
+                                    <button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
+                                    <button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelmutasi');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+                                        <table class="table table-hover tabelmutasi mb-0" id="tabelPrint" style="font-size:12px!important;">
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>No.</th>
@@ -370,22 +372,22 @@
                 htmlx = `
                     <div class="invoice-card" id="divToPRINT">
                         <div class="invoice-title">
-                            <div id="main-title">
-                            <h4 style="margin-bottom:0;padding-bottom:0px;">INVOICE</h4>
-                            <span>#${x['invoice']}</span>
+                            <div id="main-title" style="display:block!important;">
+                            <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;">INVOICE</h4>
+                            <span style=" color:black!important; display:block; font-size:12px!important;">#${x['invoice']}</span>
                             </div>
                             
-                            <span id="date">${moment(x['date']).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
-                            <span style="font-size:11px;">- - -</span>
+                            <span id="date" style=" color:black!important;">${moment(x['date']).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
+                            <span style="font-size:11px; color:black!important;">- - -</span>
                         </div>
                         <div style="text-align:center;">
                         WITHDRAWAL
-                        <small style="display:block;color: rgba(0, 0, 0, 0.4);">Beringin Taluk, Kec. Kuantan Tengah, Kabupaten Kuantan Singingi, Riau 29566</small>
+                        <small style="display:block;color: rgba(0, 0, 0, 0.4); color:black!important;">Beringin Taluk, Kec. Kuantan Tengah, Kabupaten Kuantan Singingi, Riau 29566</small>
                         
                         </div>
                         
                         <div class="invoice-details">
-                            <table class="invoice-table">
+                            <table class="invoice-table" style="width:100%;">
                             <tbody class="detailTabelInvoice">
                                 <tr class="calc-row">
                                     <td colspan="2">Saldo Awal</td>
@@ -404,14 +406,24 @@
                                 <td colspan="2"><b>Sisa Saldo</b></td>
                                 <td>Rp${formatRupiah(nomialSisaSaldo)}</td>
                                 </tr>
+
+                                <tr><td colspan="3">
+                                    <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                </td></tr>
+
                             </tbody>
                             </table>
                         </div>
                         
+                        
+                    </div>
+
+                    <div class="invoice-card mt-4" style="min-height:auto!important;">
                         <div class="invoice-footer">
-                            <button class="btn btn-sm btn-secondary" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK</button>
+                            <button class="btn btn-sm btn-secondary" data-dismiss="modal" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
+                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
                         </div>
+                    
                     </div>
                 `;
 

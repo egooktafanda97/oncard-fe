@@ -19,12 +19,13 @@
 					<div class="card-body">
 						<div class="d-lg-flex align-items-center mb-4 gap-3">
 							<div class="position-relative">
-								<input type="text" class="form-control ps-5 radius-30" placeholder="Ketik nama produk"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
+								<input type="text" id="floatingInput" class="form-control ps-5 radius-30" placeholder="Ketik nama produk"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
 							</div>
 						  <div class="ms-auto"><a href="<?=base_url().$function.'/produkManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Tambah Produk</a></div>
 						</div>
 						<div class="table-responsive">
-							<table class="table mb-0">
+						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelproduk');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+							<table class="table mb-0 tabelproduk">
 								<thead class="table-light">
 									<tr>
 										<th>No.</th>
@@ -50,6 +51,12 @@
 		<script type="text/javascript">
 			$(document).ready(function () {
                 showData();
+				$("#floatingInput").on("keyup", function() {
+					let value = $(this).val().toLowerCase();
+					$(".putContentHere tr").filter(function() {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+					});
+				});
             });
 			function showData(){
 				let num = 0;
@@ -60,7 +67,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/produk', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);

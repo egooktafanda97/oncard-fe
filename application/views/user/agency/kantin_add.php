@@ -26,7 +26,25 @@
                        <div class="form-body mt-4">
 					<form id="main">
 						<div class="row">
-						   <div class="ifUpdate1st col-lg-6 ">
+						   	<div class="ifUpdate1st col-lg-12 ">
+
+						  	 	<div class="border border-3 p-4 mb-3 rounded fotodivupdate">
+									<div class="row g-3">
+										<div class="col-lg-5 col-md-6 col-sm-6 col-12 text-center">
+											<img src="#/" id="putfotopreview" style="width:140px; height:200px; border-radius:5px; border-:5px solid #f2f2f2; object-fit:cover; object-position:center;"/>
+										</div>
+										<div class="col-lg-7 col-md-6 col-sm-6 col-12">
+											<div class="mb-3">
+												<label for="inputProductDescription" class="form-label">Upload Foto Baru</label>
+												<input id="file_update" class="form-control" type="file" accept="image/*,.pdf">
+
+												<button type="button" id="btnSaveUpload" class="btn btn-primary mt-4" onclick="updateImage();"><i class="bx bx-upload"></i> Upload</button>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+
 								<div class="border border-3 p-4 rounded">
 									<div class="mb-3">
 										<label for="namaKantin" class="form-label">Nama Kantin</label>
@@ -44,7 +62,7 @@
 								</div>
 							</div>
 
-							<div class="col-lg-6 ifUpdate">
+							<div class="col-lg-12 mt-3 ifUpdate">
 							<div class="border border-3 p-4 rounded">
                               <div class="row g-3">
 								  <div class="col-md-6">
@@ -59,14 +77,10 @@
 									<label for="email" class="form-label">Email</label>
 									<input type="email" class="form-control" id="email" placeholder="Email kantin">
 								  </div>
-
-								  <div class="col-md-6" style="display:none;">
-									<label for="norek" class="form-label">No. Rek BRKS</label>
-									<input type="text" class="form-control" id="norek" placeholder="Masukkan nomor rekening">
-								  </div>
 								  
 							  </div> 
 						    </div>
+							
 						   </div>
 						   <div class="col-12 text-end py-3">
 									  
@@ -89,9 +103,13 @@
         <script type="text/javascript">
 			
 			let pageMode = '<?=$pageMode;?>';
+			let userIDX = '';
 			if(pageMode!='add'){
 				$('.ifUpdate').css('display','none');
 				$('.ifUpdate1st').attr('class','ifUpdate1st col-lg-12');
+			}
+			if(pageMode=='add'){
+				$('.fotodivupdate').css('display','none');
 			}
             $(document).ready(function () {
                 $('#image-uploadify').imageuploadify();
@@ -142,7 +160,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post(url, form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 
@@ -244,11 +262,127 @@
 
 			}
 
+			function updateImage() {
+
+				$('#btnSaveUpload').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+				$('#btnSaveUpload').attr('disabled', 'disabled');
+				$('#btnSaveUpload').css('cursor', 'not-allowed');
+
+
+				var email = $("#email").val();
+				var imageuploadify = $("#file_update")[0].files[0]; 
+
+				var form_data = new FormData();
+
+
+				if(imageuploadify!='' && pageMode!='add'){
+					form_data.append('foto', imageuploadify);	
+				}
+
+				let url = '';
+
+				if(pageMode!='add'){
+					url = '<?= api_url(); ?>api/v1/usr/upadate-me/'+userIDX;
+				}
+
+				const save = async (form_data) => {
+					const posts = await axios.post(url, form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+
+						for (const key in err.response.data.error) {
+							Toastify({
+								text: err.response.data.error[key],
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+						
+						$('#btnSaveUpload').html('<i class="bx bx-upload"></i> Upload');
+						$('#btnSaveUpload').attr('disabled', false);
+						$('#btnSaveUpload').css('cursor', 'pointer');
+					});
+					if (posts.status == 201||posts.status == 200) {
+
+						if (posts.data.status == true) {
+
+							if(pageMode!='add'){
+								callDataToUpdate(pageMode);
+							}
+
+							Toastify({
+								text: 'Data berhasil diperbaharui!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "successMessage",
+
+							}).showToast();
+
+							$('#main')[0].reset();
+
+						} else {
+							Toastify({
+								text: posts.data.message,
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+
+						$('#btnSaveUpload').html('<i class="bx bx-upload"></i> Upload');
+						$('#btnSaveUpload').attr('disabled', false);
+						$('#btnSaveUpload').css('cursor', 'pointer');
+
+					}else if(posts.status==500){
+						
+						Toastify({
+							text: "Server dalam perbaikan!",
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "infoMessage",
+
+						}).showToast();
+					} 
+					else {
+						posts.data.error.map((mapping, i) => {
+							Toastify({
+								text: 'Oops!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						});
+						$('#btnSaveUpload').html('<i class="bx bx-upload"></i> Upload');
+						$('#btnSaveUpload').attr('disabled', false);
+						$('#btnSaveUpload').css('cursor', 'pointer');
+					}
+				}
+
+				save(form_data);
+
+				}
+
 			function callDataToUpdate(str){
 				const save = async (str) => {
 					const posts = await axios.get('<?= api_url(); ?>api/v1/kantin/id/' + str, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						for (const key in err.response.data.error) {
@@ -268,11 +402,16 @@
 						console.log(posts.data.data);
 						$('#username').attr('disabled','disabled');
 						
+						userIDX = posts.data.data.user.id;
 						$("#namaKantin").val(posts.data.data.nama_kantin);
 						$("#alamat").val(posts.data.data.alamat_lengkap);
 						$("#waKantin").val(posts.data.data.no_telepon);
 						$("#password").prop("disabled", true);
 						$("#norek").val('');
+
+						if(posts.data.data.user.foto!='default.jpg'){
+							$('#putfotopreview').attr('src','<?=base_url();?>app/assets/users/foto/'+posts.data.data.user.foto);
+						}
 						
 					} else {
 

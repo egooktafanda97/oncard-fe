@@ -2,13 +2,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Siswa</div>
+					<div class="breadcrumb-title pe-3">General</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Daftar Siswa</li>
+								<li class="breadcrumb-item active" aria-current="page">Daftar Pengguna</li>
 							</ol>
 						</nav>
 					</div>
@@ -19,23 +19,22 @@
 					<div class="card-body">
 						<div class="d-lg-flex align-items-center mb-4 gap-3">
 							<div class="position-relative">
-								<input type="text" class="form-control ps-5 radius-30" id="floatingInput" placeholder="Ketik nama siswa"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
+								<input type="text" class="form-control ps-5 radius-30" id="floatingInput" placeholder="Ketik nama pengguna"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
 							</div>
 						  <div class="ms-auto">
-							<a href="#/" onclick="openmodalSetCard('saldo')" class="btn btn-danger radius-30 mt-2 me-3 mt-lg-0" style="color:white;"><i class="bx bx-scan" ></i> Saldo Siswa</a>
-							<a href="<?=base_url().$function.'/siswaManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i> Tambah Siswa</a>
+							<a href="#/" onclick="openmodalSetCard('saldo')" class="btn btn-danger radius-30 mt-2 me-3 mt-lg-0" style="color:white;"><i class="bx bx-scan" ></i> Saldo Pengguna</a>
+							<a href="<?=base_url().$function.'/generalManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i> Tambah Pengguna</a>
 						  </div>
 						</div>
 						<div class="table-responsive">
 						<button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
-						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelsiswa');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
-							<table class="table mb-0 tabelsiswa" id="tabelPrint">
+						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelguru');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+							<table class="table mb-0 tabelguru" id="tabelPrint">
 								<thead class="table-light">
 									<tr>
-										<th>#NIS</th>
-										<th>Nama siswa</th>
+										<th>Tipe</th>
+										<th>Nama Pengguna</th>
 										<th>Koneksi Kartu</th>
-										<th>Diinput Pada</th>
 										<th>Saldo</th>
 										<th>Tambah Saldo</th>
 										<th>Limit Transaksi</th>
@@ -48,15 +47,14 @@
 
 							<!-- Pagination -->
 							<nav class="container mt-5"
-								id="siswa-pagination-container"
+								id="general-pagination-container"
 								aria-label="Page navigation example">
 							</nav>
 
 							<!-- Pagination details -->
 							<div class="container mt-1 text-muted text-center">
-								<small id="siswa-pagination-details"></small>
+								<small id="general-pagination-details"></small>
 							</div>
-
 						</div>
 					</div>
 				</div>
@@ -130,30 +128,29 @@
 			let idsett = '';
 			let modescan = '';
             let secret_code= '';
-			let endPointGetDataSiswa = '<?= api_url(); ?>api/v1/siswa';
-			let endPointGetDataSiswaSearch = '<?= api_url(); ?>api/v1/siswa/search?q=';
+			let endPointGetDataGeneral = '<?= api_url(); ?>api/v1/general';
+			let endPointGetDataGeneralSearch = '<?= api_url(); ?>api/v1/general?search=';
 
 			var typingTimer;
-			
+
 			$(document).ready(function () {
-                showData(endPointGetDataSiswa);
+                showData(endPointGetDataGeneral);
 
 				$("#floatingInput").on("keyup", function() {
+					
 					let value = $(this).val().toLowerCase();
 					clearTimeout(typingTimer);
 					typingTimer = setTimeout(function() {
 						if(value==''){
-							showData(endPointGetDataSiswa);
+							showData(endPointGetDataGeneral);
 						}else {
-							showData(endPointGetDataSiswaSearch+value);	
+							showData(endPointGetDataGeneralSearch+value);	
 						}
 					}, 1200);
 
-					
 				});
                 
             });
-
 			function showData(params){
 				let num = 0;
 				let tableColumn = '';
@@ -161,7 +158,7 @@
 				$('.putContentHere').html(tableColumn);
 				
 				const save2 = async () => {
-					const posts2 = await axios.get( params , {
+					const posts2 = await axios.get(params, {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -179,40 +176,22 @@
 							
 							console.log(posts2.data.data.data);
 							posts2.data.data.data.map((mapping,i)=>{
-							    let textTingkat = '';
-								let textNamaA = mapping.nama_lengkap;
-								let textNama = textNamaA.split("-M");
-								if(textNama[1]=='A'){
-									textTingkat = 'Madrasah Aliyah';
-								}
-								if(textNama[1]=='TS'){
-									textTingkat = 'Madrasah Tsanawiyah';
-								}
 							tableColumn +=`
 								<tr>
 									<td >
-										<div class="d-flex align-items-center">
-											<div>
-												<input class="form-check-input me-3" type="checkbox" value="" aria-label="...">
-											</div>
-											<div class="ms-2">
-												<h6 class="mb-0 font-14">#${mapping.nis}</h6>
-											</div>
-										</div>
+										<h6 class="mb-0 font-14">${mapping.jabatan}</h6>
 									</td>
-									<td>${textNama[0]} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}
-									<br/><small class="text-muted">${textTingkat}</small> </td>
+									<td>${mapping.nama_lengkap} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}</td>
 									<td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
-									<td>${moment(mapping.created_at).format('Do MMMM YYYY')}</td>
 									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
 									<td ><button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="requestSecret();setSaldoManually('${mapping.nama_lengkap}','${mapping.nis}','${mapping.tanggal_lahir}','${mapping.accounts.card_id}','${mapping.accounts.balance}');" class="btn btn-warning btn-sm radius-30 px-4"><i class="bx bx-plus"></i> Saldo</button></td>
 									<td >
 											<div class="btn-group">
-												<button type="button" class="disabled btn btn-sm btn-outline-success">Rp${formatRupiah(mapping.accounts.limit_trx)}</button>
+												<button type="button" class="disabled btn btn-sm btn-outline-success">${(mapping.accounts.limit_trx=='1000000000')?'Maksimum':'Rp'+formatRupiah(mapping.accounts.limit_trx)}</button>
 												<button type="button" class="btn btn-sm btn-outline-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">	<span class="visually-hidden">Toggle Dropdown</span>
 												</button>
 												<ul class="dropdown-menu">
-													<li><a class="dropdown-item" href="#/" onclick="openModalSetLimitTrx('${mapping.nama_lengkap}','${mapping.nis}','${mapping.tanggal_lahir}');idsett='${mapping.accounts.id}';"><i class='bx bxs-edit'></i> Update</a>
+													<li><a class="dropdown-item" href="#/" onclick="openModalSetLimitTrx('${mapping.nama_lengkap}','${mapping.tempat_lahir}','${mapping.tanggal_lahir}');idsett='${mapping.accounts.id}';"><i class='bx bxs-edit'></i> Update</a>
 													</li>
 												</ul>
 											</div>
@@ -220,8 +199,8 @@
 									<td>
 										<div class="d-flex order-actions">
 											<a href="#/" onclick="openmodalSetCard('connect');idsett='${mapping.accounts.account_number}';" class="me-3 "><i class='bx bx-link'></i></a>
-											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/siswaManage/${mapping.id}';" class=""><i class='bx bxs-edit'></i></a>
-											<a href="#/" onclick="openModalDelete('${mapping.id}','siswa');" class="ms-3"><i class='bx bxs-trash'></i></a>
+											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/generalManage/${mapping.id}';" class=""><i class='bx bxs-edit'></i></a>
+											<a href="#/" onclick="openModalDeleteGeneral('${mapping.id}','general');" class="ms-3"><i class='bx bxs-trash'></i></a>
 										</div>
 										
 									</td>
@@ -230,7 +209,7 @@
 							});
 							
 						$('.putContentHere').html(tableColumn);
-						createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
+						createPaginations(posts2.data.data, "general-pagination-container", "general-pagination-details", "showData");
 					}
 				}
 				save2();
@@ -293,7 +272,7 @@
                                     <td>: ${nama}</td>
                                 </tr>
                                 <tr>
-                                    <td width="100">NIS</td>
+                                    <td width="100">Tempat Lahir</td>
                                     <td>: ${nis}</td>
                                 </tr>
                                 <tr>
@@ -407,7 +386,7 @@
 					if (posts.status == 200) {
 						if (posts.data.status == true) {
 							
-							showData(endPointGetDataSiswa);
+							showData(endPointGetDataGeneral);
 							$('#modalSetCard').modal('toggle');
 							$('#textToCard').val('');
 							Toastify({
@@ -517,7 +496,7 @@
 					if (posts.status == 201) {
 						if (posts.data.status == true) {
 							
-							showData(endPointGetDataSiswa);
+							showData(endPointGetDataGeneral);
                             $('#modalSetSaldo').modal('toggle');
 							$('#textToCard').val('');
 							Toastify({
@@ -605,7 +584,7 @@
 					if (posts.status == 201||posts.status == 200) {
 						if (posts.data.status == true) {
 							
-							showData(endPointGetDataSiswa);
+							showData(endPointGetDataGeneral);
                             $('#modalSetLimitTrx').modal('toggle');
 							$('#limitTrx').val('');
 							Toastify({
@@ -760,6 +739,74 @@
 				
 				
 			}
+			
+			function commitDeleteGeneral(){
+			let url = '';
+			if(tablesett == 'general'){
+				url = '<?= api_url(); ?>api/v1/'+tablesett+'/' + uidsett;
+			}else {
+				url = '<?= api_url(); ?>api/v1/'+tablesett+'/destroy/' + uidsett;
+			}
+
+			const save = async (uidsett) => {
+				const posts = await axios.delete(url, {
+					headers: {
+						'Authorization': 'Bearer ' + localStorage.getItem('_token')
+					}
+				}).catch((err) => { 
+
+					if(err.error){
+						Toastify({
+							text: 'Maaf. Data tidak ditemukan.',
+							duration: 3000,
+							close: true,
+							gravity: "bottom",
+							position: "left",
+							className: "errorMessage",
+
+						}).showToast();
+						return false;
+					}
+
+					for (const key in err.response.data.error) {
+							Toastify({
+								text: err.response.data.error[key],
+								duration: 3000,
+								close: true,
+								gravity: "bottom",
+								position: "left",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+				});
+
+				if (posts.status == 200) {
+
+					Toastify({
+						text: 'Data berhasil dihapus!',
+						duration: 3000,
+						close: true,
+						gravity: "top",
+						position: "left",
+						className: "successMessage",
+
+					}).showToast();
+
+					showData(endPointGetDataGeneral);
+					uidsett = '';
+					tablesett = '';
+
+					$('#modalDeleteGeneral').modal('toggle');
+
+
+				} else {
+
+				}
+			}
+
+			save(uidsett);
+		}
 
             function requestSecret(){
 				const save2 = async () => {
@@ -777,6 +824,5 @@
 				}
 				save2();
 			}
-
 			
 		</script>

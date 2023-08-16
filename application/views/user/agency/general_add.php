@@ -3,15 +3,15 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Siswa</div>
+					<div class="breadcrumb-title pe-3">Tambah Pengguna General</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-                                <li class="breadcrumb-item"><a href="<?=base_url().$function;?>/Siswa">Daftar Siswa</a>
+                                <li class="breadcrumb-item"><a href="<?=base_url().$function;?>/General">Daftar Pengguna</a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Form <font class="modeText">penambahan</font> siswa</li>
+								<li class="breadcrumb-item active" aria-current="page">Form <font class="modeText">penambahan</font> pengguna</li>
 							</ol>
 						</nav>
 					</div>
@@ -21,48 +21,79 @@
 			  
 				<div class="card">
 				  <div class="card-body p-4">
-					  <h5 class="card-title" style="text-transform:capitalize;">Formulir <font class="modeText">penambahan</font> Siswa</h5>
+					  <h5 class="card-title" style="text-transform:capitalize;">Formulir <font class="modeText">Penambahan</font> Pengguna</h5>
 					  <hr/>
                        <div class="form-body mt-4">
 					<form id="main">
 						<div class="row">
 						   <div class="col-lg-7">
 								<div class="border border-3 p-4 mb-3 rounded">
-								    <div class="col-md-12">
-										<label for="tingkatKelas" class="form-label">Tingkatan Kelas</label>
-										<select class="form-control" id="tingkatKelas">
-											<option value="MTS" >MTS</option>
-											<option value="MA" selected>MA</option>
-										</select>
-									</div>
-									<div class="mb-3">
-										<label for="namaSiswa" class="form-label">Nama Siswa</label>
-										<input type="email" class="form-control" id="namaSiswa" placeholder="Ketik nama lengkap siswa">
-									</div>
-									<div class="mb-3">
-										<label for="alamatSiswa" class="form-label">Alamat</label>
-										<textarea class="form-control" id="alamatSiswa" rows="2"></textarea>
-									</div>
-									
-									<div class="row">
-										<div class="col-md-6">
-										<label for="tempatLahir" class="form-label">Tempat lahir</label>
-										<input type="text" class="form-control" id="tempatLahir" placeholder="Alamat tempat lahir">
-										</div>
-										<div class="col-md-6">
-											<label for="tanggalLahir" class="form-label">Tanggal Lahir</label>
-											<input type="date" class="form-control" id="tanggalLahir" placeholder="Tanggal lahir">
-										</div>
+									<div class="row mb-3">
+									<div class="col-md-12">
+                                            <label for="jabatan" class="form-label">Tipe Pengguna</label>
+                                            <select class="form-control" id="jabatan">
+                                                <option value="Guru">Guru</option>
+                                                <option value="Orangtua">Orangtua</option>
+                                                <option value="Barbershop">Barbershop</option>
+                                                <option value="Laundry">Laundry</option>
+                                                <option value="Petugas Kebersihan">Petugas Kebersihan</option>
+												<option value="Petugas Kantin">Petugas Kantin</option>
+                                                <option value="Pembina Asrama">Pembina Asrama</option>
+                                                <option value="Lainnya">Lainnya</option>
+												<option value="Staf Sekolah">Staf Sekolah</option>
+												<option value="Kepala Madrasah Tsanawiyah">Kepala Madrasah Tsanawiyah</option>
+												<option value="Kepala Madrasah Aliyah">Kepala Madrasah Aliyah</option>
+                                            </select>
+                                        </div>
 									</div>
 
-								  <div class="col-12 mt-3">
-								 	 <label for="waOrtu" class="form-label">Telefon (WA) Orangtua<br/><small><i>Nomor harus dimulai dari 62.</i></small></label>
-									 <input type="text" class="form-control" id="waOrtu" value="0" placeholder="cth : 6281220222922">
-								  </div>
-								  <div class="col-12 mt-3">
-								  	 <label for="nisn" class="form-label">NISN</label>
-									 <input type="text" class="form-control" id="nisn" placeholder="Masukkan NISN">
-								  </div>
+									<div class="row mb-3 bagianguru" style="display:block;">
+										<!-- <div class="col-md-12">
+											<div class="col-12 mt-3 mb-3 ">
+												<label for="nuptk" class="form-label">Nomor Unik Pendidik dan Tenaga Kependidikan (NUPTK)</label>
+												<input type="text" class="form-control" id="nuptk" placeholder="Masukkan NUPTK">
+											</div>
+										</div> -->
+                                        <div class="col-md-12">
+                                            <label for="mataPelajaran" class="form-label">Mata Pelajaran <i>(Jika jabatan yang dipilih : Guru)</i></label>
+                                            <select class="form-control" id="mataPelajaran">
+                                                <option value="Matematika">Matematika</option>
+                                                <option value="Pendidikan Agama Islam">Pendidikan Agama Islam</option>
+                                                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                                <option value="Ilmu Tafsir">Ilmu Tafsir</option>
+                                                <option value="Lainnya">Lainnya</option>
+                                            </select>
+                                        </div>
+									</div>
+
+                                	<div class="mb-3">
+										<label for="namaGuru" class="form-label">Nama Pengguna</label>
+										<input type="text" class="form-control" id="namaGuru" placeholder="Ketik nama lengkap pengguna">
+									</div>
+
+                                    
+
+									<div class="mb-3">
+										<label for="alamatGuru" class="form-label">Alamat</label>
+										<textarea class="form-control" id="alamatGuru" rows="2"></textarea>
+									</div>
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                        <label for="tempatLahir" class="form-label">Tempat lahir</label>
+                                        <input type="text" class="form-control" id="tempatLahir" placeholder="Alamat tempat lahir">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="tanggalLahir" class="form-label">Tanggal Lahir</label>
+                                            <input type="date" class="form-control" id="tanggalLahir" placeholder="Email agensi">
+                                        </div>
+									</div>
+
+									<div class="mb-3">
+										<label for="noTelp" class="form-label">Nomor Whatsapp <i>(Harus dimulai dengan 62)</i></label>
+										<input type="text" class="form-control" id="noTelp" placeholder="Ketik nama lengkap pengguna">
+									</div>
+                                    
 								</div>
 							</div>
 
@@ -90,7 +121,7 @@
 										<input type="text" class="form-control" id="username" placeholder="Ketik username">
 									</div>
 									<div class="col-md-6">
-										<label for="password" class="form-label">Password<br/><small><i>Default : 123456</i></small></label>
+										<label for="password" class="form-label">PIN<br/><small><i>Default : 123456</i></small></label>
 										<input type="password" class="form-control" value="123456" id="password" placeholder="Minimal 6 karakter">
 									</div>
 									<div class="col-md-6">
@@ -101,7 +132,7 @@
 										<label for="pin" class="form-label">Jenis Kelamin</label>
 										<select class="form-control" id="jenisKelamin">
 											<option value="L">Laki-laki</option>
-											<option value="P" selected>Perempuan</option>
+											<option value="P">Perempuan</option>
 										</select>
 									</div>
 									<div class="col-md-12">
@@ -115,7 +146,6 @@
 											<option value="Lainnya">Lainnya</option>
 										</select>
 									</div>
-									
 									<div class="col-12 fotodiv">
 										<div class="mb-3">
 											<label for="inputProductDescription" class="form-label">Foto</label>
@@ -147,12 +177,11 @@
         <script type="text/javascript">
 
 			let pageMode = '<?=$pageMode;?>';
-			// let userIDX = '';
+			console.log(pageMode);
+			let userIDX = '';
 			if(pageMode!='add'){
 				$('.fotodiv').attr('style','display:none!important;');
 				$('.fotodivupdate').attr('style','display:block!important;');
-				$('#password').val('');
-				$('#password').attr('placeholder','Kosongkan bila tidak ingin diubah!');
 			}else {
 				$('.fotodivupdate').attr('style','display:none!important;');
 			}
@@ -161,7 +190,15 @@
                 $('#image-uploadify').imageuploadify();
 				let rands = "user-"+randstr(5);
 				$('#username').val(rands);
-				$('#email').val(rands+'@gmail.com');
+
+				$('#jabatan').on('change', function() {
+					var jabatan = $("#jabatan").val();
+					if(jabatan=='Guru'){
+						$('.bagianguru').attr('style','display:block');
+					}else {
+						$('.bagianguru').attr('style','display:none');
+					}
+				});
 
 				if(pageMode!='add'){
 					callDataToUpdate(pageMode);
@@ -178,9 +215,9 @@
 				$('#btnSave').attr('disabled', 'disabled');
                 $('#btnSave').css('cursor', 'not-allowed');
 				
-				var namaSiswa = $("#namaSiswa").val();
-				var tingkatKelas = $("#tingkatKelas").val();
-				var alamatSiswa = $("#alamatSiswa").val();
+				
+				var namaGuru = $("#namaGuru").val();
+				var alamatGuru = $("#alamatGuru").val();
 				var imageuploadify = $("#file")[0].files[0]; 
 				// imageuploadify = $("#file")[0].files[0];
 				var username = $("#username").val();
@@ -190,33 +227,44 @@
 				var agama = $("#agama").val();
 				var tanggalLahir = $("#tanggalLahir").val();
 				var tempatLahir = $("#tempatLahir").val();
-				var waOrtu = $("#waOrtu").val();
-				var nisn = $("#nisn").val();
-
+				// var waOrtu = $("#waOrtu").val();
+				var jabatan = $("#jabatan").val();
+				var noTelp = $("#noTelp").val();
+				
 				var form_data = new FormData();
-				form_data.append('nama_lengkap', namaSiswa+"-"+tingkatKelas);
+				
+				if(jabatan=='Guru'){
+					// var nuptk = $("#nuptk").val();
+					var mataPelajaran = $("#mataPelajaran").val();
+					// form_data.append('nuptk', nuptk);
+					form_data.append('mata_pelajaran', mataPelajaran);
+				}
+
+				form_data.append('nama_lengkap', namaGuru);
 				form_data.append('jenis_kelamin', jenisKelamin);
 				form_data.append('tempat_lahir', tempatLahir);
 				form_data.append('tanggal_lahir', tanggalLahir);
-				form_data.append('username', username);
+				form_data.append('jabatan', jabatan);
 				
+				form_data.append('username', username);
 				form_data.append('email', email);
 				form_data.append('agama', agama);
-				form_data.append('alamat_lengkap', alamatSiswa);
-				form_data.append('telp_ortu', waOrtu);
+				form_data.append('alamat_lengkap', alamatGuru);
+				form_data.append('telpon', noTelp);
 
 				if(imageuploadify!='' && pageMode=='add'){
 					form_data.append('foto', imageuploadify);	
 				}
-				form_data.append('nis', nisn);
-
+				if(password!=''){
+					form_data.append('password', password);
+				}
+				
 				let url = '';
 
 				if(pageMode!='add'){
-					url = '<?= api_url(); ?>api/v1/siswa/update/'+pageMode;
-					
+					url = '<?= api_url(); ?>api/v1/general/update/'+userIDX;
 				}else {
-					url = '<?= api_url(); ?>api/v1/siswa/store';
+					url = '<?= api_url(); ?>api/v1/general/store';
 				}
 
 				if(password!=''){
@@ -314,7 +362,6 @@
 					//re-create rand string format
 					let rands = "user-"+randstr(5);
 					$('#username').val(rands);
-                    $('#email').val(rands+'@gmail.com');
 				}
 
 				save(form_data);
@@ -439,7 +486,7 @@
 
 			function callDataToUpdate(str){
 				const save = async (str) => {
-					const posts = await axios.get('<?= api_url(); ?>api/v1/siswa/id/' + str, {
+					const posts = await axios.get('<?= api_url(); ?>api/v1/general/id/' + str, {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -459,34 +506,30 @@
 
 					if (posts.status == 200) {
 						$('#username').attr('disabled','disabled');
+
 						
-						let textTingkat = '';
-						let textNamaA = posts.data.data.nama_lengkap;
-                        let textNama = textNamaA.split("-M");
-						if(textNama[1]=='A'){
-							textTingkat = 'MA';
-						}
-						if(textNama[1]=='TS'){
-							textTingkat = 'MTS';
+						if(posts.data.data.jabatan=='Guru'){
+							// $("#nuptk").val(posts.data.data.nuptk);
+							$("#mataPelajaran").val(posts.data.data.mata_pelajaran);
+							$('.bagianguru').attr('style','display:block');
+						}else {
+							$('.bagianguru').attr('style','display:none');
 						}
 						
 						$("#username").val(posts.data.data.user.username);
-						$("#alamatSiswa").val(posts.data.data.alamat_lengkap);
+						$("#alamatGuru").val(posts.data.data.alamat_lengkap);
 						$("#tempatLahir").val(posts.data.data.tempat_lahir);
-						$("#waOrtu").val(posts.data.data.telp_ortu);
-						$("#nisn").val(posts.data.data.nis);
-						$("#namaSiswa").val(textNama[0]);
-						$("#tingkatKelas").val(textTingkat);
-						
+						$("#namaGuru").val(posts.data.data.nama_lengkap);
 						$("#email").val(posts.data.data.user.email);
 						$("#jenisKelamin").val(posts.data.data.jenis_kelamin);
 						$("#agama").val(posts.data.data.agama);
 						$("#tanggalLahir").val(posts.data.data.tanggal_lahir);
+						$("#jabatan").val(posts.data.data.jabatan);
+						$("#noTelp").val(posts.data.data.telpon);
 						
 						userIDX  = posts.data.data.user.id;
 						$('#password').val('');
 						$('#password').attr('placeholder','Kosongkan bila tidak ingin diubah!');
-						
 						
 						if(posts.data.data.user.foto!='default.jpg'){
 							$('#putfotopreview').attr('src','<?=base_url();?>app/assets/users/foto/'+posts.data.data.user.foto);

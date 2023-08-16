@@ -108,7 +108,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/siswa', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -266,7 +266,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post('<?= api_url(); ?>api/v1/account/connetions-card', form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 
@@ -361,7 +361,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post('<?= api_url(); ?>api/v1/trx/store-balance', form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 
@@ -462,7 +462,7 @@
                 const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/usr?card='+str, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						$('#textToCard').blur();
@@ -554,7 +554,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);

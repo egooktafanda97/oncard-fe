@@ -58,15 +58,15 @@
 										<p>Start by signing in to your account.</p>
 									</div>
 									<div class="form-body">
-										<form class="row g-3">
+										<form class="row g-3" autocomplete="off">
 											<div class="col-12">
 												<label for="inputEmailAddress" class="form-label">Enter Username</label>
-												<input type="username" class="form-control" name="username" id="inputEmailAddress" placeholder="Username">
+												<input type="username" class="form-control" name="username" id="inputEmailAddress" placeholder="Username" autocomplete="off">
 											</div>
 											<div class="col-12">
 												<label for="inputChoosePassword" class="form-label">Enter Password</label>
 												<div class="input-group" id="show_hide_password">
-													<input type="password" class="form-control border-end-0" name="password" id="inputChoosePassword" value="12345678" placeholder="Enter Password">
+													<input type="password" class="form-control border-end-0" name="password" autocomplete="off" id="inputChoosePassword" value="" placeholder="Enter Password">
                                                     <a tabindex="-1" href="javascript:;" class="input-group-text bg-transparent"><i class='bx bx-hide'></i></a>
 												</div>
 											</div>
@@ -100,7 +100,7 @@
 	<script src="<?=base_url();?>assets_oncard/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="<?=base_url();?>assets_oncard/plugins/metismenu/js/metisMenu.min.js"></script>
 	<script src="<?=base_url();?>assets_oncard/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
         integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<!--Password show & hide js -->
@@ -124,6 +124,15 @@
 	<script src="<?=base_url();?>assets_oncard/js/app.js"></script>
 
   <script type="text/javascript">
+
+    // $(document).ready(function(){
+    //     if(localStorage.getItem('_token')!=null){
+    //         console.log('LOGINED');
+    //         window.location.href ='<?=base_url();?>CPanel_Admin';
+    //         // return false;
+    //     }
+    // });
+    
     $('#btnSbmtReg').on('click', function (event) {
         event.preventDefault();
             var username = $("[name='username']").val();

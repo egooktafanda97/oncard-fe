@@ -65,7 +65,7 @@
 					<div class="col-12">
 						<div class="card radius-10 w-100" style="overflow:hidden;">
 							<div class="row" >
-								<img src="<?=base_url();?>assets/png/image_welcome_oncard.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/>
+								<img src="<?=base_url();?>assets_oncard/images/bg_new.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/>
 							</div>
 						</div>
 					</div>
@@ -138,6 +138,28 @@
 							</div>
 						  </div>
 					 </div><!--end row-->
+
+                     <div class="row">
+                        <div class="col d-flex">
+                           <div class="card radius-10 w-100">
+							   <div class="card-body">
+                                <img src="<?=base_url();?>assets_oncard/images/icons/birthday-illustration.webp" style="width:350px; height:100%; max-height:250px; object-fit:cover;opacity:.2; object-position:center center; position:absolute; bottom:0px; right:5px; border-radius:5px;"/>
+								<p class="font-weight-bold mb-1 text-secondary">Ultah Hari Ini</p>
+								<div class="d-flex align-items-center mb-4">
+									<div>
+										<h4 class="mb-0 totalUltah">0</h4>
+									</div>
+								</div>
+
+                                <div class="row putUltahHere">
+                                    
+                                </div>
+								
+							   </div>
+							   
+						   </div>
+						 </div>
+                    </div>
 			</div>
 		</div>
 
@@ -148,6 +170,7 @@
 			let NewInvoiceDataArrayForGraph2 = [];
 			let NewDataArrayForGraph5 = [];
 			let arrSebaranSaldo = [];
+            let arrUltah = [];
 			let beaAdmin = 0;
 			let graphtot = 0;
 			let saldoOwner = 0;
@@ -163,9 +186,9 @@
 				arrSebaranSaldo = [];
 
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/siswa', {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/siswa/get-inpaging', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -176,25 +199,61 @@
                         let jmlDataConnect = 0;
                         let percentage = 0.0;
 						let saldo = 0;
-                        jmlData = posts2.data.data.data.length;
+                        let jmlUltah = 0;
+                        let htmlUltah = '';
+                        jmlData = posts2.data.data.length;
                         
-                        posts2.data.data.data.map((mapping,i)=>{
+                        posts2.data.data.map((mapping,i)=>{
                             if(mapping.accounts.card_id){
                                 jmlDataConnect++;
                             }
-							
+
+                            let tglUltahServer = moment(mapping.tanggal_lahir).format('MM-DD');
+							let dateToday = moment(new Date()).format('MM-DD');
+
+                            if(tglUltahServer==dateToday){
+                                jmlUltah++;
+
+                                let defaultURLFoto = '<?=base_url();?>assets_oncard/images/icons/user.webp';
+
+                                let textTingkat = '';
+                                let textNamaA = mapping.nama_lengkap;
+                                let textNama = textNamaA.split("-M");
+                                if(textNama[1]==='A'){
+                                    textTingkat = 'Madrasah Aliyah';
+                                }
+                                if(textNama[1]==='TS'){
+                                    textTingkat = 'Madrasah Tsanawiyah';
+                                }
+
+                                htmlUltah +=`
+                                <div class="col-lg-3 col-md-6 col-12 mb-3">
+                                    <div class="row">
+                                        <div class="col-2 text-center">
+                                            <img src="${(mapping.user.foto=='default.jpg')?defaultURLFoto:`<?=base_url();?>app/assets/users/foto/${mapping.user.foto}`}" style="object-fit:cover; object-position:center; border-radius:100%; width:45px; height:45px;"/>
+                                        </div>
+                                        <div class="col-10">
+                                            <h6 style="font-size:13px;text-transform:uppercase;">${textNama[0]}<br/><font class="text-muted" style="font-weight:normal;">${textTingkat}</font></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            }
+
 							saldo += parseInt(mapping.accounts.balance);
                         });
 
                         percentage = (jmlDataConnect/jmlData)*100;
-                        $('.box2val').html(posts2.data.data.data.length);
-                        $('.box2val2').html(formatRupiah(jmlDataConnect.toString())+"/"+formatRupiah(jmlData.toString())+"("+percentage+"%) akun terhubung.");
+                        $('.box2val').html(posts2.data.data.length);
+                        $('.box2val2').html(formatRupiah(jmlDataConnect.toString())+"/"+formatRupiah(jmlData.toString())+"("+percentage+"%) akun terkoneksi.");
 
 						saldoOwner += saldo;
 						
 						arrSebaranSaldo.push(saldoOwner);
 
 						$('.saldoSiswa').html("Rp"+formatRupiah(saldo.toString()));
+						$('.totalUltah').html(formatRupiah(jmlUltah.toString())+' orang');
+						$('.putUltahHere').html(htmlUltah);
 						
 						getKantin();
                     }
@@ -206,7 +265,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/kantin', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -266,7 +325,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -276,7 +335,7 @@
                         // console.log(posts2.data.data);
                         let statusInstansi = '';
                         if(posts2.data.data[1].status.status=='Active'){
-                            statusInstansi = `Verified <i class="bx bx-badge-check text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Instansi ini telah secara resmi bergabung dengan sistem Oncard.id" ></i>`;
+                            statusInstansi = `Verified <i class="bx bxs-badge-check text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Instansi ini telah secara resmi bergabung dengan sistem Oncard.id" ></i>`;
                         }else {
                             statusInstansi = 'Not set';
                         }
@@ -308,7 +367,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/setting/get-config-trx-business', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -330,7 +389,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/history?type=sell', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);

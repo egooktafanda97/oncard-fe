@@ -1,4 +1,15 @@
 <style type="text/css">
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
 	.display {
 	width: 100%;
 	outline: none;
@@ -185,7 +196,7 @@
 							<div class="tab-pane fade  active show" id="primary-pills-home" role="tabpanel">
 								<div class="row">
 									<div class="col-lg-6 col-12 mb-5">
-										<input type="text" class="display" />
+										<input type="number" class="display" autocomplete="off" />
 										<div class="buttons">
 											<button class="operator" data-value="AC">AC</button>
 											<button class="operator" data-value="DEL">DEL</button>
@@ -388,7 +399,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/produk', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -428,7 +439,7 @@
 				const save2 = async (str) => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/produk/id/'+str, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -638,7 +649,7 @@
                 const save = async () => {
                     const posts = await axios.get('<?= api_url(); ?>api/v1/produk/search?q='+searchText, {
                         headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
                     }).catch((err) => {
 
@@ -818,7 +829,7 @@
                 const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/setting/get-config-trx-business', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						$('#textToCard').blur();
@@ -870,7 +881,7 @@
                 const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/usr?card='+str, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						$('#textToCard').blur();
@@ -1026,6 +1037,14 @@
 				`);
 			}
             
+
+            
+            $("#textToCard2").on("keydown",function search(e) {
+                if(e.keyCode == 13) {
+                    commitTransaction();
+                }
+            });
+            
             function openNextDialogPembelianDenganMenu(nama, nis, balance){
 				nominal_belanja = '0';
 				let totalTransaksi = $('#totalTagihan').html();
@@ -1136,7 +1155,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post(url, form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
                         $('#btnSubmitTransaksi').html('Selesai');
@@ -1287,9 +1306,9 @@
                 htmlx = `
                     <div class="invoice-card" id="divToPRINT">
                         <div class="invoice-title">
-                            <div id="main-title">
-                            <h4 style="margin-bottom:0;padding-bottom:0px;">INVOICE</h4>
-                            <span>#${invoiceResultPrint.transaction.invoice}</span>
+                            <div id="main-title" style="display:block!important;">
+                                <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;">INVOICE</h4>
+                                <span style=" color:black!important; display:block; font-size:12px!important;">#${invoiceResultPrint.transaction.invoice}</span>
                             </div>
                             
                             <span id="date">${moment(invoiceResultPrint.transaction.created_at).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
@@ -1302,7 +1321,7 @@
                         </div>
                         
                         <div class="invoice-details">
-                            <table class="invoice-table">
+                            <table class="invoice-table" style="width:100%;">
                             <thead>
                                 <tr>
                                 <td>PRODUK</td>
@@ -1336,14 +1355,22 @@
                                 <td colspan="2"><b>Sisa Saldo</b></td>
                                 <td>Rp${formatRupiah(invoiceResultPrint.balance.users.balance.toString())}</td>
                                 </tr>
+
+                                <tr><td colspan="3">
+                                    <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                </td></tr>
+
                             </tbody>
                             </table>
                         </div>
                         
+                    </div>
+                    <div class="invoice-card mt-4" style="min-height:auto!important;">
                         <div class="invoice-footer">
                             <button class="btn btn-sm btn-secondary" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK</button>
+                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
                         </div>
+                    
                     </div>
                 `;
 
@@ -1396,7 +1423,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);

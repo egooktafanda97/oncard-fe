@@ -161,7 +161,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post(url, form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 
@@ -258,7 +258,7 @@
 				const save = async (str) => {
 					const posts = await axios.get('<?= api_url(); ?>api/v1/produk/id/' + str, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						for (const key in err.response.data.error) {

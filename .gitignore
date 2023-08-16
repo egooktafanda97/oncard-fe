@@ -4,7 +4,8 @@
 application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess
-
+assets/img/*
+assets/img
 application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess

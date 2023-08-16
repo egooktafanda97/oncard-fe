@@ -19,19 +19,21 @@
 					<div class="card-body">
 						<div class="d-lg-flex align-items-center mb-4 gap-3">
 							<div class="position-relative">
-								<input type="text" class="form-control ps-5 radius-30" placeholder="Ketik nama kantin"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
+								<input type="text" id="floatingInput" class="form-control ps-5 radius-30" placeholder="Ketik nama kantin"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
 							</div>
 						  <div class="ms-auto"><a href="<?=base_url().$function.'/kantinManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Tambah Kantin</a></div>
 						</div>
 						<div class="table-responsive">
-							<table class="table mb-0">
+						<button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
+						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelkantin');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+							<table class="table mb-0 tabelkantin" id="tabelPrint">
 								<thead class="table-light">
 									<tr>
 										<th>No.</th>
 										<th>Nama kantin</th>
+										<th>Rekening</th>
 										<th>Nomor WA</th>
-										<th>Didaftarkan Pada</th>
-                                        <th>Saldo</th>
+										<th>Saldo</th>
 										<th></th>
 										<th>Aksi</th>
 									</tr>
@@ -84,12 +86,83 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="modal fade" id="upPASS" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" style="">
+                    <div class="modal-header">
+						<h5 class="modal-title">Reset Password</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
+					</div>
+					<div class="modal-body">
+                        <form id="mainx">
+							<div class="row">
+								<div class="col-md-4 text-center">
+								<img src="<?=base_url();?>assets_oncard/images/image-removebg-preview.webp" style="width:100%; max-width:150px;text-align:center;"/>
+								</div>
+								<div class="col-md-8">
+								<h6>Password pengguna ini akan diupdate ke password default, yakni :<br/><p class="text-center" style="background:#198adf; border-radius:10px; padding:10px;color:white;"><b>123456</b></p>Harap beritahukan kepada pengguna tersebut. </h6>
+								</div>
+							</div>
+							<h5 class="mt-4">Konfirmasi dengan PIN</h5>
+                            <div class="mb-3">
+                                <label for="pinUpdate" class="form-label">PIN</label>
+                                <input type="password" class="form-control" id="pinUpdate" placeholder="Ketikkan pin">
+                            </div>
+                        </form>
+
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button type="button" id="btnSavePassword" class="btn btn-primary" onclick="resetPassword();"><i class="bx bxs-key"></i> Reset Now</button>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal fade" id="upBankAccount" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" style="">
+                    <div class="modal-header">
+						<h5 class="modal-title">Setting Akun Bank <img src="<?=base_url();?>assets_oncard/images/BRK_Syariah.webp" style=" margin-left:15px;margin-top:4px; width:100%; max-width:100px;text-align:center;float:right;"/></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
+					</div>
+					<div class="modal-body">
+                        <form id="mainx">
+							
+						<div class="mb-3">
+                                <label for="pinUpdate" class="form-label">Nomor Rekening</label>
+                                <input type="number" class="form-control" id="norek" placeholder="Ketikkan nomor rekening">
+                            </div>
+							<div class="mb-3">
+                                <label for="namadirekening" class="form-label">Nama di rekening</label>
+                                <input type="text" class="form-control" id="namadirekening" placeholder="Ketikkan nama lengkap direkening">
+                            </div>
+                        </form>
+
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button type="button" id="btnSaveBank" class="btn btn-primary" onclick="saveBankAcc();"><i class="bx bx-save"></i> Simpan</button>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<script type="text/javascript">
             let secret_code = '';
 			let idsett = '';
 			$(document).ready(function () {
                 showData();
+
+				$("#floatingInput").on("keyup", function() {
+					let value = $(this).val().toLowerCase();
+					$(".putContentHere tr").filter(function() {
+						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+					});
+				});
             });
 
             function showData(){
@@ -132,15 +205,17 @@
 											</div>
 										</div>
 									</td>
-									<td>${mapping.nama_kantin}<br/><small class="text-muted">${mapping.user.username}</small></td>
+									<td>${mapping.nama_kantin} ${(mapping.accounts.bank_account_number!=null && mapping.user.foto!=null)?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}<br/><small class="text-muted">${mapping.user.username}</small></td>
+									<td>${mapping.accounts.bank_account_number}<br/><small class="text-muted">${mapping.accounts.bank_account_name}</small></td>
 									<td>${mapping.no_telepon}</td>
-									<td>${moment(mapping.created_at).format('Do MMMM YYYY')}</td>
-                                    <td>Rp${formatRupiah(mapping.accounts.balance)}</td>
+									<td>Rp${formatRupiah(mapping.accounts.balance)}</td>
 									<td><button type="button" onclick="openDialogWD(${mapping.accounts.account_number},'${mapping.user.username}','Rp${formatRupiah(mapping.accounts.balance)}');" class="btn btn-primary btn-sm radius-30 px-4"><i class="bx bx-transfer-alt"></i> Pencairan Dana</button></td>
 									<td>
 										<div class="d-flex order-actions">
 											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/kantinManage/${mapping.id}'" class=""><i class='bx bxs-edit'></i></a>
-											<a href="#/" disabled onclick="console.log('belum ada function deletenya');return false; openModalDelete('${mapping.id}','kantin');" class="ms-3"><i class='bx bxs-trash'></i></a>
+											<a href="#/" disabled onclick="openModalDelete('${mapping.id}','kantin');" class="ms-3"><i class='bx bxs-trash'></i></a>
+											<a href="#/" onclick="openModalUpdatePass('${mapping.user.id}');" class="ms-3"><i class='bx bxs-key'></i></a>
+											<a href="#/" onclick="openModalUpdateBankAccount('${mapping.accounts.id}','${mapping.accounts.bank_account_name}');" class="ms-3"><i class='bx bxs-credit-card-front'></i></a>
 										</div>
 									</td>
 								</tr>
@@ -161,6 +236,53 @@
 				idsett = id;
                 $('#namaPengguna').html(nama);
                 $('#saldoPengguna').html(saldo);
+            }
+
+			function openModalUpdatePass(id){
+                $('#upPASS').modal('toggle');
+				
+				idsett = id;
+            }
+			
+			let account_number = '';
+			let nama_diakun_m = '';
+			function openModalUpdateBankAccount(id, nama_diakun){
+
+				idsett = id;
+				nama_diakun_m = nama_diakun;
+
+                $('#upBankAccount').modal('toggle');
+
+				const save = async (id) => {
+					const posts = await axios.get('<?= api_url(); ?>api/v1/account/id/' + id, {
+						headers: {
+							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						for (const key in err.response.data.error) {
+							Toastify({
+								text: err.response.data.error[key],
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+					});
+
+					if (posts.status == 200) {
+						account_number = posts.data.data.account_number;
+						$('#norek').val(posts.data.data.bank_account_number);
+						$('#namadirekening').val(posts.data.data.bank_account_name);
+						
+					} else {
+
+					}
+				}
+
+				save(id);
             }
 
             $('#wdMODAL').on('hidden.bs.modal', function () {
@@ -282,6 +404,191 @@
 						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
 						$('#btnSave').attr('disabled', false);
 						$('#btnSave').css('cursor', 'pointer');
+					}
+				}
+				
+				save(form_data);				
+
+			}
+			
+			function resetPassword(){
+				
+				let pin = $('#pinUpdate').val();
+				
+				if(pin==''){
+
+					$('#btnSavePassword').html('<i class="bx bxs-key"></i> Reset Now');
+					$('#btnSavePassword').attr('disabled', false);
+					$('#btnSavePassword').css('cursor', 'pointer');
+					Toastify({
+						text: 'PIN harus diisi oleh pengguna akun tersebut!',
+						duration: 3000,
+						close: true,
+						gravity: "top",
+						position: "right",
+						className: "errorMessage",
+
+					}).showToast();
+					return false;
+				}
+				
+            	var form_data = new FormData();
+				
+				form_data.append('password', '123456');
+				form_data.append('pin', pin);
+				
+				let url = '';
+				
+				const save = async (form_data) => {
+					const posts = await axios.post('<?= api_url(); ?>api/v1/password/upd-passwords/'+idsett, form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+						}
+					}).catch((err) => {
+                        $('#btnSavePassword').html('<i class="bx bxs-key"></i> Reset Now');
+						$('#btnSavePassword').attr('disabled', false);
+						$('#btnSavePassword').css('cursor', 'pointer');
+						for (const key in err.response.data) {
+							Toastify({
+								text: err.response.data[key],
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+					});
+					if (posts.status == 201||posts.status == 200) {
+						Toastify({
+							text: posts.data.message,
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "successMessage",
+
+						}).showToast();
+
+						$('#upPASS').modal('toggle');
+						$('#pinUpdate').val('');
+						$('#btnSavePassword').html('<i class="bx bxs-key"></i> Reset Now');
+						$('#btnSavePassword').attr('disabled', false);
+						$('#btnSavePassword').css('cursor', 'pointer');
+
+					}
+					else {
+						posts.data.error.map((mapping, i) => {
+							Toastify({
+								text: 'Oops!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						});
+						$('#btnSavePassword').html('<i class="bx bxs-key"></i> Reset Now');
+						$('#btnSavePassword').attr('disabled', false);
+						$('#btnSavePassword').css('cursor', 'pointer');
+					}
+				}
+				
+				save(form_data);				
+
+			}
+			
+			function saveBankAcc(){
+				
+				let norek = $('#norek').val();
+				let namadirekening = $('#namadirekening').val();
+
+				
+				if(pin==''){
+
+					$('#btnSaveBank').html('<i class="bx bxs-key"></i> Reset Now');
+					$('#btnSaveBank').attr('disabled', false);
+					$('#btnSaveBank').css('cursor', 'pointer');
+					Toastify({
+						text: 'Nomor rekening harus diisi!',
+						duration: 3000,
+						close: true,
+						gravity: "top",
+						position: "right",
+						className: "errorMessage",
+
+					}).showToast();
+					return false;
+				}
+				
+            	var form_data = new FormData();
+				
+				form_data.append('bank_account_number', norek);
+				form_data.append('account_number', account_number);
+
+				if(namadirekening!=nama_diakun_m){
+					form_data.append('bank_account_name', namadirekening);	
+				}
+				
+				let url = '';
+				
+				const save = async (form_data) => {
+					const posts = await axios.post('<?= api_url(); ?>api/v1/account/update/'+idsett, form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+						}
+					}).catch((err) => {
+                        $('#btnSaveBank').html('<i class="bx bx-save"></i> Simpan');
+						$('#btnSaveBank').attr('disabled', false);
+						$('#btnSaveBank').css('cursor', 'pointer');
+						for (const key in err.response.data) {
+							Toastify({
+								text: err.response.data[key],
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+					});
+					if (posts.status == 201||posts.status == 200) {
+						Toastify({
+							text: 'Informasi akun bank berhasil disimpan!',
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "successMessage",
+
+						}).showToast();
+
+						showData();
+
+						$('#upBankAccount').modal('toggle');
+						$('#btnSaveBank').html('<i class="bx bx-save"></i> Simpan');
+						$('#btnSaveBank').attr('disabled', false);
+						$('#btnSaveBank').css('cursor', 'pointer');
+
+					}
+					else {
+						posts.data.error.map((mapping, i) => {
+							Toastify({
+								text: 'Oops!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						});
+						$('#btnSaveBank').html('<i class="bx bx-save"></i> Simpan');
+						$('#btnSaveBank').attr('disabled', false);
+						$('#btnSaveBank').css('cursor', 'pointer');
 					}
 				}
 				

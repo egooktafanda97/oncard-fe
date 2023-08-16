@@ -160,7 +160,9 @@
                                     Menampilkan <font class="jmldt"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></font> data <font class="stdt"></font>.
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover mb-0" style="font-size:12px!important;">
+                                <button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
+                                <button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelriwayattransaksi');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+                                    <table class="table table-hover mb-0 tabelriwayattransaksi" id="tabelPrint" style="font-size:12px!important;">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>No.</th>
@@ -303,7 +305,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get(url, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -383,7 +385,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -409,27 +411,27 @@
                 htmlx = `
                     <div class="invoice-card" id="divToPRINT">
                         <div class="invoice-title">
-                            <div id="main-title">
-                            <h4 style="margin-bottom:0;padding-bottom:0px;">INVOICE</h4>
-                            <span>#${x['invoice']}</span>
+                            <div id="main-title" style="display:block!important;">
+                            <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;">INVOICE</h4>
+                            <span style=" color:black!important; display:block; font-size:12px!important;">#${x['invoice']}</span>
                             </div>
                             
-                            <span id="date">${moment(x['created_at']).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
-                            <span style="font-size:11px;">ID Card . 000</span>
+                            <span id="date" style=" color:black!important;">${moment(x['created_at']).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
+                            <span style="display:block; font-size:11px; color:black!important;">ID Card . 000</span>
                         </div>
-                        <div style="text-align:center;">
-                        ${x['account_seller']}
-                        <small style="display:block;color: rgba(0, 0, 0, 0.4);">Beringin Taluk, Kec. Kuantan Tengah, Kabupaten Kuantan Singingi, Riau 29566</small>
+                        <div style="text-align:center; color:black!important; ">
+                        <font style="font-weight:bolder;">${x['account_seller']}</font>
+                        <small style="display:block;color: rgba(0, 0, 0, 0.4); color:black!important;">Beringin Taluk, Kec. Kuantan Tengah, Kabupaten Kuantan Singingi, Riau 29566</small>
                         
                         </div>
                         
                         <div class="invoice-details">
-                            <table class="invoice-table">
+                            <table class="invoice-table" style="width:100%;">
                             <thead>
                                 <tr>
-                                <td>PRODUK</td>
-                                <td>JML</td>
-                                <td>HARGA</td>
+                                <td style="color:black!important;">PRODUK</td>
+                                <td style="color:black!important;">JML</td>
+                                <td style="color:black!important;">HARGA</td>
                                 </tr>
                             </thead>
                             
@@ -440,31 +442,40 @@
                                 
                                 <tr class="calc-row">
                                 <td colspan="2">Subtotal</td>
-                                <td>Rp${formatRupiah(x['total_spending'])}</td>
+                                <td style="color:black!important;">Rp${formatRupiah(x['total_spending'])}</td>
                                 </tr>
                                 <tr class="calc-row">
                                 <td colspan="2">Biaya transaksi</td>
-                                <td>Rp${formatRupiah(x['admin_fee'])}</td>
+                                <td style="color:black!important;">Rp${formatRupiah(x['admin_fee'])}</td>
                                 </tr>
                                 <tr class="calc-row">
                                 <td colspan="2">Total</td>
-                                <td>Rp${formatRupiah(x['total_payment'])}</td>
+                                <td style="color:black!important;">Rp${formatRupiah(x['total_payment'])}</td>
                                 </tr>
                                 <tr><td colspan="3">
                                     <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
                                 </td></tr>
                                 <tr class="calc-row">
                                 <td colspan="2"><b>Sisa Saldo</b></td>
-                                <td>Rp${formatRupiah(x['sisa_saldo'])}</td>
+                                <td style="color:black!important;">Rp${formatRupiah(x['sisa_saldo'])}</td>
                                 </tr>
+
+                                <tr><td colspan="3">
+                                    <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                </td></tr>
+
                             </tbody>
                             </table>
                         </div>
                         
+                    </div>
+
+                    <div class="invoice-card mt-4" style="min-height:auto!important;">
                         <div class="invoice-footer">
                             <button class="btn btn-sm btn-secondary" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK</button>
+                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
                         </div>
+                    
                     </div>
                 `;
 

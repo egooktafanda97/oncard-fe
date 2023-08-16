@@ -144,7 +144,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post('<?= api_url(); ?>api/v1/agency/store', form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						Toastify({

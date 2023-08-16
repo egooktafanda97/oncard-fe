@@ -15,12 +15,9 @@ class Login extends CI_Controller {
      }
 
 	public function index(){   
-    if($this->session->userdata('adminSession')){      
+    if($this->session->userdata('_token')){      
       $data['errormsg'] = "";    
-      redirect('Managements/index', 'refresh');
-    }elseif($this->session->userdata('userSession')){          
-      $data['errormsg'] = "";
-      redirect('User/index', 'refresh');
+      redirect('CPanel_Admin/index', 'refresh');
     }else{
       $data['errormsg'] = "";
       $this->load->view('loginregister/login',$data); 
