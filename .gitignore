@@ -6,6 +6,8 @@ application/cache/*
 !application/cache/.htaccess
 assets/img/*
 assets/img
+assets_oncard/*
+assets_oncard/
 application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
