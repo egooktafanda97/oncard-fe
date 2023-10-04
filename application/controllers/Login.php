@@ -80,6 +80,7 @@ class Login extends CI_Controller {
               "_permission" => $result['result']["data"]['permission'],
               "_user" => $result['result']["data"]['users']['username'],
               "_user_id" => $result['result']["data"]['users']['id'],
+              "_user_uid" => $result['result']["data"]['users']['uid'],
           ]);
       }
       echo json_encode($result);

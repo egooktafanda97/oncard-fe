@@ -1,3 +1,8 @@
+<style>
+    body {
+        background:white!important;
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-12 resumeData table-responsive py-4">
@@ -71,14 +76,12 @@
 					});
 			
 					if (posts2.status == 200) {
-							num += 1;
+							
 							tableColumn = '';
 
                             let arr = [];				
                             let arrNoNISN = [];				
 							
-							console.log(posts2.data.data);
-
                             posts2.data.data.map((mapping,i)=>{
 
                                 let pecahNISN = mapping.nis;
@@ -93,17 +96,19 @@
                                 if(pecahNISN[1]){
                                     arrNoNISN.push({
                                         'nama' : mapping.nama_lengkap,
-                                        'id' : mapping.id,
+                                        'id' : mapping.id
                                     })
                                 }
 
                             });
 
-                            console.log(arr);
+                            console.log(arr.length);
+
                             let dataMALengkap = 0;
                             let dataMtsLengkap = 0;
                             let dataMATidakLengkap = 0;
                             let dataMtsTidakLengkap = 0;
+                            let dataTidakJelas = 0;
                             
                             if(arr.length > 0){
                                 let nomor = 1;
@@ -112,11 +117,11 @@
                                     let textTingkat = '';
                                     let textNamaA = mapping.nama;
                                     let textNama = textNamaA.split("-M");
-                                    if(textNama[1]==='A'){
+                                    if(textNama[1]=='A'){
                                         textTingkat = 'Madrasah Aliyah';
                                         dataMATidakLengkap = dataMATidakLengkap+1;
                                     }
-                                    if(textNama[1]==='TS'){
+                                    else if(textNama[1]=='TS'){
                                         textTingkat = 'Madrasah Tsanawiyah';
                                         dataMtsTidakLengkap = dataMtsTidakLengkap+1;
                                     }
@@ -140,13 +145,13 @@
                                     let textTingkat = '';
                                     let textNamaA = mapping.nama;
                                     let textNama = textNamaA.split("-M");
-                                    if(textNama[1]=='A' && mapping.deleted_at==null){
+                                    if(textNama[1]=='A'){
                                         textTingkat = 'Madrasah Aliyah';
-                                        dataMATidakLengkap = dataMATidakLengkap+1;
+                                        // dataMATidakLengkap = dataMATidakLengkap+1;
                                     }
-                                    if(textNama[1]=='TS' && mapping.deleted_at==null){
+                                    else if(textNama[1]=='TS'){
                                         textTingkat = 'Madrasah Tsanawiyah';
-                                        dataMtsTidakLengkap=dataMtsTidakLengkap+1;
+                                        // dataMtsTidakLengkap=dataMtsTidakLengkap+1;
                                     }
                                     xmx += `<tr><td width="20">${nomor++}</td>
                                     <td style="text-transform:uppercase;"><a href="<?=base_url();?>CPanel_Admin/siswaManage/${mapping.id}" class="">${textNama[0]} <i class='bx bx-link-external'></i> </a> - <span class="text-muted">${textTingkat}</span></td></tr>`;
@@ -164,6 +169,9 @@
                             let dataokcount = 0;
 
                             posts2.data.data.map((mapping,i)=>{
+                                num++;
+
+                                if(num>=501 && num <700){
 
                                 if(mapping.user.foto!='default.jpg' && mapping.user.foto!='null'){
                                     dataokcount++;
@@ -179,14 +187,16 @@
                                     if(textNama[1]=='a'){
                                         textTingkat = 'Madrasah Aliyah';
                                         dataMALengkap++;
-                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_ma.webp';
+                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_ma_1.webp';
                                         // urlBgBelakang = '<?=base_url();?>assets_oncard/images/kartu/back_siswa_ma.webp';
                                     }
-                                    if(textNama[1]=='ts'){
+                                    else if(textNama[1]=='ts'){
                                         textTingkat = 'Madrasah Tsanawiyah';
                                         dataMtsLengkap++;
-                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_mts.webp';
+                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_mts_1.webp';
                                         // urlBgBelakang = '<?=base_url();?>assets_oncard/images/kartu/back_siswa_mts.webp';
+                                    }else {
+                                        dataTidakJelas = dataTidakJelas+1;
                                     }
                                     
                                     let alamat = mapping?.alamat_lengkap;
@@ -195,8 +205,7 @@
                                     tableColumn +=`
                                         
                                         <div class="row">
-                                        <div class="col-lg-3  col-3">
-                                        </div>
+                                        
                                             <div class="col-lg-6 col-6">
                                                 <div style="width:350px!important; height:555.02px!important; margin-bottom:50px; margin-right:50px; background:url(${urlBgDepan});background-size:contain;background-position:center;">
                                                     <img src="<?=base_url();?>app/assets/users/foto/${mapping.user.foto}" style="width:143px; height:187px; border-radius:20px; border:4px solid #fff; position:relative; margin-left:105px; margin-top:149px; object-fit:cover; object-position:center;"/>
@@ -209,13 +218,15 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-3 col-3">
-                                        </div>
+                                            
                                             
                                         </div>
                                         
                                     `;
                                 }
+
+                            }
+                            
 
 							});
 
@@ -243,22 +254,7 @@
                         //         </tr>
                         //     </table>
                         // `);
-                        $('.resumeData').html(`
-                            <table class="table table-bordered">
-                                <tr>
-                                <td width="33.3%"><font class="jmldataok"></font><a href="#/" onclick="showModalData();">Lihat ${arr.length} data yang belum lengkap</a>
-                                </td>
-                                <td width="33.3%">${dataokcount} data sudah lengkap
-                                </td>
-                                <td width="33.3%"> TOTAL DATA : ${posts2.data.data.length} DATA.
-                                </tr>
-                                <tr>
-                                <td colspan="3">NIS belum ditentukan<br/>
-                                <a href="#/" onclick="showModalDataNISN();">Lihat ${arrNoNISN.length} data NIS yang belum lengkap</a>
-                                </td>
-                                </tr>
-                            </table>
-                        `);
+                        
 							
 						$('.putContentHere').html(tableColumn);
 					}

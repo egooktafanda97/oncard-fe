@@ -36,7 +36,7 @@
 							   <div>
 								   <p class="mb-0 text-secondary">Total Kantin</p>
 								   <h4 class="my-1 text-success box3val"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
-								   <p class="mb-0 font-13 box3val2"><a href="<?=base_url().$function;?>/Kantin">Lihat daftar kantin</a></p>
+								   <p class="mb-0 font-13 box3val2"><a href="<?=base_url().$function;?>/Merchant">Lihat daftar kantin</a></p>
 							   </div>
 							   <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i class='bx bxs-bar-chart-alt-2' ></i>
 							   </div>
@@ -108,7 +108,9 @@
 								<ul class="list-group list-group-flush">
 									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Siswa <span class="badge bg-gradient-quepal saldoSiswa rounded-pill">Rp0</span>
 									</li>
-									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Kantin <span class="badge bg-gradient-ibiza saldoKantin rounded-pill">Rp0</span>
+									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">General <span class="badge bg-gradient-quepal saldoGeneral rounded-pill">Rp0</span>
+									</li>
+									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Merchant <span class="badge bg-gradient-ibiza saldoKantin rounded-pill">Rp0</span>
 									</li>
 									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Income Sekolah <span class="badge bg-gradient-deepblue saldoInstansi rounded-pill">Rp0</span>
 									</li>
@@ -122,7 +124,7 @@
 								 <div class="card-header bg-transparent">
 									<div class="d-flex align-items-center">
 										<div>
-											<h6 class="mb-0">Saldo Kantin</h6>
+											<h6 class="mb-0">Saldo Merchant</h6>
 										</div>
 										
 									 </div>
@@ -176,9 +178,38 @@
 			let saldoOwner = 0;
 			let saldTot = 0;
 			let saldoKantinTotal = 0;
+            let saldoAll = 0;
             $(document).ready(function () {
-                getSiswa();
+				getSaldoOwner();
+                
             });
+
+
+			function getSaldoOwner(){
+				let num = 0;
+				let tableColumn = '';
+			
+				tableColumn += `<tr><td colspan="7" class="text-center">Loading....</td></tr>`;
+				$('.putContentHere').html(tableColumn);
+				
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/get/owner', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+                        saldoOwner= posts2.data.data.data[0].balance;
+                        saldoAll=parseInt(saldoOwner);
+						getSiswa();
+
+					}
+				}
+				save2();
+			}
 
 			
             function getSiswa(){
@@ -227,7 +258,7 @@
                                 }
 
                                 htmlUltah +=`
-                                <div class="col-lg-3 col-md-6 col-12 mb-3">
+                                <div class="col-lg-3 col-md-6 col-xs-6 col-sm-6 col-12 mb-3">
                                     <div class="row">
                                         <div class="col-2 text-center">
                                             <img src="${(mapping.user.foto=='default.jpg')?defaultURLFoto:`<?=base_url();?>app/assets/users/foto/${mapping.user.foto}`}" style="object-fit:cover; object-position:center; border-radius:100%; width:45px; height:45px;"/>
@@ -247,13 +278,42 @@
                         $('.box2val').html(posts2.data.data.length);
                         $('.box2val2').html(formatRupiah(jmlDataConnect.toString())+"/"+formatRupiah(jmlData.toString())+"("+percentage+"%) akun terkoneksi.");
 
-						saldoOwner += saldo;
 						
-						arrSebaranSaldo.push(saldoOwner);
+						arrSebaranSaldo.push(saldo);
+                        saldoAll+=saldo;
 
 						$('.saldoSiswa').html("Rp"+formatRupiah(saldo.toString()));
 						$('.totalUltah').html(formatRupiah(jmlUltah.toString())+' orang');
 						$('.putUltahHere').html(htmlUltah);
+						
+						getGeneral();
+                    }
+				}
+				save2();
+			}
+
+			function getGeneral(){
+			
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/general/get-inpaging', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+                        let saldo = 0;
+                        
+                        posts2.data.data.map((mapping,i)=>{
+                            saldo += parseInt(mapping.accounts.balance);
+                        });
+
+						arrSebaranSaldo.push(saldo);
+						$('.saldoGeneral').html("Rp"+formatRupiah(saldo.toString()));
+
+                        saldoAll+=saldo;
 						
 						getKantin();
                     }
@@ -288,10 +348,16 @@
 
 						saldo += parseInt(mapping.accounts.balance);
 
+                        let nmkntn = mapping.nama_kantin;
+                        
+                        nmkntn = nmkntn.replace("'","");
+
 						NewDataArrayForGraph5.push({
-							namaKantin: mapping.nama_kantin,
+							namaKantin: nmkntn,
 							saldoKantin : mapping.accounts.balance
 						});
+
+                        
 						
 
 						num += 1;
@@ -305,22 +371,24 @@
 						
 						});
 
-						saldoOwner += saldo;
-
+						
 						saldoKantinTotal = saldo;
 						
 						arrSebaranSaldo.push(saldo);
+                        saldoAll+=saldo;
 						
 					$('.putListKantinSaldoHere').html(tableColumn);
 					$('.saldoKantin').html("Rp"+formatRupiah(saldo.toString()));
 
-					getAkun();
+                    getAkun();
 
                     }
 				}
 				save2();
 			}
 
+
+			
             function getAkun(){
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
@@ -339,14 +407,15 @@
                         }else {
                             statusInstansi = 'Not set';
                         }
-                        $('.box1val').html(posts2.data.data[1].customers_name);
+                        $('.box1val').html(posts2.data.data[1].instansi.nama);
                         $('.box1val2').html(statusInstansi);
-                        $('.box4val').html(formatRupiah(posts2.data.data[1].balance));
+                        
                         saldTot = parseInt(posts2.data.data[1].balance);
                         $('.saldoInstansi').html("Rp"+formatRupiah(posts2.data.data[2].balance));
 
-						saldoOwner += parseInt(posts2.data.data[2].balance);
 						arrSebaranSaldo.push(parseInt(posts2.data.data[2].balance));
+
+                        saldoAll+=parseInt(posts2.data.data[2].balance);
 
 						$('[data-bs-toggle="tooltip"]').tooltip();
 
@@ -355,6 +424,18 @@
 						localStorage.removeItem("saldoTerakhir");
 						localStorage.setItem("saldoTerakhir", "Rp"+formatRupiah(posts2.data.data[2].balance));
 						$('.getSaldoInstansiCache').html(localStorage.getItem("saldoTerakhir"));
+
+                        if(posts2.data.data[0].uid=='1f3ade3e-5a26-4018-8a97-a8a00919ba85'){
+                            var ul = document.getElementById("menu");
+                            var li = document.createElement("li");
+                            li.appendChild(document.createTextNode("Four"));
+                            li.setAttribute("id", "element4"); // added line
+                            ul.appendChild(li);
+                        }
+
+                        console.log('saldoAllLama', formatRupiah(saldoAll.toString()));
+
+                        $('.box4val').html(formatRupiah(saldoAll.toString()));
 						
 
                     }
@@ -515,9 +596,9 @@
 			function setGraph2(){
 
 				
-				let saldoOwnerReal = parseInt(saldTot-saldoOwner);
-				arrSebaranSaldo.push(saldoOwnerReal);
+				arrSebaranSaldo.push(saldoOwner);
 
+                console.log(arrSebaranSaldo);
 				let graph2Data = [];
 				
 				$.each(arrSebaranSaldo, function (i, item) {
@@ -526,13 +607,16 @@
 					graph2Data.push(mtk);
                 });
 
-				$('.saldoOwner').html("Rp"+formatRupiah(saldoOwnerReal.toString()));
+				$('.saldoOwner').html("Rp"+formatRupiah(saldoOwner.toString()));
 
 				var ctx = document.getElementById("chart4").getContext('2d');
 
 				var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
 					gradientStroke1.addColorStop(0, '#42e695');
 					gradientStroke1.addColorStop(1, '#3bb2b8');
+				var gradientStroke4 = ctx.createLinearGradient(0, 0, 0, 300);
+					gradientStroke4.addColorStop(0, '#42e695');
+					gradientStroke4.addColorStop(1, '#3bb2b8');
 					
 				var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
 					gradientStroke2.addColorStop(0, '#ee0979');
@@ -549,9 +633,10 @@
 					var myChart = new Chart(ctx, {
 						type: 'pie',
 						data: {
-						labels: ["Siswa ", "Kantin ", "Instansi ","Oncard "],
+						labels: ["Siswa ","General", "Merchant ", "Instansi ","Oncard "],
 						datasets: [{
 							backgroundColor: [
+							gradientStroke1,
 							gradientStroke1,
 							gradientStroke2,
 							gradientStroke3,
@@ -560,13 +645,14 @@
 
 							hoverBackgroundColor: [
 							gradientStroke1,
+							gradientStroke1,
 							gradientStroke2,
 							gradientStroke3,
 							gradientStroke4
 							],
 
 							data: graph2Data,
-					borderWidth: [1, 1, 1,1]
+					borderWidth: [1,1, 1, 1,1]
 						}]
 						},
 						
@@ -611,6 +697,8 @@
 					
                 });
 
+                console.log(graph5DataLabel);
+
 				var ctx = document.getElementById("chart5").getContext('2d');
 
 					var myChart = new Chart(ctx, {
@@ -644,4 +732,107 @@
 
 			}
 
+
+            let totalSALDOTOPUPALL = 0;
+            let totalSALDOWITHDRAW = 0;
+
+
+            let totalsaldotopup = 0;
+            topuptotal();
+            function topuptotal(){
+
+                totalsaldotopup = 0;
+                totalSALDOTOPUPALL = 0;
+
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?mtype=top_up', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : true
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+                        posts2.data.data.map((mapping,i)=>{
+                            totalsaldotopup += parseInt(mapping.credit_amount);
+                        });
+
+                        console.log("topup", formatRupiah(totalsaldotopup.toString()));
+
+                        totalSALDOTOPUPALL +=totalsaldotopup;
+                        wdtotal();
+                    }
+				}
+				save2();
+			}
+            
+            
+            let totalsaldowd = 0;
+            
+            function wdtotal(){
+
+                totalsaldowd = 0;
+
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?account_type=business&mtype=withdrawal', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : true
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+                        posts2.data.data.map((mapping,i)=>{
+                            totalsaldowd += parseInt(mapping.debit_amount);
+                        });
+
+                        console.log("wd1", formatRupiah(totalsaldowd.toString()));
+                        totalSALDOWITHDRAW +=totalsaldowd;
+                        wdtotal2();
+                    }
+				}
+				save2();
+			}
+            
+            
+            let totalsaldowd2 = 0;
+            
+            function wdtotal2(){
+
+                totalsaldowd2 = 0;
+
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?account_type=primary&mtype=withdrawal', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : true
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+                        posts2.data.data.map((mapping,i)=>{
+                            totalsaldowd2 += parseInt(mapping.debit_amount);
+                        });
+
+                        console.log("wd2", formatRupiah(totalsaldowd2.toString()));
+                        totalSALDOWITHDRAW +=totalsaldowd2;
+
+                        let tttls = totalSALDOTOPUPALL - totalSALDOWITHDRAW;
+
+                        console.log("saldoAllBARU",formatRupiah(tttls.toString()));
+
+                        // $('.box4val').html(formatRupiah(tttls.toString()));
+                    }
+				}
+				save2();
+			}
+
+
+            
         </script>

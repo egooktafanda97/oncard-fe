@@ -11,6 +11,7 @@
 	<script src="<?=base_url();?>assets_oncard/js/jquery.min.js"></script>
 	
 	<!--plugins-->
+    
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
     <link href="<?=base_url();?>assets_oncard/plugins/select2/css/select2.min.css" rel="stylesheet" />
 	<link href="<?=base_url();?>assets_oncard/plugins/select2/css/select2-bootstrap4.css" rel="stylesheet" />
@@ -86,6 +87,9 @@
         }
         }
         
+        .chart-container-4{
+            height:auto!important;
+        }
         
         .text-success {
             background: #42e695!important;

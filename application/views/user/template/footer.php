@@ -174,6 +174,7 @@
 		let accountNumberX = '';
 		let userIDX = '';
 		let bankAccountNumber = '';
+        let instansiNameX = '';
         function getAuth(){
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
@@ -184,7 +185,7 @@
 
                         if(err.response.data.message=='Too Many Attempts.'){
                             Toastify({
-                                text: 'Terlalu banyak proses. Perlambat aktifitas Anda. Refresh 10 detik kemudian.',
+                                text: 'Terlalu banyak proses. Perlambat aktifitas Anda. Refresh 10 detik kemudian. [-getAuthFooter]',
                                 duration: 10000,
                                 close: true,
                                 gravity: "bottom",
@@ -225,6 +226,7 @@
                             $('.image-profile').attr('src','<?=base_url();?>app/assets/users/foto/'+posts2.data.data[0].user.foto);
                         }
 						accountNumberX = posts2.data.data[0].account_number;
+						instansiNameX = posts2.data.data[0].instansi.nama;
 						roleUserX = posts2.data.data[0].user.role;
 						bankAccountNumber = posts2.data.data[0].bank_account_number;
 						getAkunPengaturan(roleUserX,accountNumberX);
@@ -232,6 +234,7 @@
 				}
 				save2();
 			}
+            
 
 		function formatRupiah(angka, prefix){
 			var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -302,6 +305,30 @@
 			}());
 
 			window.print();
+		}
+		
+        function printDivNEW() {
+			var printContents = document.getElementById('divToPRINT').outerHTML;
+			var originalContents = document.body.innerHTML;
+
+            let m =  `
+			<!-- Bootstrap CSS -->
+			<link href="<?=base_url();?>assets_oncard/css/bootstrap.min.css" rel="stylesheet">
+			<link href="<?=base_url();?>assets_oncard/css/bootstrap-extended.css" rel="stylesheet">
+			<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+			<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,600;0,800;1,800&display=swap" rel="stylesheet">
+			<link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/style_universal.css">
+			<style type="text/css">body {font-family: 'JetBrains Mono', monospace;
+			}* { -webkit-print-color-adjust: exact !important;color-adjust: exact !important;print-color-adjust: exact !important;}</style>
+			`+printContents;
+			
+
+            localStorage.setItem("struk", m);
+
+            window.open("<?=base_url();?>CPanel_Admin/PrintStruk", '_blank', 'location=yes,height=570,width=220,scrollbars=yes,status=yes');
+
 		}
 
 		function saveToExcel(className){
@@ -382,6 +409,60 @@
 					_html_paging += `
 							<li class="page-item ${x?.active ? 'active' : ''} ${x.url ? '' : 'disabled'}">
 								<button onclick="${linkTo}('${x?.url}')" class="page-link">${x?.label}</button>
+							</li>
+							`;
+				}
+				ril = x?.url;
+			});
+
+			const _html_paging_set = `
+						<div class="pagination justify-content-center">
+								${_html_paging_left}
+								${_html_paging}
+								${_html_paging_right}
+								</div>
+						</div>
+					`;
+			$("#" + paginationContainer).html(_html_paging_set);
+
+			// create pagination details
+			const paginationDetails = `Menampilkan ${params?.from}-${params?.to} dari ${params?.total} jumlah seluruh data.`;
+			$("#" + PaginationDetailsContainer).html(paginationDetails);
+		}
+		function createPaginationsNEW(params, 
+			paginationContainer, 
+			PaginationDetailsContainer,
+			linkTo,
+            addon
+			) {
+
+			let ril = '';
+				
+			const collections_data = params;
+			let _html_paging_left = ``;
+			let _html_paging_right = ``;
+			let _html_paging = ``;
+			const counting_page = collections_data?.links?.length;
+
+			const paginations = collections_data?.links?.map((x, inx) => {
+				if (inx === 0) {
+					_html_paging_left += `
+								<li class="page-item ${x.url ? '' : 'disabled'}">
+									<button onclick="${linkTo}('${x?.url}${addon}')" class="page-link">
+										${x.label}
+									</button>
+								</li>`;
+				} else if (inx === (counting_page - 1)) {
+					_html_paging_right += `
+								<li class="page-item ${x.url ? '' : 'disabled'}">
+									<button onclick="${linkTo}('${x?.url}${addon}')" class="page-link">
+										${x.label} 
+									</button>
+								</li>`;
+				} else {
+					_html_paging += `
+							<li class="page-item ${x?.active ? 'active' : ''} ${x.url ? '' : 'disabled'}">
+								<button onclick="${linkTo}('${x?.url}${addon}')" class="page-link">${x?.label}</button>
 							</li>
 							`;
 				}

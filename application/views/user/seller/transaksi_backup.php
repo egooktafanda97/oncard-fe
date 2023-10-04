@@ -1,12 +1,4 @@
 <style type="text/css">
-
-    .modal-backdrop
-    {
-        opacity:1!important;
-        background-color:#fff;!important;
-        background:url(https://www.toptal.com/designers/subtlepatterns/uploads/full-bloom.png);
-        background-repeat:repeat;
-    }
     /* Chrome, Safari, Edge, Opera */
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -36,7 +28,7 @@
 	grid-gap: 10px;
 	grid-template-columns: repeat(4, 1fr);
 	}
-	.buttons buttonmm {
+	.buttons button {
 	padding: 10px;
 	border-radius: 6px;
 	border: none;
@@ -45,7 +37,6 @@
 	background-color: #3c4043;
 	color: #fff;
 	font-weight: 500;
-    text-align:center;
 	}
 	.buttons button:active {
 	transform: scale(0.99);
@@ -170,7 +161,6 @@
 					</div>
 				</div>
 				<!--end breadcrumb-->
-                <div class="putContentPembeliHere mb-3"></div>
 				<div class="card">
 					<div class="card-body">
 						<ul class="nav nav-pills mb-3" role="tablist">
@@ -192,15 +182,6 @@
 									</div>
 								</a>
 							</li>
-							<li class="nav-item" role="presentation" style="display:none;">
-								<a class="nav-link" onclick="openDialogScan('ceksaldo');"  data-bs-toggle="pill" href="#primary-pills-ceksaldo" role="tab" aria-selected="false" tabindex="-1" style="color:#5fd302!important;">
-									<div class="d-flex align-items-center">
-										<div class="tab-icon"><i class="bx bx-scan font-18 me-1"></i>
-										</div>
-										<div class="tab-title">Cek Saldo</div>
-									</div>
-								</a>
-							</li>
 							<!-- <li class="nav-item" role="presentation">
 								<a class="nav-link" data-bs-toggle="pill" href="#primary-pills-contact" role="tab" aria-selected="false" tabindex="-1">
 									<div class="d-flex align-items-center">
@@ -210,40 +191,45 @@
 									</div>
 								</a>
 							</li> -->
-                            
 						</ul>
-                        
 						<div class="tab-content" id="pills-tabContent">
 							<div class="tab-pane fade  active show" id="primary-pills-home" role="tabpanel">
 								<div class="row">
-									<div class="col-lg-6 col-12 mb-3">
-										<input type="number" class="display" id="saldoTambah" oninput="setVal(this.value);" autocomplete="off"  />
+									<div class="col-lg-6 col-12 mb-5">
+										<input type="number" class="display" autocomplete="off" />
 										<div class="buttons">
-											<buttonmm class="operator" data-value="AC">AC</buttonmm>
-											<buttonmm class="operator" data-value="DEL">DEL</buttonmm>
-											<!-- <buttonmm class="operator" data-value="%">%</buttonmm>
-											<buttonmm class="operator" data-value="/">÷</buttonmm> -->
-											<!-- <buttonmm data-value="7">7</buttonmm>
-											<buttonmm data-value="8">8</buttonmm>
-											<buttonmm data-value="9">9</buttonmm>
-											<buttonmm class="operator" data-value="*">×</buttonmm>
-											<buttonmm data-value="4">4</buttonmm>
-											<buttonmm data-value="5">5</buttonmm>
-											<buttonmm data-value="6">6</buttonmm>
-											<buttonmm class="operator" data-value="-">-</buttonmm>
-											<buttonmm data-value="1">1</buttonmm>
-											<buttonmm data-value="2">2</buttonmm>
-											<buttonmm data-value="3">3</buttonmm>
-											<buttonmm class="operator" data-value="+">+</buttonmm>
-											<buttonmm data-value="0">0</buttonmm>
-											<buttonmm data-value="00">00</buttonmm>
-											<buttonmm data-value=".">.</buttonmm>
-											<buttonmm class="operator equal" data-value="=">=</buttonmm> -->
+											<button class="operator" data-value="AC">AC</button>
+											<button class="operator" data-value="DEL">DEL</button>
+											<button class="operator" data-value="%">%</button>
+											<button class="operator" data-value="/">÷</button>
+											<button data-value="7">7</button>
+											<button data-value="8">8</button>
+											<button data-value="9">9</button>
+											<button class="operator" data-value="*">×</button>
+											<button data-value="4">4</button>
+											<button data-value="5">5</button>
+											<button data-value="6">6</button>
+											<button class="operator" data-value="-">-</button>
+											<button data-value="1">1</button>
+											<button data-value="2">2</button>
+											<button data-value="3">3</button>
+											<button class="operator" data-value="+">+</button>
+											<button data-value="0">0</button>
+											<button data-value="00">00</button>
+											<button data-value=".">.</button>
+											<button class="operator equal" data-value="=">=</button>
 										</div>
 									</div>
 									<div class="col-lg-6 col-12">
-											<button type="button" class="btn btn-success" data-value="" onclick="submitPembelian('pembelian');" style="width:100%;padding:13px;">SELESAIKAN TRANSAKSI</button>
-											
+											<button type="button" class="btn btn-lg btn-success" data-value="" onclick="openDialogScan('pembelian');" style="width:100%;padding:20px;">SELESAIKAN TRANSAKSI</button>
+											<div class="row mt-3">
+												<div class="col-6">
+												<button type="button" onclick="openDialogScan('ceksaldo');" data-value="" class="btn btn-lg btn-outline-success" style="width:100%;padding:10px;">CEK SALDO</button>
+												</div>
+												<div class="col-6">
+												<button type="button" class="btn btn-lg btn-secondary disabled" style="width:100%;padding:10px;"><i class="bx bx-lock"></i> Fitur Terkunci</button>
+												</div>
+											</div>
 									</div>
 								</div>
 							</div>
@@ -313,13 +299,6 @@
                                     
                                 </div>
 							</div>
-							
-                            
-                            <div class="tab-pane fade " id="primary-pills-ceksaldo" role="tabpanel">
-                                <div class="row">
-                                    
-                                </div>
-							</div>
 							<!-- <div class="tab-pane fade" id="primary-pills-contact" role="tabpanel">
 								<p>API SEDANG DALAM PENGEMBANGAN.</p>
 							</div> -->
@@ -332,62 +311,57 @@
 
 		<div class="modal fade" id="modalSetCard" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
 			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content"  style="border:none!important;">
-					<div class="modal-header" style="border:none!important;">
-						<h5 class="modal-title"></h5>
-                        <div>
-                        <button type="button" onclick="window.location.href='<?=base_url();?>CPanel_Admin';" class="btn btn-sm btn-outline-secondary me-2"><i class="bx bx-home" style="margin-right:0px!important;"></i></button>
-                        <button type="button" onclick="location.reload();"class="btn btn-sm btn-outline-secondary"><i class="bx bx-refresh" style="margin-right:0px!important;"></i></button>
-                        </div>
-                    </div>
-					<div class="modal-body text-center" style="border:none!important;" id="kart" onclick="putFocusScanCard();" >
-                        <h6>Pindai Kartu</h6>
-						Indikator dibawah ini harus bergaris <font class="text-success">hijau</font> dulu.
-						<small class="text-muted"><i><br/>Apabila garis hijau belum muncul, klik pada gambar dibawah ini untuk mengaktifkan indikator tersebut!</i></small>
+				<div class="modal-content" onclick="putFocusScanCard();">
+					<div class="modal-header">
+						<h5 class="modal-title">Pindai Kartu</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
+					</div>
+					<div class="modal-body">
+						Pastikan indikator dibawah ini sudah bergaris <font class="text-success">hijau</font> terlebih dahulu.
+						<small class="text-muted"><i>Apabila garis hijau belum muncul, klik pada gambar dibawah ini untuk mengaktifkan indikator tersebut!</i></small>
 						<br/>
 						
-						<img id="scanCard" src="<?=base_url();?>assets_oncard/images/scan_kard2.webp"  style="width:100px;  margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px;"/>
+						<img id="scanCard" src="<?=base_url();?>assets_oncard/images/scan_kard.webp"  style="width:30%;margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px;"/>
 						<p class="text-center" id="textIndicator" style="margin:auto; transform:scale(0);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff;"></p>
-						<input type="number" style="transform:scale(0)!important; margin:auto; text-align:center; width:100%; border:none;outline:none!important;" id="textToCard"/>
+						<input type="text" style="transform:scale(0)!important; margin:auto; text-align:center; width:100%; border:none;outline:none!important;" id="textToCard"/>
 						
 					</div>
-					<div class="modal-footer text-center" style="border:none!important;" onclick="putFocusScanCard();" >
-						<!-- <button type="button" id="btnConnectToCard" style="display:block;margin:auto;" data-value="=" class="btn btn-outline-primary">Status</button> -->
+					<div class="modal-footer text-center">
+						<button type="button" id="btnConnectToCard" style="display:block;margin:auto;" data-value="=" disabled class="btn btn-outline-primary">Status</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		
 		<div class="modal fade" id="transaksiNext" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered" style="border:none!important;">
-				<div class="modal-content" style="border:none!important;">
-					<div class="modal-header" style="border:none!important;">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" >
+					<div class="modal-header">
 						<h5 class="modal-title">Konfirmasi Transaksi</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
 					</div>
-					<div class="modal-body" style="border:none!important;">
-                    
+					<div class="modal-body">
 						<div class="detailTransaksi" onclick="putFocusScanCard2();"></div>
 						
-						<p class="text-center" id="textIndicator2" style="margin:auto; transform:scale(1);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff;">PIN</p>
-						<input type="password" data-lpignore="true" autocomplete="aus" pattern="[0-9]*" inputmode="numeric" style="transform:scale(1)!important; margin:auto; text-align:center; width:100%; letter-spacing:10px; border:none;outline:none!important;" id="textToCard2"/>
+						<p class="text-center" id="textIndicator2" style="margin:auto; transform:scale(0);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff;"></p>
+						<input type="password" style="transform:scale(1)!important; margin:auto; text-align:center; width:100%; letter-spacing:10px; border:none;outline:none!important;" id="textToCard2"/>
 						
 					</div>
-					<div class="modal-footer text-center" style="border:none!important;">
-						<button type="button" onclick="lockCheck();" id="btnSubmitTransaksi" style="display:block;margin:auto;" data-value="" class="btn btn-success">Selesai</button>
+					<div class="modal-footer text-center">
+						<button type="button" onclick="commitTransaction();" id="btnSubmitTransaksi" style="display:block;margin:auto;" data-value="" class="btn btn-success">Selesai</button>
 					</div>
 				</div>
 			</div>
 		</div>
         
         <div class="modal fade" id="transaksiNextCekSaldo" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered" style="border:none!important;">
-				<div class="modal-content" style="border:none!important;">
-					<div class="modal-header" style="border:none!important;">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" >
+					<div class="modal-header">
 						<h5 class="modal-title">Cek Saldo</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
 					</div>
-					<div class="modal-body" style="border:none!important;">
+					<div class="modal-body">
 						<div class="detailTransaksi2"></div>
 						
 					</div>
@@ -406,8 +380,6 @@
 
 		<script src="<?=base_url();?>assets_oncard/js/jquery.min.js"></script>
 		<script type="text/javascript">
-
-            $('.page-wrapper').css('opacity','0');
 			let mode = '';
 			let secret_code = '';
 			let nominal_belanja = '0';
@@ -419,10 +391,9 @@
             let usePINorNOT = '';
 
 			$(document).ready(function () {
-
-                openDialogScan('pembelian');
-
-                $('.page-wrapper').css('opacity','1');
+                loadMenu();
+                getConfigBsns();
+                getAuthSeconds();
                 
             });
 			
@@ -607,19 +578,6 @@
 
             }
 
-            $('#transaksiNext').on('hidden.bs.modal', function () {
-                    // $('#modalSetCard').modal('toggle');
-                    if(!$('#invoiceModal').hasClass('show')){
-                        location.reload();    
-                    }else {
-                        return false;
-                    }
-                    
-                });
-            $('#invoiceModal').on('hidden.bs.modal', function () {
-                location.reload();   
-            });
-
             function deleteItemInvoice(str) {
                 // console.log(invoiceText);return false;
                 invoiceText = invoiceText.filter(function(obj) {
@@ -668,9 +626,6 @@
             }
 
             function runSearchText(str) {
-
-                $('#btnConnectToCard').html('Mencari...');
-
                 let searchText = str;
                 let sintaks = ``;
                 for (let i = 0; i < 4; i++) {
@@ -716,8 +671,6 @@
                     if (posts.status == 200) {
 
                         $(".loading").fadeOut();
-
-                        $('#btnConnectToCard').html('Status');
 
                         if (posts.data.data.length > 0) {
                             let sintaks = '';
@@ -775,18 +728,18 @@
 
 				let total = '0';
 				total = $('.display').val();
-                // if((total==''||total=='0'||total=='00') && str=='pembelian'){
-				// 	Toastify({
-				// 		text: 'Pembelian Masih Kosong! Transaksi Tidak Dapat Dilakukan!',
-				// 		duration: 3000,
-				// 		close: true,
-				// 		gravity: "top",
-                //         position: "right",
-				// 		className: "errorMessage",
+                if((total==''||total=='0'||total=='00') && str=='pembelian'){
+					Toastify({
+						text: 'Pembelian Masih Kosong! Transaksi Tidak Dapat Dilakukan!',
+						duration: 3000,
+						close: true,
+						gravity: "top",
+                        position: "right",
+						className: "errorMessage",
 
-				// 	}).showToast();
-				// 	return false;
-				// }
+					}).showToast();
+					return false;
+				}
 
 
 				secret_code = '';//reset secret code when modal dialog opened
@@ -799,24 +752,22 @@
 				
 				mode = str;
 			}
-
 			$("#textToCard").focus(function(){
 				console.log('input sedang fokus');
 				$('#textIndicator').attr('style','transform:scale(1);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff; display:table; text-align:center; margin:auto;');
 				$('#textIndicator').html('Alat scan ready!');
-				$('#scanCard').attr('style','border:5px solid #53edaa;width:100px;  margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px; transition:all 0.2s linear 0s;');
+				$('#scanCard').attr('style','border:5px solid #53edaa;width:30%;margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px; transition:all 0.2s linear 0s;');
 			});
 			$('#textToCard').blur(function(){
 				console.log('input tidak fokus');
 				$('#textToCard').val('');
 				$('#textIndicator').attr('style','transform:scale(1);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:red; color:#fff;display:table;  text-align:center;margin:auto;');
 				$('#textIndicator').html('Klik disini untuk dapat memulai scan kartu!');
-				$('#scanCard').attr('style','width:100px;  margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px; transition:all 0.2s linear 0s;');
-                
+				$('#scanCard').attr('style','width:30%;margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px; transition:all 0.2s linear 0s;');
 			});
 			function putFocusScanCard(){
 				$('#textToCard').focus();
-				$('#scanCard').attr('style','border:5px solid #53edaa;width:100px;  margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px; transition:all 0.2s linear 0s;');
+				$('#scanCard').attr('style','border:5px solid #53edaa;width:30%;margin:auto; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px; transition:all 0.2s linear 0s;');
 			}
 			
 			$("#textToCard2").focus(function(){
@@ -824,8 +775,6 @@
                 if(usePINorNOT=='true'){
                     $('#textIndicator2').attr('style','transform:scale(1);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff; display:table; text-align:center; margin:auto;');
                     $('#textIndicator2').html('Masukkan PIN!');
-                }else {
-                    $('#textIndicator2').attr('style','transform:scale(0);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff; display:table; text-align:center; margin:auto;');
                 }
 			});
 			$('#textToCard2').blur(function(){
@@ -841,11 +790,7 @@
 			const input = document.querySelector('#textToCard');
 			input.addEventListener('keyup', function (e) {
 				clearTimeout(timer);
-
-                $('#textIndicator').html('Sedang melakukan pencarian...');
-
 				timer = setTimeout(() => {
-
 					if(mode=='pembelian'||mode=='ceksaldo'||mode=='pembelianDenganMenu'){
 						let mx = $('#textToCard').val();
 						kode_kartu = mx;
@@ -882,62 +827,59 @@
 				}, 1500);
 			});
 
-			let namalengkap = '';
-            let nomoridentitas = '';
-            let saldopembeli = '';
-            let fotopembeli = '';
-            let pinvalue = '';
+			function getConfigBsns(){
+				
+                const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/setting/get-config-trx-business', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						$('#textToCard').blur();
+                        return false;
+					});
+					if (posts2.status == 200) {
+                        if(posts2.data.status==false){
+                            Toastify({
+                                text: 'Network is unavailable!',
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+                            }).showToast();
+                            $('#textToCard').blur();
+                            $('#textToCard').focus();
+                            
+                            return false;
 
-            function submitPembelian(str){
-                total = $('.display').val();
-                if(total==''){
-                    Toastify({
-                        text: 'Pembelian masih kosong!',
-                        duration: 3000,
-                        close: true,
-                        gravity: "top",
-                        position: "right",
-                        className: "infoMessage",
+                        }
+                        console.log(posts2.data.data);
+                        // posts2.data.map((mapping, i) => {
+                            beaAdmin = posts2.data.data.admin_fee_total;
+                        // });
+                        
 
-                    }).showToast();
-                    return false;
-                }
-                openNextDialogPembelian(namalengkap,nomoridentitas,saldopembeli,fotopembeli);
-                if(usePINorNOT=='false'){
-                    $('#textToCard2').val(pinvalue);
-                    $('#textToCard2').css('display','none');
-                    $('#textIndicator2').html('TRANSAKSI TIDAK MEMERLUKAN PIN!');
-                }else {
-                    pinvalue = '';
-                    $('#textToCard2').val('');
-                    $('#textToCard2').css('display','block');
-                    $('#textIndicator2').attr('style','display:block;');
-                }
-            }
+					}else {
+                        Toastify({
+                            text: 'Tunggu. Telah terjadi kesalahan pada aplikasi!',
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: "right",
+                            className: "errorMessage",
+                        }).showToast();
+                        // $('#textToCard').blur();
+                        
+                    }
+				}
+				
+				save2();
+				
+				
+			}
             
             function searchSiswaByKartu(str){
-
-                namalengkap = '';
-                nomoridentitas = '';
-                saldopembeli = '';
-                fotopembeli = '';
-
-                if(str==''){
-                    Toastify({
-						text: 'Silahkan ulangi lagi.',
-						duration: 3000,
-						close: true,
-						gravity: "top",
-                        position: "right",
-						className: "errorMessage",
-
-					}).showToast();
-
-                    $('#textIndicator').html('Alat scan ready!');
-                    return false;
-                }
-
-                $('.putContentPembeliHere').html(``);
 				
                 const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/usr?card='+str, {
@@ -945,14 +887,10 @@
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
-                        // $('#textIndicator').html('Alat scan ready!');
 						$('#textToCard').blur();
                         return false;
 					});
 					if (posts2.status == 200) {
-
-                        $('#textIndicator').html('Alat scan ready!');
-
                         if(posts2.data.status==false){
                             Toastify({
                                 text: 'Scan ulang kartu tersebut!',
@@ -965,6 +903,11 @@
                             $('#textToCard').blur();
                             $('#textToCard').focus();
                         }
+
+                        let namalengkap = '';
+                        let nomoridentitas = '';
+                        let saldopembeli = '';
+                        let fotopembeli = '';
                         
                         if(posts2.data.data.user.model=='Siswa'){
                             namalengkap = posts2.data.data.siswa.nama_lengkap;
@@ -984,31 +927,19 @@
                         }
                         
                         if(mode!='ceksaldo'){
-                            pinvalue = posts2.data.data.pin;
-                            $('#modalSetCard').modal('toggle');
-                            $('.putContentPembeliHere').html(`
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-3 text-center">
-                                            <img src="${fotopembeli}" style="width:46px; height:46px; object-fit:cover;border-radius:100px;"/>
-                                            </div>
-                                            <div class="col-9">
-                                                <h6 style="margin:0;padding:0; font-weight:bolder;">${namalengkap}</h6>
-                                                <small>${nomoridentitas} | Rp${formatRupiah(saldopembeli)}</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `);
-
-                            loadMenu();
                             requestSecret();
-                            // getConfigBsns();
-                            getAuthSeconds();
-                            
-                            return false;
-                            
+                            if(mode=='pembelian'){
+                                openNextDialogPembelian(namalengkap,nomoridentitas,saldopembeli,fotopembeli);
+                            }else {
+                                openNextDialogPembelianDenganMenu(namalengkap,nomoridentitas,saldopembeli,fotopembeli);
+                            }
+
+                            if(usePINorNOT=='false'){
+                                $('#textToCard2').val(posts2.data.data.pin);
+                                $('#textToCard2').css('display','none');
+                            }else {
+                                $('#textToCard2').val('');
+                            }
                         }else {
                             openNextDialogSaldoCek(namalengkap,nomoridentitas,saldopembeli,fotopembeli);
                         }
@@ -1034,8 +965,6 @@
                             className: "errorMessage",
                         }).showToast();
                         // $('#textToCard').blur();
-
-                        // $('#textIndicator').html('Alat scan ready!');
                         
                     }
 				}
@@ -1068,7 +997,9 @@
                                         <small>NIS : ${nis}</small><br/>
                                         <small style="font-size:1.5em; font-weight:bold;">Rp${formatRupiah(balance)}</small>
                                     </div>
-                                    
+                                    <div class="col-12">
+                                        <div style="width:100%;display:block; text-align:center; width:100%;">Sisa limit harian : Rp0</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1082,13 +1013,11 @@
 				nominal_belanja = '0';
 				let total = '0';
 				total = $('.display').val();
-                total = total.split('.').join("");
-                total = total.split(',').join("");
 				nominal_belanja = parseInt(total);
 
                 $('#textToCard2').val('');
 				
-				// $('#modalSetCard').modal('toggle');
+				$('#modalSetCard').modal('toggle');
 				$('#transaksiNext').modal('toggle');
 				
 				let val = $('#textToCard').val();
@@ -1118,10 +1047,10 @@
                                     <div class="col-12 text-center pb-3">
                                         Data Pemilik Kartu
                                     </div>
-                                    <div class="col-4 text-center" style="border-right:1px solid #dee2e6">
+                                    <div class="col-6 text-center" style="border-right:1px solid #dee2e6">
                                         <img src="${foto}" style="width:77px; height:77px; object-fit:cover;border-radius:100px;"/>
                                     </div>
-                                    <div class="col-8">
+                                    <div class="col-6">
                                         <p style="margin:0;padding:0;font-weight:bold;">${nama}</p>
                                         <small>NIS : ${nis}</small><br/>
                                         <small>Saldo : Rp${formatRupiah(balance)}</small>
@@ -1152,9 +1081,11 @@
 				`);
 			}
             
+
+            
             $("#textToCard2").on("keydown",function search(e) {
                 if(e.keyCode == 13) {
-                    lockCheck();
+                    commitTransaction();
                 }
             });
             
@@ -1170,7 +1101,7 @@
 
                 $('#textToCard2').val('');
 				
-				// $('#modalSetCard').modal('toggle');
+				$('#modalSetCard').modal('toggle');
 				$('#transaksiNext').modal('toggle');
 				
 				let val = $('#textToCard').val();
@@ -1275,22 +1206,17 @@
 						$('#btnSubmitTransaksi').attr('disabled', false);
 						$('#btnSubmitTransaksi').css('cursor', 'pointer');
 
-                        if(err.response.status==500||err.response.status==402){
+                        
+
+                        if(err.response.status==500){
                             Toastify({
-                                text: 'Tekan tombol Selesai kembali!',
+                                text: 'PIN Tidak Benar!',
                                 duration: 3000,
                                 close: true,
                                 gravity: "top",
                                 position: "right",
-                                className: "infoMessage"
+                                className: "errorMessage"
                             }).showToast();
-
-                            requestSecret();
-
-                            $('#btnSubmitTransaksi').html('Selesai');
-                            $('#btnSubmitTransaksi').attr('disabled', false);
-                            $('#btnSubmitTransaksi').css('cursor', 'pointer');
-
                         }
 
 
@@ -1344,7 +1270,7 @@
 						if (posts.data.status == true) {
 							
 							Toastify({
-								text: 'Transaksi berhasil!',
+								text: posts.data.message,
 								duration: 3000,
 								close: true,
 								gravity: "top",
@@ -1414,38 +1340,9 @@
 
                     }).showToast();
                 } else {
-                    mode = 'pembelianDenganMenu';
-                    submitPembelianMenu(mode);
+                    openDialogScan('pembelianDenganMenu');
                 }
             });
-
-            function submitPembelianMenu(str){
-                if ($('#totalTagihan').text() == 'Rp 0') {
-                    Toastify({
-                        text: 'Pembelian masih kosong!',
-                        duration: 3000,
-                        close: true,
-                        gravity: "top",
-                        position: "right",
-                        className: "infoMessage",
-
-                    }).showToast();
-                    return false;
-                }
-                requestSecret();
-                openNextDialogPembelianDenganMenu(namalengkap,nomoridentitas,saldopembeli,fotopembeli);
-                if(usePINorNOT=='false'){
-                    $('#textToCard2').val(pinvalue);
-                    $('#textToCard2').css('display','none');
-                    $('#textIndicator2').html('TRANSAKSI TIDAK MEMERLUKAN PIN!');
-                }else {
-                    pinvalue = '';
-                    $('#textToCard2').val('');
-                    $('#textToCard2').css('display','block');
-                    $('#textIndicator2').attr('style','display:block;');
-                }
-            }
-            
 
             function openInvoiceModal(){
                 let htmlx = '';
@@ -1530,7 +1427,7 @@
                     <div class="invoice-card mt-4" style="min-height:auto!important;">
                         <div class="invoice-footer">
                             <button class="btn btn-sm btn-secondary" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
                         </div>
                     
                     </div>
@@ -1550,7 +1447,7 @@
 			// ------------------------------------------------------------------------------------
 
 			const display = document.querySelector(".display");
-			const buttons = document.querySelectorAll("buttonmm");
+			const buttons = document.querySelectorAll("button");
 			const specialChars = ["%", "*", "/", "-", "+", "="];
 			let output = "";
 
@@ -1559,16 +1456,19 @@
 			//Define function to calculate based on button clicked.
 			const calculate = (btnValue) => {
 			display.focus();
-			// if (btnValue === "=" && output !== "") {
-			// 	//If output has '%', replace with '/100' before evaluating.
-			// 	output = eval(output.replace("%", "/100"));
-			// } 
-            if (btnValue === "AC") {
+			if (btnValue === "=" && output !== "") {
+				//If output has '%', replace with '/100' before evaluating.
+				output = eval(output.replace("%", "/100"));
+			} else if (btnValue === "AC") {
 				output = "";
 			} else if (btnValue === "DEL") {
 				//If DEL button is clicked, remove the last character from the output.
 				output = output.toString().slice(0, -1);
-			} 
+			} else {
+				//If output is empty and button is specialChars then return
+				if (output === "" && specialChars.includes(btnValue)) return;
+				output += btnValue;
+			}
 			display.value = output;
 			};
 
@@ -1578,13 +1478,9 @@
 			button.addEventListener("click", (e) => calculate(e.target.dataset.value));
 			});
 
-
-
-
-
 			function requestSecret(){
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create-trx', {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -1594,74 +1490,14 @@
 
 					if (posts2.status == 201) {
 						secret_code = posts2.data.data.client_secret;
-
-                        // commitTransaction();
 					}
 				}
 				save2();
 			}
-			
-            
-            function lockCheck(){
-
-                $('#btnSubmitTransaksi').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
-				$('#btnSubmitTransaksi').attr('disabled', 'disabled');
-                $('#btnSubmitTransaksi').css('cursor', 'not-allowed');
-                
-				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/lock-check', {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
-						}
-					}).catch((err) => {
-						if(err.response.status==500){
-                            Toastify({
-                                text: 'Tunggu sejenak, transaksi di titik lain sedang berlangsung!',
-                                duration: 3000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                className: "infoMessage"
-                            }).showToast();
-
-                            $('#btnSubmitTransaksi').html('Selesai');
-                            $('#btnSubmitTransaksi').attr('disabled', false);
-                            $('#btnSubmitTransaksi').css('cursor', 'pointer');
-                        }
-					});
-
-					if (posts2.status == 201||posts2.status == 200) {
-                        
-						// secret_code = posts2.data.data.client_secret;
-                        
-                        clearTimeout(timer);
-
-                        let mmm = Math.floor(Math.random() * 1250) + 1;
-                        
-
-                        timer = setTimeout(() => {
-
-                            commitTransaction();
-
-                            console.log(mmm);
-                            // $('#btnSubmitTransaksi').html('Selesai');
-                            // $('#btnSubmitTransaksi').attr('disabled', false);
-                            // $('#btnSubmitTransaksi').css('cursor', 'pointer');
-
-                        }, mmm);
-                        
-
-                        
-					}
-				}
-				save2();
-			}
-
-
 
             function getAuthSeconds(){
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v2/usr', {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -1706,24 +1542,33 @@
 			
 					if (posts2.status == 200) {
                         
-						accountNumberX = posts2.data.data.account_number;
+						accountNumberX = posts2.data.data[0].account_number;
 
-                        if(posts2.data.data.kantin.pin_setting==0){
-                            usePINorNOT = 'false';
-                        }else {
-                            usePINorNOT = 'true';
-                        }
-
-                        beaAdmin = posts2.data.data.admin_fee.admin_fee_total;
-
-                        
+                        getTransaksiPINKonfigurasi();
                     }
 				}
 				save2();
 			}
 
-            function setVal(str){
-                $('#saldoTambah').val(formatRupiah(str));
-            }
+            function getTransaksiPINKonfigurasi(){
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/usr?q='+accountNumberX, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
 
+					if (posts2.status == 201 || posts2.status == 200) {
+                        console.log(posts2.data.data.kantin.pin_setting);
+						if(posts2.data.data.kantin.pin_setting==0){
+                            usePINorNOT = 'false';
+                        }else {
+                            usePINorNOT = 'true';
+                        }
+					}
+				}
+				save2();
+			}
 		</script>

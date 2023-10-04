@@ -152,6 +152,20 @@
 
                                 <div class="col-12">
                                     
+                                    <div class="row mb-4">
+                                        <div class="col-9">
+                                        Secara <i>default</i>, data yang dimunculkan hanya 20 baris terbaru.<br/>
+                                        Lihat semua data? 
+                                        </div>
+                                        <div class="col-3">
+                                        <div class="form-check form-switch">
+											<input class="form-check-input form-toggle-showdata" type="checkbox" id="onoffpin" onchange="setValToggle();">
+                                            
+										</div>
+                                        </div>
+                                    </div>
+                                
+
                                     <div class="form-group mb-3">
                                         <label for="akunGet">Akun</label>
                                         <select class="form-select single-select inputFilterItem" id="akunGet" data-object='account_number' style="border-radius:0px!important;">
@@ -283,7 +297,8 @@
 				const save2 = async () => {
 					const posts2 = await axios.get(url, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : statustoggle
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -294,13 +309,23 @@
 
                             let j = 0;
 
-                            if(posts2.data.data.data.length==0){
+                            let mmm = posts2.data;
+                        
+                            if(statustoggle==true){
+                                mmm = posts2.data.data;
+                            }else {
+                                mmm = posts2.data.data.data;
+                            }
+
+                            console.log(mmm);
+
+                            if(mmm.length==0){
                                 callJmlDt(j,'');
                                 tableColumn +=`<tr><td colspan="9" class="text-center">Tidak ada data.</td></tr>`;
 								$('.putContentHere').html(tableColumn);return false;
 							}
 
-                            posts2.data.data.data.map((mapping,i)=>{
+                            mmm.map((mapping,i)=>{
 
                                 if(mapping.account.user_id=<?=$this->session->userdata('_user_id');?> && mapping.status.status=='success'){
                                     invoiceDataArray.push({
@@ -421,7 +446,7 @@
                     <div class="invoice-card mt-4" style="min-height:auto!important;">
                         <div class="invoice-footer">
                             <button class="btn btn-sm btn-secondary" data-dismiss="modal" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                            <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
                         </div>
                     
                     </div>
@@ -429,6 +454,8 @@
 
                 $('#invoiceModal .modal-body').html(htmlx);
                 $('#invoiceModal').modal('toggle');
+
+                
 
             }
 
@@ -503,5 +530,20 @@
                         text : item.customers_name 
                     }));
                 });
+            }
+
+            let statustoggle = false;
+
+            function setValToggle(){
+                let valx = $('.form-toggle-showdata').prop('checked');
+                console.log(valx);
+
+                if(valx==true){
+                    statustoggle = true;
+                }else {
+                    statustoggle = false;
+                }
+
+                showData();
             }
 		</script>

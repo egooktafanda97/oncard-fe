@@ -2,13 +2,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Kantin</div>
+					<div class="breadcrumb-title pe-3">Merchant</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Daftar Kantin</li>
+								<li class="breadcrumb-item active" aria-current="page">Daftar Merchant</li>
 							</ol>
 						</nav>
 					</div>
@@ -19,9 +19,9 @@
 					<div class="card-body">
 						<div class="d-lg-flex align-items-center mb-4 gap-3">
 							<div class="position-relative">
-								<input type="text" id="floatingInput" class="form-control ps-5 radius-30" placeholder="Ketik nama kantin"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
+								<input type="text" id="floatingInput" class="form-control ps-5 radius-30" placeholder="Ketik nama merchant"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
 							</div>
-						  <div class="ms-auto"><a href="<?=base_url().$function.'/kantinManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Tambah Kantin</a></div>
+						  <div class="ms-auto"><a href="<?=base_url().$function.'/kantinManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Tambah Merchant</a></div>
 						</div>
 						<div class="table-responsive">
 						<button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
@@ -30,12 +30,15 @@
 								<thead class="table-light">
 									<tr>
 										<th>No.</th>
-										<th>Nama kantin</th>
+										<th>Nama Merchant</th>
 										<th>Rekening</th>
 										<th>Nomor WA</th>
 										<th>Saldo</th>
-										<th></th>
 										<th>Aksi</th>
+										<th></th>
+										<th>Limit Tr.</th>
+										<th>Pin</th>
+
 									</tr>
 								</thead>
 								<tbody class="putContentHere">
@@ -174,7 +177,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/kantin', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -193,6 +196,7 @@
 							console.log(posts2.data.data.data);
 							posts2.data.data.data.map((mapping,i)=>{
 							num += 1;
+
 							tableColumn +=`
 								<tr>
 									<td>
@@ -209,13 +213,23 @@
 									<td>${mapping.accounts.bank_account_number}<br/><small class="text-muted">${mapping.accounts.bank_account_name}</small></td>
 									<td>${mapping.no_telepon}</td>
 									<td>Rp${formatRupiah(mapping.accounts.balance)}</td>
-									<td><button type="button" onclick="openDialogWD(${mapping.accounts.account_number},'${mapping.user.username}','Rp${formatRupiah(mapping.accounts.balance)}');" class="btn btn-primary btn-sm radius-30 px-4"><i class="bx bx-transfer-alt"></i> Pencairan Dana</button></td>
 									<td>
 										<div class="d-flex order-actions">
 											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/kantinManage/${mapping.id}'" class=""><i class='bx bxs-edit'></i></a>
 											<a href="#/" disabled onclick="openModalDelete('${mapping.id}','kantin');" class="ms-3"><i class='bx bxs-trash'></i></a>
 											<a href="#/" onclick="openModalUpdatePass('${mapping.user.id}');" class="ms-3"><i class='bx bxs-key'></i></a>
 											<a href="#/" onclick="openModalUpdateBankAccount('${mapping.accounts.id}','${mapping.accounts.bank_account_name}');" class="ms-3"><i class='bx bxs-credit-card-front'></i></a>
+										</div>
+									</td>
+									<td><button type="button" onclick="openDialogWD(${mapping.accounts.account_number},'${mapping.user.username}','Rp${formatRupiah(mapping.accounts.balance)}');" class="btn btn-primary btn-sm radius-30 px-4"><i class="bx bx-transfer-alt"></i> Pencairan</button></td>
+									<td>
+										<div class="form-check form-switch">
+											<input class="form-check-input form-toggle-trx-${mapping.id}" type="checkbox" ${(mapping.limit_trx_setting==0)?'':'checked'} onclick="idsett='${mapping.id}';runProsesUpdateSettingTrx(${mapping.id});" id="onofftrx">
+										</div>
+									</td>
+									<td>
+										<div class="form-check form-switch">
+											<input class="form-check-input form-toggle-pin-${mapping.id}" type="checkbox" id="onoffpin" ${(mapping.pin_setting==0)?'':'checked'} onclick="idsett='${mapping.id}';runProsesUpdateSettingPin(${mapping.id});">
 										</div>
 									</td>
 								</tr>
@@ -256,7 +270,7 @@
 				const save = async (id) => {
 					const posts = await axios.get('<?= api_url(); ?>api/v1/account/id/' + id, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						for (const key in err.response.data.error) {
@@ -324,7 +338,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post('<?= api_url(); ?>api/v1/wd', form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
                         $('#btnSave').html('Selesai');
@@ -442,7 +456,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post('<?= api_url(); ?>api/v1/password/upd-passwords/'+idsett, form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
                         $('#btnSavePassword').html('<i class="bx bxs-key"></i> Reset Now');
@@ -537,7 +551,7 @@
 				const save = async (form_data) => {
 					const posts = await axios.post('<?= api_url(); ?>api/v1/account/update/'+idsett, form_data, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
                         $('#btnSaveBank').html('<i class="bx bx-save"></i> Simpan');
@@ -611,7 +625,7 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
 					}).catch((err) => {
 						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
@@ -632,4 +646,102 @@
 				}
 				save2();
 			}
+
+			function runProsesUpdateSettingPin(val){
+				let valx = $('.form-toggle-pin-'+val).prop('checked');
+				console.log(valx);
+                if(valx) {
+                    togglesettingconf('pin_setting',1);
+                }else {
+                    togglesettingconf('pin_setting',0);
+                }
+            };
+			function runProsesUpdateSettingTrx(val){
+				let valx = $('.form-toggle-trx-'+val).prop('checked');
+				console.log(valx);
+                if(valx) {
+                    togglesettingconf('limit_trx_setting',1);
+                }else {
+                    togglesettingconf('limit_trx_setting',0);
+                }
+            };
+
+			function togglesettingconf(kolom, str){
+            
+			var key = kolom;
+			var value = str;
+			
+			var form_data = new FormData();
+			form_data.append(key, parseInt(value));
+			
+			const save = async (form_data) => {
+				const posts = await axios.post('<?= api_url(); ?>api/v1/kantin/update/'+idsett, form_data, {
+					headers: {
+						'Authorization': 'Bearer ' + localStorage.getItem('_token')
+					}
+				}).catch((err) => {
+
+					for (const key in err.response.data.error) {
+						Toastify({
+							text: err.response.data.error[key],
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "errorMessage",
+
+						}).showToast();
+					}
+					
+				});
+				if (posts.status == 201||posts.status == 200) {
+
+					if (posts.data.status == true) {
+
+						Toastify({
+							text: 'Tersimpan!',
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "successMessage",
+
+						}).showToast();
+
+						idsett= '';
+
+					} else {
+						Toastify({
+							text: posts.data.message,
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "errorMessage",
+
+						}).showToast();
+					}
+
+					
+
+				}else if(posts.status==500){
+					
+					Toastify({
+						text: "Server dalam perbaikan!",
+						duration: 3000,
+						close: true,
+						gravity: "top",
+						position: "right",
+						className: "infoMessage",
+
+					}).showToast();
+				} 
+				else {
+					console.log('Developer must be see it!');
+				}
+
+			}
+
+			save(form_data);
+		}
 		</script>

@@ -29,11 +29,13 @@
 						<div class="table-responsive">
 						<button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
 						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelguru');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+                        <a class="btn btn-sm btn-outline-secondary me-2 mb-3" href="<?=base_url();?>CPanel_Admin/GeneralAllRender" style="border-radius:0px;" target="_blank"><i class="bx bx-grid-small"></i> Lihat Semua Data</a>
 							<table class="table mb-0 tabelguru" id="tabelPrint">
 								<thead class="table-light">
 									<tr>
 										<th>Tipe</th>
 										<th>Nama Pengguna</th>
+										<th>PIN</th>
 										<th>Koneksi Kartu</th>
 										<th>Saldo</th>
 										<th>Tambah Saldo</th>
@@ -75,7 +77,7 @@
 						<small class="text-muted"><i>Apabila garis hijau belum muncul, klik pada gambar dibawah ini untuk mengaktifkan indikator tersebut</i></small>
 						<br/>
 						
-						<img id="scanCard" src="<?=base_url();?>assets_oncard/images/scan_kard.webp"  style="width:100%; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px;"/>
+						<img id="scanCard" src="<?=base_url();?>assets_oncard/images/scan_kard2.webp"  style="width:100%; border-radius:20px; display:block; margin-top:15px; margin-bottom:15px;"/>
 						<p class="text-center" id="textIndicator" style="margin:auto; transform:scale(0);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff;"></p>
 						<input type="text" style="transform:scale(0)!important; margin:auto; text-align:center; width:100%; border:none;outline:none!important;" id="textToCard"/>
 						
@@ -128,10 +130,24 @@
 			let idsett = '';
 			let modescan = '';
             let secret_code= '';
+            let notelppublic = '';
 			let endPointGetDataGeneral = '<?= api_url(); ?>api/v1/general';
 			let endPointGetDataGeneralSearch = '<?= api_url(); ?>api/v1/general?search=';
 
 			var typingTimer;
+
+            $('#modalSetSaldo').on('hidden.bs.modal', function () {
+                    // $('#modalSetCard').modal('toggle');
+                    if(!$('#modalSetSaldo').hasClass('show')){
+                        notelppublic = '';
+                    }else {
+                        return false;
+                    }
+                    
+                });
+            $('#modalSetSaldo').on('hidden.bs.modal', function () {
+                notelppublic = '';
+            });
 
 			$(document).ready(function () {
                 showData(endPointGetDataGeneral);
@@ -182,9 +198,10 @@
 										<h6 class="mb-0 font-14">${mapping.jabatan}</h6>
 									</td>
 									<td>${mapping.nama_lengkap} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}</td>
+                                    <td>${mapping.accounts.pin}</td>
 									<td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
 									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
-									<td ><button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="requestSecret();setSaldoManually('${mapping.nama_lengkap}','${mapping.nis}','${mapping.tanggal_lahir}','${mapping.accounts.card_id}','${mapping.accounts.balance}');" class="btn btn-warning btn-sm radius-30 px-4"><i class="bx bx-plus"></i> Saldo</button></td>
+									<td ><button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="requestSecret();setSaldoManually('${mapping.nama_lengkap}','${mapping.nis}','${mapping.tanggal_lahir}','${mapping.accounts.card_id}','${mapping.accounts.balance}','${mapping.telpon}');" class="btn btn-warning btn-sm radius-30 px-4"><i class="bx bx-plus"></i> Saldo</button></td>
 									<td >
 											<div class="btn-group">
 												<button type="button" class="disabled btn btn-sm btn-outline-success">${(mapping.accounts.limit_trx=='1000000000')?'Maksimum':'Rp'+formatRupiah(mapping.accounts.limit_trx)}</button>
@@ -215,9 +232,13 @@
 				save2();
 			}
 
-            function setSaldoManually(nama,nis,tgl,cardNumber, balance){
+            let balancepublic = '';
+
+            function setSaldoManually(nama,nis,tgl,cardNumber, balance,telepon){
 
                 idsett = cardNumber;
+                notelppublic = telepon;
+                balancepublic = balance;
 
                 $('#modalSetSaldo .modal-body').html(`
                     <div class="row">
@@ -229,18 +250,15 @@
                                     <td>: ${nama}</td>
                                 </tr>
                                 <tr>
-                                    <td width="100">NIS</td>
-                                    <td>: ${nis}</td>
+                                    <td width="100">Saldo</td>
+                                    <td>: Rp${formatRupiah(balance)}</td>
                                 </tr>
-                                <tr>
-                                    <td width="100">Tanggal Lahir</td>
-                                    <td>: ${moment(tgl).format('Do MMMM YYYY')}</td>
-                                </tr>
+                                
                             </table>
                         </div>
                         <div class="col-12 mt-3">
                             <label for="saldoTambah" class="mb-1">Saldo</label>
-                            <input type="text" id="saldoTambah" class="form-control mb-2" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
+                            <input type="text" id="saldoTambah" class="form-control mb-2" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
 
                             <label for="pin" class="mt-3 mb-1">PIN Otoritas</label>
                             <input type="password" id="pin" class="form-control mb-2 setPinSaldo" style="border-radius:100px;" placeholder="Masukkan PIN Anda!"/>
@@ -399,6 +417,8 @@
 
 							}).showToast();
 							$('#btnConnectToCard').html('Status : Done');
+
+
 						} else {
 								let msgg = '';
 								if(posts.data.response.data.error=='Card ID already exists in the database'){
@@ -451,6 +471,8 @@
 				var saldo = $('#saldoTambah').val();
 				var pin = $('#pin').val();
 
+                saldo = saldo.split('.').join("");
+
 				var form_data = new FormData();
 				form_data.append('card', card_id);
 				form_data.append('amount', saldo);
@@ -497,6 +519,7 @@
 						if (posts.data.status == true) {
 							
 							showData(endPointGetDataGeneral);
+
                             $('#modalSetSaldo').modal('toggle');
 							$('#textToCard').val('');
 							Toastify({
@@ -511,6 +534,16 @@
 							$('#btnSubmitSaldo').html('Masukkan Saldo Sekarang');
                             $('#btnSubmitSaldo').attr('disabled', false);
                             $('#btnSubmitSaldo').css('cursor', 'pointer');
+
+                            if(notelppublic.length>8 && notelppublic!='0'){
+                                var strFirstThree = notelppublic.substring(0,3);
+                                if(strFirstThree=='628' ){
+                                    sendMessageSaldoSuccess(`${saldo}`,`${posts.data.data.customers_name}`);
+                                }
+                            }
+
+                            idsett='';
+                            
 						} else {
 								let msgg = '';
 								if(posts.data.response.data.error=='Card ID already exists in the database'){
@@ -555,6 +588,62 @@
 			save(form_data);
 
 			}
+
+            function sendMessageSaldoSuccess(saldo,nama){
+                let isiPesan = "";
+                let arrayBaru = [];
+                let totalSaldoAkhir = parseInt(saldo) + parseInt(balancepublic);
+
+                isiPesan += `Assalamu'alaikum warahmatullahi wabarakatuh,
+*SALDO Rp${formatRupiah(saldo)} BERHASIL DITAMBAHKAN*
+Selamat! Saldo Bpk/Ibu berhasil ditambahkan ke dalam sistem Kartu Elektronik Santri pada ${moment(moment()).format('Do MMMM YYYY HH:mm:ss')} WIB.
+
+*===SALDO SAAT INI===*
+        *Rp${formatRupiah(totalSaldoAkhir.toString())}*
+*===================*
+
+_Selalu pantau perkembangan saldo Bapak/Ibu agar selalu dapat digunakan sesuai dengan keperluannya._
+
+Terimakasih.
+`;
+
+isiPesan += `
+
+
+_Kode pesan : #${createRandom()}_
+                            `;
+
+                arrayBaru.push(
+                    {"to" : notelppublic,
+                    "text" : isiPesan}
+                )
+
+                let arrayLengkap = {"session":"ppsrSess","data":arrayBaru,"delay":1000};
+                
+
+                axios.post("https://v3.gigades.id/rest/api/v1/wa/broadcast", arrayLengkap)
+                .then((res) => {
+                    if (res.data.status === true) {
+                        Toastify({
+                            text: 'Pemberitahuan juga terkirim ke Whatsapp Bpk/Ibu.',
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: "right",
+                            className: "successMessage",
+
+                        }).showToast();
+
+                        idsett = '';
+                        notelppublic = '';
+                        balancepublic ='';
+                    }
+
+                })
+                .catch((err) => {
+                    console.log('error kirim pesan ke wa ortu');
+                });
+            }
 			
 			function commitLimitTrxUpdate() {
 				$('#btnSubmitLimitTrx').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
@@ -687,21 +776,18 @@
                                         <tr><td colspan="2" class="text-center"><div class="alert alert-sm alert-success">( ! ) Pastikan data berikut ini adalah benar dan valid.</div></td></tr>
                                         <tr>
                                             <td width="100">Nama user</td>
-                                            <td>: ${posts2.data.data.siswa.nama_lengkap}</td>
+                                            <td>: ${posts2.data.data.customers_name}</td>
                                         </tr>
                                         <tr>
-                                            <td width="100">NIS</td>
-                                            <td>: ${posts2.data.data.siswa.nis}</td>
+                                            <td width="100">Saldo</td>
+                                            <td>: Rp${formatRupiah(posts2.data.data.balance)}</td>
                                         </tr>
-                                        <tr>
-                                            <td width="100">Tanggal Lahir</td>
-                                            <td>: ${moment(posts2.data.data.siswa.tanggal_lahir).format('Do MMMM YYYY')}</td>
-                                        </tr>
+
                                     </table>
                                 </div>
                                 <div class="col-12 mt-3">
                                     <label for="saldoTambah" class="mb-1">Saldo</label>
-                                    <input type="text" id="saldoTambah" class="form-control mb-2" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
+                                    <input type="text" id="saldoTambah" class="form-control mb-2" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
 
                                     <label for="pin" class="mt-3 mb-1">PIN Otoritas</label>
                                     <input type="password" id="pin" class="form-control mb-2" style="border-radius:100px;" placeholder="Masukkan PIN Anda!"/>
@@ -824,5 +910,22 @@
 				}
 				save2();
 			}
+
+            function createRandom(){
+                let result = '';
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                const charactersLength = characters.length;
+                let counter = 0;
+                while (counter < 10) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                counter += 1;
+                }
+                return result;
+            }
+
+            function setVal(str){
+                $('#saldoTambah').val(formatRupiah(str));
+            }
+
 			
 		</script>

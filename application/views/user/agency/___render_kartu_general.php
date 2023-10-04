@@ -97,6 +97,10 @@
 
                             posts2.data.data.map((mapping,i)=>{
 
+                            // let inisiateNama = mapping.nama_lengkap;
+                            // inisiateNama = inisiateNama.toLowerCase();
+                            // if(inisiateNama.includes('ridho ok')||inisiateNama.includes('sumitr')||inisiateNama.includes('mifta')||inisiateNama.includes('elsamia')||inisiateNama.includes('fitri kh')||inisiateNama.includes('amiru')||inisiateNama.includes('zikri')||inisiateNama.includes('mahjor')||inisiateNama.includes('ari ag')||inisiateNama.includes('jami')||inisiateNama.includes('saidul')||inisiateNama.includes('yusmawa')||inisiateNama.includes('ikhsan ka')||inisiateNama.includes('bagas')||inisiateNama.includes('safri')){
+
                                 if(mapping.user.foto!='default.jpg'){
                                     dataokcount++;
 
@@ -114,26 +118,7 @@
                                     let alamat = mapping?.alamat_lengkap;
                                     alamat = alamat?.toLowerCase();
 
-                                        
-                                    // tableColumn +=`
-                                    //     <div class="row">
-                                    //         <div class="col-lg-6 col-12">
-                                    //             <div style="width:350px!important; height:555.02px!important; margin-bottom:50px; margin-right:50px; background:url(${urlBgDepan});background-size:contain;background-position:center;">
-                                    //                 <img src="<?=base_url();?>app/assets/users/foto/${mapping.user.foto}" style="width:143px; height:187px; border-radius:20px; border:4px solid #fff; position:relative; margin-left:105px; margin-top:149px; object-fit:cover; object-position:center;"/>
-                                    //                 <div style="width:250px; margin-left:122px; margin-top:-1px; color:black; font-weight:bold; font-size:16px;">
-                                    //                     <p style="margin:0px!important;text-transform:capitalize;">${textNama[0]}</p>
-                                    //                     <p  style="margin:0px!important; margin-top:-3px!important; font-size:15px;">${mapping.jabatan}</p>
-                                                        
-                                    //                 </div>
-                                    //             </div>
-                                    //         </div>
-                                    //         <div class="col-lg-6 col-12">
-                                    //             <div style="width:350px!important; height:555.02px!important; margin-bottom:50px; margin-right:50px; background:url(${urlBgBelakang});background-size:contain;background-position:center;">
-                                    //             </div>
-                                    //         </div>
-                                    //     </div>
-                                        
-                                    // `;
+                                 
                                     tableColumn +=`
                                         <div class="row">
                                             <div class="col-lg-12 col-12">
@@ -151,17 +136,19 @@
                                         
                                     `;
                                 }
+
+                            // }
 							});
 
-                        $('.resumeData').html(`
-                            <table class="table table-bordered">
-                                <tr>
-                                <td width="33.3%"><font class="jmldataok"></font><a href="#/" onclick="showModalData();">Lihat ${arr.length} data yang belum lengkap</a></td>
-                                <td width="33.3%">${dataokcount} data sudah lengkap</td>
-                                <td width="33.3%"> TOTAL DATA : ${posts2.data.data.length} DATA.</td>
-                                </tr>
-                            </table>
-                        `);
+                        // $('.resumeData').html(`
+                        //     <table class="table table-bordered">
+                        //         <tr>
+                        //         <td width="33.3%"><font class="jmldataok"></font><a href="#/" onclick="showModalData();">Lihat ${arr.length} data yang belum lengkap</a></td>
+                        //         <td width="33.3%">${dataokcount} data sudah lengkap</td>
+                        //         <td width="33.3%"> TOTAL DATA : ${posts2.data.data.length} DATA.</td>
+                        //         </tr>
+                        //     </table>
+                        // `);
 							
 						$('.putContentHere').html(tableColumn);
 					}

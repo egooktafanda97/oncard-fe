@@ -98,13 +98,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Laporan Saldo Kantin</div>
+					<div class="breadcrumb-title pe-3">Laporan Saldo Merchant</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Laporan Saldo Kantin</li>
+								<li class="breadcrumb-item active" aria-current="page">Laporan Saldo Merchant</li>
 							</ol>
 						</nav>
 					</div>
@@ -130,6 +130,7 @@
                                                     <th>Jam</th>
                                                     <th>No. Invoice</th>
                                                     <th>Akun</th>
+                                                    <th>Merchant</th>
                                                     <th>Nominal</th>
                                                     <th>Keterangan</th>
                                                 </tr>
@@ -137,6 +138,18 @@
                                             <tbody class="putContentHere">
                                             </tbody>
                                         </table>
+
+                                        <!-- Pagination -->
+                                        <nav class="container mt-5"
+                                            id="siswa-pagination-container"
+                                            aria-label="Page navigation example">
+                                        </nav>
+
+                                        <!-- Pagination details -->
+                                        <div class="container mt-1 text-muted text-center">
+                                            <small id="siswa-pagination-details"></small>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -150,6 +163,20 @@
                                 </div>
 
                                 <div class="col-12">
+
+                                    <div class="row mb-4">
+                                        <div class="col-9">
+                                        Secara <i>default</i>, data yang dimunculkan hanya 20 baris terbaru.<br/>
+                                        Lihat semua data? 
+                                        </div>
+                                        <div class="col-3">
+                                        <div class="form-check form-switch">
+											<input class="form-check-input form-toggle-showdata" type="checkbox" id="onoffpin" onchange="setValToggle();">
+                                            
+										</div>
+                                        </div>
+                                    </div>
+                                
                                     
                                     <div class="form-group mb-3">
                                         <label for="siswaGet">Akun</label>
@@ -265,13 +292,14 @@
                 if(isFilterOn){
                     url = urlSetFromFilter;
                 }else {
-                    url = '<?= api_url(); ?>api/v1/rep/jurnal?account_level=seller';
+                    url = '<?= api_url(); ?>api/v1/rep/jurnal?usr-model=Kantin';
                 }
 				
 				const save2 = async () => {
 					const posts2 = await axios.get(url, {
 						headers: {
-							'Authorization': 'Bearer ' + sessionStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : statustoggle
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -282,13 +310,23 @@
 
                             let j = 0;
 
-                            if(posts2.data.data.length==0){
+                            let mmm = posts2.data;
+                        
+                            if(statustoggle==true){
+                                mmm = posts2.data.data;
+                            }else {
+                                mmm = posts2.data.data.data;
+                            }
+
+                            console.log(mmm);
+
+                            if(mmm.length==0){
                                 callJmlDt(j,'');
                                 tableColumn +=`<tr><td colspan="9" class="text-center">Tidak ada data.</td></tr>`;
 								$('.putContentHere').html(tableColumn);return false;
 							}
 
-                            posts2.data.data.map((mapping,i)=>{
+                            mmm.map((mapping,i)=>{
 
                                 invoiceDataArray.push({
                                     invoice: mapping.invoice,
@@ -315,6 +353,7 @@
                                     statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Pengisian Saldo</span>';
                                 }
                                 let namaNya = '';
+                                let namaMerchant = '';
                                 let amount ='0';
                                 let cond1 = mapping.management_type.name_type;
                                 if(cond1 =='top_up'){
@@ -323,6 +362,7 @@
                                 }else {
                                     namaNya = mapping.debit_account?.customers_name;
                                     amount = mapping.debit_amount??'0';
+                                    namaMerchant = mapping.credit_account?.customers_name??'-';
                                 }
                                 num += 1;
                                 tableColumn +=`
@@ -338,6 +378,7 @@
                                         <td width="70">${moment(mapping.created_at).format('HH:mm:ss')} WIB</td>
                                         <td width="160">${mapping.invoice}</td>
                                         <td>${namaNya}</td>
+                                        <td>${namaMerchant}</td>
                                         <td>Rp${formatRupiah(amount.toString())}</td>
                                         <td>${statusText}</td>
                                     </tr>
@@ -346,6 +387,7 @@
                             });
 
 						$('.putContentHere').html(tableColumn);
+                        // createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
                         callJmlDt(j,'');							
 					}
 				}
@@ -459,5 +501,20 @@
                         text : item.customers_name 
                     }));
                 });
+            }
+
+            let statustoggle = false;
+
+            function setValToggle(){
+                let valx = $('.form-toggle-showdata').prop('checked');
+                console.log(valx);
+
+                if(valx==true){
+                    statustoggle = true;
+                }else {
+                    statustoggle = false;
+                }
+
+                showData();
             }
 		</script>

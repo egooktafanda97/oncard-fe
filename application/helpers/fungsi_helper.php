@@ -197,6 +197,11 @@ function desc($str)
     return $CI->kripto->descript_kripto($str);
 }
 
+function getToken()
+{
+    return 'a997eddf-9ca5-4922-b714-0b50da66baf4';
+}
+
 function api_url($url = null)
 {
     return base_url('app/' . $url);

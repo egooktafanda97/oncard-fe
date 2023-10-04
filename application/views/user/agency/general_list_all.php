@@ -2,13 +2,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Siswa</div>
+					<div class="breadcrumb-title pe-3">General</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Daftar Siswa</li>
+								<li class="breadcrumb-item active" aria-current="page">Daftar Pengguna</li>
 							</ol>
 						</nav>
 					</div>
@@ -17,31 +17,18 @@
 			  
 				<div class="card">
 					<div class="card-body">
-						<div class="d-lg-flex align-items-center mb-4 gap-3">
-							<div class="position-relative">
-								<input type="text" class="form-control ps-5 radius-30" id="floatingInput" placeholder="Ketik nama siswa"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
-							</div>
-						  <div class="ms-auto">
-							<a href="#/" onclick="openmodalSetCard('saldo')" class="btn btn-danger radius-30 mt-2 me-3 mt-lg-0" style="color:white;"><i class="bx bx-scan" ></i> Saldo Siswa</a>
-							<a href="<?=base_url().$function.'/siswaManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i> Tambah Siswa</a>
-						  </div>
-						</div>
+						
 						<div class="table-responsive">
 						<button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
-						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelsiswa');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
-						<a class="btn btn-sm btn-outline-secondary me-2 mb-3" href="<?=base_url();?>CPanel_Admin/SiswaAllRender" style="border-radius:0px;" target="_blank"><i class="bx bx-grid-small"></i> Lihat Semua Data</a>
-							<table class="table mb-0 tabelsiswa" id="tabelPrint">
+						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelguru');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
+							<table class="table mb-0 tabelguru" id="tabelPrint">
 								<thead class="table-light">
 									<tr>
-										<th>#NIS</th>
-										<th>Nama siswa</th>
+										<th>Tipe</th>
+										<th>Nama Pengguna</th>
 										<th>Koneksi Kartu</th>
-										<!-- <th>Diinput Pada</th> -->
-										<!-- <th>KODE KARTU</th> -->
 										<th>Saldo</th>
-										<th>Tambah Saldo</th>
 										<th>Limit Transaksi</th>
-										<th>Aksi</th>
 									</tr>
 								</thead>
 								<tbody class="putContentHere">
@@ -50,15 +37,14 @@
 
 							<!-- Pagination -->
 							<nav class="container mt-5"
-								id="siswa-pagination-container"
+								id="general-pagination-container"
 								aria-label="Page navigation example">
 							</nav>
 
 							<!-- Pagination details -->
 							<div class="container mt-1 text-muted text-center">
-								<small id="siswa-pagination-details"></small>
+								<small id="general-pagination-details"></small>
 							</div>
-
 						</div>
 					</div>
 				</div>
@@ -128,177 +114,15 @@
 			</div>
 		</div>
 
-        <div class="modal fade" id="wdMODAL" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content" style="">
-                    <div class="modal-header">
-						<h5 class="modal-title">Pencairan Dana</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
-					</div>
-					<div class="modal-body">
-                        <form id="mainx">
-                            <div class="mb-3">
-                                <label for="namaSiswa" class="form-label">Nama Pengguna</label>
-                                <font style="font-weight:bold;display:block;" id="namaPengguna">Loading...</font>
-                            </div>
-                            <div class="mb-3">
-                                <label for="namaSiswa" class="form-label">Sisa Saldo</label>
-                                <font style="font-weight:bold;display:block;" id="saldoPengguna">Loading...</font>
-                            </div>
-                            <div class="mb-3">
-                                <label for="namaSiswa" class="form-label">Saldo Dicairkan</label>
-                                <input type="text" class="form-control" id="saldoCair" oninput="setVal3(this.value);" placeholder="Ketikkan saldo">
-                            </div>
-                            <h5 class="mt-4">PIN Pengguna</h5>
-                            <div class="mb-3">
-                                <label for="pin" class="form-label">PIN</label>
-                                <input type="password" class="form-control" id="pin" placeholder="Ketikkan saldo">
-                            </div>
-                        </form>
-
-                        <div class="col-12">
-                            <div class="d-grid">
-                                <button type="button" id="btnSave" class="btn btn-primary" onclick="requestSecretPencairan();"><i class="bx bx-transfer-alt"></i> Cairkan Sekarang</button>
-                            </div>
-                        </div>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<script type="text/javascript">
 			let idsett = '';
 			let modescan = '';
             let secret_code= '';
-            let namauser = '';
-            let namainstansi = '';
-			let endPointGetDataSiswa = '<?= api_url(); ?>api/v1/siswa';
-			let endPointGetDataSiswaSearch = '<?= api_url(); ?>api/v1/siswa/search?q=';
-
-            let balancepublic = '';
             let notelppublic = '';
-            let tanggalLahirpublic = '';
+			let endPointGetDataGeneral = '<?= api_url(); ?>api/v1/general/get-inpaging';
+			let endPointGetDataGeneralSearch = '<?= api_url(); ?>api/v1/general?search=';
 
 			var typingTimer;
-			
-			$(document).ready(function () {
-                showData(endPointGetDataSiswa);
-
-				$("#floatingInput").on("keyup", function() {
-					let value = $(this).val().toLowerCase();
-					clearTimeout(typingTimer);
-					typingTimer = setTimeout(function() {
-						if(value==''){
-							showData(endPointGetDataSiswa);
-						}else {
-							showData(endPointGetDataSiswaSearch+value);	
-						}
-					}, 1200);
-
-					
-				});
-                
-            });
-
-			function showData(params){
-				let num = 0;
-				let tableColumn = '';
-				tableColumn += `<tr><td colspan="8" class="text-center">Loading...</td></tr>`;
-				$('.putContentHere').html(tableColumn);
-				
-				const save2 = async () => {
-					const posts2 = await axios.get( params , {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
-						}
-					}).catch((err) => {
-						console.log(err.response);
-					});
-			
-					if (posts2.status == 200) {
-							num += 1;
-							tableColumn = '';
-							if(posts2.data.data.data.length==0){
-								tableColumn +=`<tr><td colspan="8" class="text-center">Tidak ada data.</td></tr>`;
-								$('.putContentHere').html(tableColumn);return false;
-							}
-							
-							console.log(posts2.data.data.data);
-							posts2.data.data.data.map((mapping,i)=>{
-							    let textTingkat = '';
-								let textNamaA = mapping.nama_lengkap;
-								let textNama = textNamaA.split("-M");
-
-                                let mmmsaldo = mapping.accounts.balance;
-                                
-								if(textNama[1]=='A'){
-									textTingkat = 'Madrasah Aliyah';
-								}
-								if(textNama[1]=='TS'){
-									textTingkat = 'Madrasah Tsanawiyah';
-								}
-                                let nisclear = mapping.nis;
-                                nisclear = nisclear.replace(/\s/g, "");
-
-                                tanggalLahirpublic = mapping.tanggal_lahir;
-
-							tableColumn +=`
-								<tr>
-									<td >
-										<div class="d-flex align-items-center">
-											<div>
-												<input class="form-check-input me-3" type="checkbox" value="" aria-label="...">
-											</div>
-											<div class="ms-2">
-												<h6 class="mb-0 font-14">#${nisclear}</h6>
-											</div>
-										</div>
-									</td>
-									<td>${textNama[0]} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}
-									<br/><small class="text-muted">${textTingkat}</small> </td>
-									<td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
-									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
-									<td >
-                                    <button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="console.log('${mapping.telp_ortu}');setSaldoManually('${mapping.nama_lengkap}','${nisclear}','${mapping.tanggal_lahir}','${mapping.accounts.card_id}','${mapping.accounts.balance}','${mapping.telp_ortu}');" class="btn btn-warning btn-sm radius-30 px-4"><i class="bx bx-plus"></i> Saldo</button>
-                                    <button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="openDialogWD(${mapping.accounts.account_number},'${mapping.nama_lengkap}','Rp${formatRupiah(mapping.accounts.balance)}');" class="btn btn-primary btn-sm radius-30 px-4"><i class="bx bx-transfer-alt"></i> Pencairan</button>
-                                    </td>
-									<td >
-											<div class="btn-group">
-												<button type="button" class="disabled btn btn-sm btn-outline-success">Rp${formatRupiah(mapping.accounts.limit_trx)}</button>
-												<button type="button" class="btn btn-sm btn-outline-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">	<span class="visually-hidden">Toggle Dropdown</span>
-												</button>
-												<ul class="dropdown-menu">
-													<li><a class="dropdown-item" href="#/" onclick="openModalSetLimitTrx('${mapping.nama_lengkap}','${nisclear}','${mapping.tanggal_lahir}','${mapping.telp_ortu}');idsett='${mapping.accounts.id}';"><i class='bx bxs-edit'></i> Update</a>
-													</li>
-												</ul>
-											</div>
-									</td>
-									<td>
-										<div class="d-flex order-actions">
-											<a href="#/" onclick="openmodalSetCard('connect');idsett='${mapping.accounts.account_number}';" class="me-3 "><i class='bx bx-link'></i></a>
-											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/siswaManage/${mapping.id}';" class=""><i class='bx bxs-edit'></i></a>
-											<a href="#/" onclick="openModalDelete('${mapping.id}','siswa');" class="ms-3"><i class='bx bxs-trash'></i></a>
-										</div>
-										
-									</td>
-								</tr>
-							`;
-							});
-							
-						$('.putContentHere').html(tableColumn);
-						createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
-					}
-				}
-				save2();
-			}
-
-            function openDialogWD(id, nama, saldo){
-                $('#wdMODAL').modal('toggle');
-				
-				idsett = id;
-                $('#namaPengguna').html(nama);
-                $('#saldoPengguna').html(saldo);
-            }
 
             $('#modalSetSaldo').on('hidden.bs.modal', function () {
                     // $('#modalSetCard').modal('toggle');
@@ -313,16 +137,78 @@
                 notelppublic = '';
             });
 
-            
-            function setSaldoManually(nama,nis,tgl,cardNumber, balance, notelp){
+			$(document).ready(function () {
+                showData(endPointGetDataGeneral);
 
-                namauser = nama;
-                namainstansi = "PP Syafa'atturrasul";
+				$("#floatingInput").on("keyup", function() {
+					
+					let value = $(this).val().toLowerCase();
+					clearTimeout(typingTimer);
+					typingTimer = setTimeout(function() {
+						if(value==''){
+							showData(endPointGetDataGeneral);
+						}else {
+							showData(endPointGetDataGeneralSearch+value);	
+						}
+					}, 1200);
+
+				});
                 
-                notelppublic = notelp;
-                balancepublic = balance;
+            });
+			function showData(params){
+				let num = 0;
+				let tableColumn = '';
+				tableColumn += `<tr><td colspan="8" class="text-center">Loading...</td></tr>`;
+				$('.putContentHere').html(tableColumn);
+				
+				const save2 = async () => {
+					const posts2 = await axios.get(params, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+							num += 1;
+							tableColumn = '';
+							if(posts2.data.data.length==0){
+								tableColumn +=`<tr><td colspan="8" class="text-center">Tidak ada data.</td></tr>`;
+								$('.putContentHere').html(tableColumn);return false;
+							}
+							
+							console.log(posts2.data.data);
+							posts2.data.data.map((mapping,i)=>{
+							tableColumn +=`
+								<tr>
+									<td >
+										<h6 class="mb-0 font-14">${mapping.jabatan}</h6>
+									</td>
+									<td>${mapping.nama_lengkap} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}</td>
+                                    <td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
+									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
+									<td >Rp${formatRupiah(mapping.accounts.limit_trx)}
+									</td>
+									
+								</tr>
+							`;
+							});
+							
+						$('.putContentHere').html(tableColumn);
+						createPaginations(posts2.data.data, "general-pagination-container", "general-pagination-details", "showData");
+					}
+				}
+				save2();
+			}
+
+            let balancepublic = '';
+
+            function setSaldoManually(nama,nis,tgl,cardNumber, balance,telepon){
 
                 idsett = cardNumber;
+                notelppublic = telepon;
+                balancepublic = balance;
 
                 $('#modalSetSaldo .modal-body').html(`
                     <div class="row">
@@ -335,17 +221,14 @@
                                 </tr>
                                 <tr>
                                     <td width="100">Saldo</td>
-                                    <td>: ${formatRupiah(balance)}</td>
+                                    <td>: Rp${formatRupiah(balance)}</td>
                                 </tr>
-                                <tr>
-                                    <td width="100">Tanggal Lahir</td>
-                                    <td>: ${moment(tgl).format('Do MMMM YYYY')}</td>
-                                </tr>
+                                
                             </table>
                         </div>
                         <div class="col-12 mt-3">
                             <label for="saldoTambah" class="mb-1">Saldo</label>
-                            <input type="text" id="saldoTambah" class="form-control mb-2 setTocurrency" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
+                            <input type="text" id="saldoTambah" class="form-control mb-2" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
 
                             <label for="pin" class="mt-3 mb-1">PIN Otoritas</label>
                             <input type="password" id="pin" class="form-control mb-2 setPinSaldo" style="border-radius:100px;" placeholder="Masukkan PIN Anda!"/>
@@ -353,9 +236,6 @@
                     </div>
                 `);
                 $('#modalSetSaldo').modal('toggle');
-
-                requestSecret();
-
             }
 
 			function openmodalSetCard(mode){
@@ -367,13 +247,8 @@
 
 				});
 			}
-
-
 			
-			function openModalSetLimitTrx(nama,nis,tglLahir,telportu){
-                notelppublic = '';
-
-                notelppublic = telportu;
+			function openModalSetLimitTrx(nama,nis,tglLahir){
 
 				$('#modalSetLimitTrx .modal-body').html(`
                     <div class="row">
@@ -385,7 +260,7 @@
                                     <td>: ${nama}</td>
                                 </tr>
                                 <tr>
-                                    <td width="100">NIS</td>
+                                    <td width="100">Tempat Lahir</td>
                                     <td>: ${nis}</td>
                                 </tr>
                                 <tr>
@@ -396,7 +271,7 @@
                         </div>
                         <div class="col-12 mt-3">
                             <label for="limitTrx" class="mb-1">Limit Transaksi</label>
-                            <input type="text" id="limitTrx" class="form-control mb-2" style="border-radius:100px;" oninput="setVal2(this.value);" placeholder="Jumlah (Rp)"/>
+                            <input type="text" id="limitTrx" class="form-control mb-2" style="border-radius:100px;" placeholder="Jumlah (Rp)"/>
 
                         </div>
                     </div>
@@ -499,7 +374,7 @@
 					if (posts.status == 200) {
 						if (posts.data.status == true) {
 							
-							showData(endPointGetDataSiswa);
+							showData(endPointGetDataGeneral);
 							$('#modalSetCard').modal('toggle');
 							$('#textToCard').val('');
 							Toastify({
@@ -512,6 +387,8 @@
 
 							}).showToast();
 							$('#btnConnectToCard').html('Status : Done');
+
+
 						} else {
 								let msgg = '';
 								if(posts.data.response.data.error=='Card ID already exists in the database'){
@@ -564,7 +441,7 @@
 				var saldo = $('#saldoTambah').val();
 				var pin = $('#pin').val();
 
-                saldo = saldo.split('.').join("");
+                saldo = saldo.replace(".","");
 
 				var form_data = new FormData();
 				form_data.append('card', card_id);
@@ -590,8 +467,7 @@
 
                             }).showToast();
                         }else {
-                        
-                            // requestSecret();
+                        requestSecret();
 
 							Toastify({
 								text: 'Terjadi kesalahan pada server!',
@@ -612,7 +488,8 @@
 					if (posts.status == 201) {
 						if (posts.data.status == true) {
 							
-							showData(endPointGetDataSiswa);
+							showData(endPointGetDataGeneral);
+
                             $('#modalSetSaldo').modal('toggle');
 							$('#textToCard').val('');
 							Toastify({
@@ -628,14 +505,11 @@
                             $('#btnSubmitSaldo').attr('disabled', false);
                             $('#btnSubmitSaldo').css('cursor', 'pointer');
 
-
                             if(notelppublic.length>8 && notelppublic!='0'){
                                 var strFirstThree = notelppublic.substring(0,3);
                                 if(strFirstThree=='628' ){
-                                    sendMessageSaldoSuccess(`${saldo}`);
+                                    sendMessageSaldoSuccess(`${saldo}`,`${posts.data.data.customers_name}`);
                                 }
-                            }else {
-                                window.location.reload();
                             }
 
                             idsett='';
@@ -685,31 +559,26 @@
 
 			}
 
-            function sendMessageSaldoSuccess(saldo){
+            function sendMessageSaldoSuccess(saldo,nama){
                 let isiPesan = "";
                 let arrayBaru = [];
                 let totalSaldoAkhir = parseInt(saldo) + parseInt(balancepublic);
 
                 isiPesan += `Assalamu'alaikum warahmatullahi wabarakatuh,
-*Pusat Informasi ${instansiNameX}*
-
 *SALDO Rp${formatRupiah(saldo)} BERHASIL DITAMBAHKAN*
-Selamat! Saldo anak Anda dengan detail,
-Nama : *${(namauser)??'-'}*,
-TTL : *${moment(tanggalLahirpublic).format('DD MMMM YYYY')}*,
-
-*Berhasil* ditambahkan ke dalam Kartu Elektronik Santri pada ${moment(moment()).format('Do MMMM YYYY HH:mm:ss')} WIB.
+Selamat! Saldo Bpk/Ibu berhasil ditambahkan ke dalam sistem Kartu Elektronik Santri pada ${moment(moment()).format('Do MMMM YYYY HH:mm:ss')} WIB.
 
 *===SALDO SAAT INI===*
         *Rp${formatRupiah(totalSaldoAkhir.toString())}*
 *===================*
 
-_Selalu pantau perkembangan saldo anak Bapak/Ibu agar selalu dapat digunakan sesuai dengan keperluannya._
+_Selalu pantau perkembangan saldo Bapak/Ibu agar selalu dapat digunakan sesuai dengan keperluannya._
 
 Terimakasih.
 `;
 
 isiPesan += `
+
 
 _Kode pesan : #${createRandom()}_
                             `;
@@ -726,7 +595,7 @@ _Kode pesan : #${createRandom()}_
                 .then((res) => {
                     if (res.data.status === true) {
                         Toastify({
-                            text: 'Pemberitahuan juga terkirim ke Whatsapp Orangtua Wali.',
+                            text: 'Pemberitahuan juga terkirim ke Whatsapp Bpk/Ibu.',
                             duration: 3000,
                             close: true,
                             gravity: "top",
@@ -738,8 +607,6 @@ _Kode pesan : #${createRandom()}_
                         idsett = '';
                         notelppublic = '';
                         balancepublic ='';
-
-                        window.location.reload();
                     }
 
                 })
@@ -755,25 +622,6 @@ _Kode pesan : #${createRandom()}_
 
 				var card_id = idsett;
 				var saldo = $('#limitTrx').val();
-                saldo = saldo.split('.').join("");
-
-                if(saldo==''|| saldo=='0'){
-                    Toastify({
-                        text: 'Limit transaksi harus diisi dahulu!',
-                        duration: 3000,
-                        close: true,
-                        gravity: "top",
-                        position: "right",
-                        className: "errorMessage",
-
-                    }).showToast();
-
-                    $('#limitTrx').val('');
-                    $('#btnSubmitLimitTrx').html('Simpan');
-                    $('#btnSubmitLimitTrx').attr('disabled', false);
-                    $('#btnSubmitLimitTrx').css('cursor', 'pointer');
-                    return false;
-                }
 				
 				var form_data = new FormData();
 				form_data.append('limit_trx', saldo);
@@ -795,7 +643,7 @@ _Kode pesan : #${createRandom()}_
 					if (posts.status == 201||posts.status == 200) {
 						if (posts.data.status == true) {
 							
-							showData(endPointGetDataSiswa);
+							showData(endPointGetDataGeneral);
                             $('#modalSetLimitTrx').modal('toggle');
 							$('#limitTrx').val('');
 							Toastify({
@@ -859,8 +707,6 @@ _Kode pesan : #${createRandom()}_
 			}
 			
 			function searchSiswaByKartu(str){
-
-                idsett = '';
 				
                 const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/usr?card='+str, {
@@ -891,9 +737,8 @@ _Kode pesan : #${createRandom()}_
                         $('#modalSetCard').modal('toggle');
 
                         idsett = str;
-                        namauser = posts2.data.data.siswa.nama_lengkap;
-                        notelppublic = posts2.data.data.siswa.telp_ortu;
-                        
+                        requestSecret();
+
                         $('#modalSetSaldo .modal-body').html(`
                             <div class="row">
                                 <div class="col-12 table-responsive">
@@ -901,21 +746,18 @@ _Kode pesan : #${createRandom()}_
                                         <tr><td colspan="2" class="text-center"><div class="alert alert-sm alert-success">( ! ) Pastikan data berikut ini adalah benar dan valid.</div></td></tr>
                                         <tr>
                                             <td width="100">Nama user</td>
-                                            <td>: ${posts2.data.data.siswa.nama_lengkap}</td>
+                                            <td>: ${posts2.data.data.customers_name}</td>
                                         </tr>
                                         <tr>
                                             <td width="100">Saldo</td>
-                                            <td>: ${formatRupiah(posts2.data.data.balance)}</td>
+                                            <td>: Rp${formatRupiah(posts2.data.data.balance)}</td>
                                         </tr>
-                                        <tr>
-                                            <td width="100">Tanggal Lahir</td>
-                                            <td>: ${moment(posts2.data.data.siswa.tanggal_lahir).format('Do MMMM YYYY')}</td>
-                                        </tr>
+
                                     </table>
                                 </div>
                                 <div class="col-12 mt-3">
                                     <label for="saldoTambah" class="mb-1">Saldo</label>
-                                    <input type="text" id="saldoTambah" class="form-control mb-2 setTocurrency" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
+                                    <input type="text" id="saldoTambah" class="form-control mb-2" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
 
                                     <label for="pin" class="mt-3 mb-1">PIN Otoritas</label>
                                     <input type="password" id="pin" class="form-control mb-2" style="border-radius:100px;" placeholder="Masukkan PIN Anda!"/>
@@ -935,8 +777,6 @@ _Kode pesan : #${createRandom()}_
                         }).showToast();
                         console.log(posts2.data.data.data);
 
-                        requestSecret();
-
 					}else {
                         Toastify({
                             text: 'Scan ulang kartu tersebut!',
@@ -955,6 +795,74 @@ _Kode pesan : #${createRandom()}_
 				
 				
 			}
+			
+			function commitDeleteGeneral(){
+			let url = '';
+			if(tablesett == 'general'){
+				url = '<?= api_url(); ?>api/v1/'+tablesett+'/' + uidsett;
+			}else {
+				url = '<?= api_url(); ?>api/v1/'+tablesett+'/destroy/' + uidsett;
+			}
+
+			const save = async (uidsett) => {
+				const posts = await axios.delete(url, {
+					headers: {
+						'Authorization': 'Bearer ' + localStorage.getItem('_token')
+					}
+				}).catch((err) => { 
+
+					if(err.error){
+						Toastify({
+							text: 'Maaf. Data tidak ditemukan.',
+							duration: 3000,
+							close: true,
+							gravity: "bottom",
+							position: "left",
+							className: "errorMessage",
+
+						}).showToast();
+						return false;
+					}
+
+					for (const key in err.response.data.error) {
+							Toastify({
+								text: err.response.data.error[key],
+								duration: 3000,
+								close: true,
+								gravity: "bottom",
+								position: "left",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+				});
+
+				if (posts.status == 200) {
+
+					Toastify({
+						text: 'Data berhasil dihapus!',
+						duration: 3000,
+						close: true,
+						gravity: "top",
+						position: "left",
+						className: "successMessage",
+
+					}).showToast();
+
+					showData(endPointGetDataGeneral);
+					uidsett = '';
+					tablesett = '';
+
+					$('#modalDeleteGeneral').modal('toggle');
+
+
+				} else {
+
+				}
+			}
+
+			save(uidsett);
+		}
 
             function requestSecret(){
 				const save2 = async () => {
@@ -988,168 +896,6 @@ _Kode pesan : #${createRandom()}_
             function setVal(str){
                 $('#saldoTambah').val(formatRupiah(str));
             }
-            
-            function setVal2(str){
-                $('#limitTrx').val(formatRupiah(str));
-            }
-            
-            function setVal3(str){
-                $('#saldoCair').val(formatRupiah(str));
-            }
-
-            function requestSecretPencairan(){
-
-            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
-            $('#btnSave').attr('disabled', 'disabled');
-            $('#btnSave').css('cursor', 'not-allowed');
-
-            const save2 = async () => {
-                const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('_token')
-                    }
-                }).catch((err) => {
-                    $('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-                    $('#btnSave').attr('disabled', false);
-                    $('#btnSave').css('cursor', 'pointer');
-                    console.log(err.response);
-                });
-
-                if (posts2.status == 201) {
-                    secret_code = posts2.data.data.client_secret;
-
-                    prosCair();
-                }else {
-                    $('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-                    $('#btnSave').attr('disabled', false);
-                    $('#btnSave').css('cursor', 'pointer');
-                }
-            }
-            save2();
-            }
-
-            function prosCair(){
-				
-				let value = $('#saldoCair').val();
-				let pin = $('#pin').val();
-				value = value.replace(/\D/g, "");
-
-				if(value=='0'||value==''){
-
-					$('#btnSave').html('Selesai');
-					$('#btnSave').attr('disabled', false);
-					$('#btnSave').css('cursor', 'pointer');
-					Toastify({
-						text: 'Nominal harus diisi!',
-						duration: 3000,
-						close: true,
-						gravity: "top",
-						position: "right",
-						className: "errorMessage",
-
-					}).showToast();
-					return false;
-				}
-				
-            	var form_data = new FormData();
-				
-				form_data.append('amount', value);
-				form_data.append('account_number', idsett);
-				form_data.append('client_secret', secret_code);
-				form_data.append('pin', pin);
-				
-				let url = '';
-				
-				const save = async (form_data) => {
-					const posts = await axios.post('<?= api_url(); ?>api/v1/wd', form_data, {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
-						}
-					}).catch((err) => {
-                        $('#btnSave').html('Selesai');
-						$('#btnSave').attr('disabled', false);
-						$('#btnSave').css('cursor', 'pointer');
-
-                        if(err.response.data.message=='your balance is not enough!'){
-                            Toastify({
-                                text: 'Saldo tidak cukup!',
-                                duration: 3000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                className: "errorMessage",
-
-                            }).showToast();
-                        }else if(err.response.data.message=='account not found!'){
-                            Toastify({
-                                text: 'PIN tidak benar!',
-                                duration: 3000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                className: "errorMessage",
-
-                            }).showToast();
-                        }
-                        
-					});
-					if (posts.status == 201) {
-
-						if (posts.data.status == true) {
-							
-							Toastify({
-								text: posts.data.message,
-								duration: 3000,
-								close: true,
-								gravity: "top",
-								position: "right",
-								className: "successMessage",
-
-							}).showToast();
-
-							$('#wdMODAL').modal('toggle');
-
-                            showData(endPointGetDataSiswa);
-                            
-						} else {
-							Toastify({
-								text: posts.data.message,
-								duration: 3000,
-								close: true,
-								gravity: "top",
-								position: "right",
-								className: "errorMessage",
-
-							}).showToast();
-						}
-
-						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-						$('#btnSave').attr('disabled', false);
-						$('#btnSave').css('cursor', 'pointer');
-
-					}
-					else {
-						posts.data.error.map((mapping, i) => {
-							Toastify({
-								text: 'Oops!',
-								duration: 3000,
-								close: true,
-								gravity: "top",
-								position: "right",
-								className: "errorMessage",
-
-							}).showToast();
-						});
-						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-						$('#btnSave').attr('disabled', false);
-						$('#btnSave').css('cursor', 'pointer');
-					}
-				}
-				
-				save(form_data);				
-
-			}
-
 
 			
 		</script>

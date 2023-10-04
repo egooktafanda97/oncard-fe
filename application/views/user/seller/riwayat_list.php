@@ -321,7 +321,9 @@
                             if(posts2.data.data.data.length==0){
                                 filterTabungan = 0;
 								tableColumn +=`<tr><td colspan="9" class="text-center">Tidak ada data.</td></tr>`;
-								$('.putContentHere').html(tableColumn);return false;
+                                $('.jmldt').html('0');
+                                $('.filterTabungan').html('0');
+                                $('.putContentHere').html(tableColumn);return false;
 							}
 							posts2.data.data.data.map((mapping,i)=>{
 
@@ -331,8 +333,8 @@
                                 total_spending: mapping.total_spending,
                                 admin_fee: mapping.admin_fee,
                                 total_payment: mapping.total_payment,
-                                account_users: mapping.account_users.customers_name,
-                                account_seller: mapping.account_seller.customers_name,
+                                account_users: mapping.account_users?.customers_name??'-',
+                                account_seller: mapping.account_seller.customers_name??'-',
                                 sisa_saldo: mapping.mutasi[0].balance,
                             });
 
@@ -353,7 +355,7 @@
 									<td width="120">${moment(mapping.created_at).format('Do-MM-YYYY')}</td>
 									<td width="120">${moment(mapping.created_at).format('HH:mm:ss')} WIB</td>
 									<td width="160">${mapping.invoice}</td>
-									<td>${mapping.account_users.customers_name}</td>
+									<td>${mapping?.account_users?.customers_name??'-'}</td>
 									<td class="text-success" style="font-weight:bold;">Rp${formatRupiah(mapping.total_spending)}</td>
 									<td>Rp${formatRupiah(mapping.admin_fee)}</td>
 									<td>Rp${formatRupiah(mapping.total_payment)}</td>
@@ -473,7 +475,7 @@
                     <div class="invoice-card mt-4" style="min-height:auto!important;">
                         <div class="invoice-footer">
                             <button class="btn btn-sm btn-secondary" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                            <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
                         </div>
                     
                     </div>
@@ -491,7 +493,7 @@
             }
 
             function callJmlDt(jmlh, str){
-                $('.jmldt').html(jmlh);
+                $('.jmldt').html('jmlh');
                 $('.stdt').html(str);
                 pecahData();
             }

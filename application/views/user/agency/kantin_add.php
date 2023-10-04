@@ -3,15 +3,15 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Kantin</div>
+					<div class="breadcrumb-title pe-3">Merchant</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-                                <li class="breadcrumb-item"><a href="<?=base_url().$function;?>/Kantin">Daftar Kantin</a>
+                                <li class="breadcrumb-item"><a href="<?=base_url().$function;?>/Merchant">Daftar Merchant</a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Form <font class="modeText">penambahan</font> kantin</li>
+								<li class="breadcrumb-item active" aria-current="page">Form <font class="modeText">penambahan</font> merchant</li>
 							</ol>
 						</nav>
 					</div>
@@ -21,7 +21,7 @@
 			  
 				<div class="card">
 				  <div class="card-body p-4">
-					  <h5 class="card-title" style="text-transform:capitalize;">Formulir <font class="modeText">Penambahan</font> Kantin</h5>
+					  <h5 class="card-title" style="text-transform:capitalize;">Formulir <font class="modeText">Penambahan</font> Merchant</h5>
 					  <hr/>
                        <div class="form-body mt-4">
 					<form id="main">
@@ -47,12 +47,12 @@
 
 								<div class="border border-3 p-4 rounded">
 									<div class="mb-3">
-										<label for="namaKantin" class="form-label">Nama Kantin</label>
-										<input type="email" class="form-control" id="namaKantin" placeholder="Ketik nama kantin">
+										<label for="namaKantin" class="form-label">Nama Merchant</label>
+										<input type="email" class="form-control" id="namaKantin" placeholder="Ketik nama merchant">
 									</div>
 									<div class="mb-3">
 										<label for="alamat" class="form-label">Alamat</label>
-										<textarea class="form-control" id="alamat" rows="2" placeholder="Masukkan alamat kantin"></textarea>
+										<textarea class="form-control" id="alamat" rows="2" placeholder="Masukkan alamat merchant"></textarea>
 									</div>
 									
 								  <div class="col-12">

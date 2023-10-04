@@ -90,6 +90,169 @@ class CPanel_Admin extends CI_Controller
         }
     }
     
+    
+    public function Wapage()
+    { //KHUSUS UNTUK CETAK KARTU SAJA!
+        if ($this->session->userdata('_token')) {
+            
+            $function = '';
+            $role = $this->session->userdata('_permission');
+            $function = 'CPanel_Admin';
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+            $uidSetted = $this->session->userdata('_user_uid');
+            
+            if($uidSetted=='1f3ade3e-5a26-4018-8a97-a8a00919ba85' || $uidSetted=='c45a75db-8e85-42a0-a319-cd88b45be75e' || $uidSetted=='b865730e-4005-48b4-9011-163651ab1415'){
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/template/navigation_wapage.php', $data);
+                $this->load->view('user/agency/whatsapp_panel.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }else {
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/agency/whatsapp_panel_error.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }
+
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
+    
+    public function Wapage_CreateSession()
+    { //KHUSUS UNTUK CETAK KARTU SAJA!
+        if ($this->session->userdata('_token')) {
+            
+            $function = '';
+            $role = $this->session->userdata('_permission');
+            $function = 'CPanel_Admin';
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+            $uidSetted = $this->session->userdata('_user_uid');
+            
+            if($uidSetted=='1f3ade3e-5a26-4018-8a97-a8a00919ba85' || $uidSetted=='c45a75db-8e85-42a0-a319-cd88b45be75e' || $uidSetted=='b865730e-4005-48b4-9011-163651ab1415'){
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/template/navigation_wapage.php', $data);
+                $this->load->view('user/agency/whatsapp_panel_createsession.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }else {
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/agency/whatsapp_panel_error.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }
+
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
+    
+    public function Wapage_BulkMessage()
+    { //KHUSUS UNTUK CETAK KARTU SAJA!
+        if ($this->session->userdata('_token')) {
+            
+            $function = '';
+            $role = $this->session->userdata('_permission');
+            $function = 'CPanel_Admin';
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+            $uidSetted = $this->session->userdata('_user_uid');
+            
+            if($uidSetted=='1f3ade3e-5a26-4018-8a97-a8a00919ba85' || $uidSetted=='c45a75db-8e85-42a0-a319-cd88b45be75e' || $uidSetted=='b865730e-4005-48b4-9011-163651ab1415'){
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/template/navigation_wapage.php', $data);
+                $this->load->view('user/agency/whatsapp_panel_bulkmessage.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }else {
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/agency/whatsapp_panel_error.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }
+
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
+    public function Wapage_BulkMessageBroadcast()
+    { //KHUSUS UNTUK CETAK KARTU SAJA!
+        if ($this->session->userdata('_token')) {
+            
+            $function = '';
+            $role = $this->session->userdata('_permission');
+            $function = 'CPanel_Admin';
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+            $uidSetted = $this->session->userdata('_user_uid');
+            
+            if($uidSetted=='1f3ade3e-5a26-4018-8a97-a8a00919ba85' || $uidSetted=='c45a75db-8e85-42a0-a319-cd88b45be75e' || $uidSetted=='b865730e-4005-48b4-9011-163651ab1415'){
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/template/navigation_wapage.php', $data);
+                $this->load->view('user/agency/whatsapp_panel_bulkmessage_broadcast.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }else {
+                $this->load->view('user/template/header.php', $data);
+                $this->load->view('user/agency/whatsapp_panel_error.php', $data);
+                $this->load->view('user/template/footer.php', $data);
+            }
+
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
     public function renderKartuGeneral()
     { //KHUSUS UNTUK CETAK KARTU SAJA!
         if ($this->session->userdata('_token')) {
@@ -262,6 +425,39 @@ class CPanel_Admin extends CI_Controller
         }
     }
     
+    
+    public function SiswaAllRender()
+    {
+        if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
+            
+            $function = '';
+            $function = 'CPanel_Admin';
+            $role = $this->session->userdata('_permission');
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+
+            $this->load->view('user/template/header.php', $data);
+            $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/'.$role.'/siswa_list_all.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
     public function General()
     {
         if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
@@ -287,6 +483,38 @@ class CPanel_Admin extends CI_Controller
             $this->load->view('user/template/header.php', $data);
             $this->load->view('user/template/navigation.php', $data);
             $this->load->view('user/'.$role.'/general_list.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+
+    public function GeneralAllRender()
+    {
+        if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
+            
+            $function = '';
+            $function = 'CPanel_Admin';
+            $role = $this->session->userdata('_permission');
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+
+            $this->load->view('user/template/header.php', $data);
+            $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/'.$role.'/general_list_all.php', $data);
             $this->load->view('user/template/footer.php', $data);
         } else {
             $data['levelUser'] = "";
@@ -326,7 +554,39 @@ class CPanel_Admin extends CI_Controller
         }
     }
     
-    public function Kantin()
+    public function WDStakeHolders()
+    {
+        if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
+            
+            $function = '';
+            $function = 'CPanel_Admin';
+            $role = $this->session->userdata('_permission');
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+
+            $this->load->view('user/template/header.php', $data);
+            $this->load->view('user/template/navigation.php', $data);
+            $this->load->view('user/'.$role.'/WD_Stakeholder.php', $data);
+            $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
+    public function Merchant()
     {
         if ($this->session->userdata('_token') && $this->session->userdata('_permission')=='agency') {
             
@@ -534,6 +794,35 @@ class CPanel_Admin extends CI_Controller
             $this->load->view('user/template/navigation.php', $data);
             $this->load->view('user/'.$role.'/mutasi_transaksi.php', $data);
             $this->load->view('user/template/footer.php', $data);
+        } else {
+            $data['levelUser'] = "";
+            $this->load->view('loginregister/login.php', $data);
+        }
+    }
+    
+    public function PrintStruk()
+    {
+        if ($this->session->userdata('_token')) {
+            
+            $function = '';
+            $function = 'CPanel_Admin';
+            $role = $this->session->userdata('_permission');
+            
+            $roleText = '';
+            if($role=='agency'){
+                $roleText = 'Host';
+            }else if($role=='seller'){
+                $roleText = 'Merchant';
+            }else {
+                $roleText = $role;
+            }
+
+            $data = [];
+            $data['role'] = $roleText;
+            $data['function'] = $function;
+            $data['namaLengkap'] = $this->session->userdata('_user');
+            $this->load->view('user/template/header.php', $data);
+            $this->load->view('user/_all/printstruk.php', $data);
         } else {
             $data['levelUser'] = "";
             $this->load->view('loginregister/login.php', $data);
@@ -768,6 +1057,10 @@ class CPanel_Admin extends CI_Controller
         }
     }
 
+    public function BroadcastInfoSaldo()
+    {
+            $this->load->view('user/_pesan_otomatis/broadcast_saldo_info.php');   
+    }
     
 
 }

@@ -17,19 +17,10 @@
 			  
 				<div class="card">
 					<div class="card-body">
-						<div class="d-lg-flex align-items-center mb-4 gap-3">
-							<div class="position-relative">
-								<input type="text" class="form-control ps-5 radius-30" id="floatingInput" placeholder="Ketik nama siswa"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
-							</div>
-						  <div class="ms-auto">
-							<a href="#/" onclick="openmodalSetCard('saldo')" class="btn btn-danger radius-30 mt-2 me-3 mt-lg-0" style="color:white;"><i class="bx bx-scan" ></i> Saldo Siswa</a>
-							<a href="<?=base_url().$function.'/siswaManage';?>" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i> Tambah Siswa</a>
-						  </div>
-						</div>
+						
 						<div class="table-responsive">
 						<button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
 						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelsiswa');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
-						<a class="btn btn-sm btn-outline-secondary me-2 mb-3" href="<?=base_url();?>CPanel_Admin/SiswaAllRender" style="border-radius:0px;" target="_blank"><i class="bx bx-grid-small"></i> Lihat Semua Data</a>
 							<table class="table mb-0 tabelsiswa" id="tabelPrint">
 								<thead class="table-light">
 									<tr>
@@ -37,11 +28,9 @@
 										<th>Nama siswa</th>
 										<th>Koneksi Kartu</th>
 										<!-- <th>Diinput Pada</th> -->
-										<!-- <th>KODE KARTU</th> -->
+										<th>KODE KARTU</th>
 										<th>Saldo</th>
-										<th>Tambah Saldo</th>
 										<th>Limit Transaksi</th>
-										<th>Aksi</th>
 									</tr>
 								</thead>
 								<tbody class="putContentHere">
@@ -128,51 +117,13 @@
 			</div>
 		</div>
 
-        <div class="modal fade" id="wdMODAL" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content" style="">
-                    <div class="modal-header">
-						<h5 class="modal-title">Pencairan Dana</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
-					</div>
-					<div class="modal-body">
-                        <form id="mainx">
-                            <div class="mb-3">
-                                <label for="namaSiswa" class="form-label">Nama Pengguna</label>
-                                <font style="font-weight:bold;display:block;" id="namaPengguna">Loading...</font>
-                            </div>
-                            <div class="mb-3">
-                                <label for="namaSiswa" class="form-label">Sisa Saldo</label>
-                                <font style="font-weight:bold;display:block;" id="saldoPengguna">Loading...</font>
-                            </div>
-                            <div class="mb-3">
-                                <label for="namaSiswa" class="form-label">Saldo Dicairkan</label>
-                                <input type="text" class="form-control" id="saldoCair" oninput="setVal3(this.value);" placeholder="Ketikkan saldo">
-                            </div>
-                            <h5 class="mt-4">PIN Pengguna</h5>
-                            <div class="mb-3">
-                                <label for="pin" class="form-label">PIN</label>
-                                <input type="password" class="form-control" id="pin" placeholder="Ketikkan saldo">
-                            </div>
-                        </form>
-
-                        <div class="col-12">
-                            <div class="d-grid">
-                                <button type="button" id="btnSave" class="btn btn-primary" onclick="requestSecretPencairan();"><i class="bx bx-transfer-alt"></i> Cairkan Sekarang</button>
-                            </div>
-                        </div>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<script type="text/javascript">
 			let idsett = '';
 			let modescan = '';
             let secret_code= '';
             let namauser = '';
             let namainstansi = '';
-			let endPointGetDataSiswa = '<?= api_url(); ?>api/v1/siswa';
+			let endPointGetDataSiswa = '<?= api_url(); ?>api/v1/siswa/get-inpaging';
 			let endPointGetDataSiswaSearch = '<?= api_url(); ?>api/v1/siswa/search?q=';
 
             let balancepublic = '';
@@ -218,13 +169,13 @@
 					if (posts2.status == 200) {
 							num += 1;
 							tableColumn = '';
-							if(posts2.data.data.data.length==0){
+							if(posts2.data.data.length==0){
 								tableColumn +=`<tr><td colspan="8" class="text-center">Tidak ada data.</td></tr>`;
 								$('.putContentHere').html(tableColumn);return false;
 							}
 							
-							console.log(posts2.data.data.data);
-							posts2.data.data.data.map((mapping,i)=>{
+							console.log(posts2.data.data);
+							posts2.data.data.map((mapping,i)=>{
 							    let textTingkat = '';
 								let textNamaA = mapping.nama_lengkap;
 								let textNama = textNamaA.split("-M");
@@ -257,48 +208,20 @@
 									<td>${textNama[0]} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}
 									<br/><small class="text-muted">${textTingkat}</small> </td>
 									<td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
+									<td>${mapping.accounts.card_id}</td>
 									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
-									<td >
-                                    <button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="console.log('${mapping.telp_ortu}');setSaldoManually('${mapping.nama_lengkap}','${nisclear}','${mapping.tanggal_lahir}','${mapping.accounts.card_id}','${mapping.accounts.balance}','${mapping.telp_ortu}');" class="btn btn-warning btn-sm radius-30 px-4"><i class="bx bx-plus"></i> Saldo</button>
-                                    <button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="openDialogWD(${mapping.accounts.account_number},'${mapping.nama_lengkap}','Rp${formatRupiah(mapping.accounts.balance)}');" class="btn btn-primary btn-sm radius-30 px-4"><i class="bx bx-transfer-alt"></i> Pencairan</button>
-                                    </td>
-									<td >
-											<div class="btn-group">
-												<button type="button" class="disabled btn btn-sm btn-outline-success">Rp${formatRupiah(mapping.accounts.limit_trx)}</button>
-												<button type="button" class="btn btn-sm btn-outline-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">	<span class="visually-hidden">Toggle Dropdown</span>
-												</button>
-												<ul class="dropdown-menu">
-													<li><a class="dropdown-item" href="#/" onclick="openModalSetLimitTrx('${mapping.nama_lengkap}','${nisclear}','${mapping.tanggal_lahir}','${mapping.telp_ortu}');idsett='${mapping.accounts.id}';"><i class='bx bxs-edit'></i> Update</a>
-													</li>
-												</ul>
-											</div>
-									</td>
-									<td>
-										<div class="d-flex order-actions">
-											<a href="#/" onclick="openmodalSetCard('connect');idsett='${mapping.accounts.account_number}';" class="me-3 "><i class='bx bx-link'></i></a>
-											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/siswaManage/${mapping.id}';" class=""><i class='bx bxs-edit'></i></a>
-											<a href="#/" onclick="openModalDelete('${mapping.id}','siswa');" class="ms-3"><i class='bx bxs-trash'></i></a>
-										</div>
-										
-									</td>
+									<td >Rp${formatRupiah(mapping.accounts.limit_trx)}</td>
+									
 								</tr>
 							`;
 							});
 							
 						$('.putContentHere').html(tableColumn);
-						createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
+						// createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
 					}
 				}
 				save2();
 			}
-
-            function openDialogWD(id, nama, saldo){
-                $('#wdMODAL').modal('toggle');
-				
-				idsett = id;
-                $('#namaPengguna').html(nama);
-                $('#saldoPengguna').html(saldo);
-            }
 
             $('#modalSetSaldo').on('hidden.bs.modal', function () {
                     // $('#modalSetCard').modal('toggle');
@@ -564,7 +487,7 @@
 				var saldo = $('#saldoTambah').val();
 				var pin = $('#pin').val();
 
-                saldo = saldo.split('.').join("");
+                saldo = saldo.replace(".","");
 
 				var form_data = new FormData();
 				form_data.append('card', card_id);
@@ -634,8 +557,6 @@
                                 if(strFirstThree=='628' ){
                                     sendMessageSaldoSuccess(`${saldo}`);
                                 }
-                            }else {
-                                window.location.reload();
                             }
 
                             idsett='';
@@ -755,7 +676,7 @@ _Kode pesan : #${createRandom()}_
 
 				var card_id = idsett;
 				var saldo = $('#limitTrx').val();
-                saldo = saldo.split('.').join("");
+                saldo = saldo.replace(".","");
 
                 if(saldo==''|| saldo=='0'){
                     Toastify({
@@ -892,7 +813,6 @@ _Kode pesan : #${createRandom()}_
 
                         idsett = str;
                         namauser = posts2.data.data.siswa.nama_lengkap;
-                        notelppublic = posts2.data.data.siswa.telp_ortu;
                         
                         $('#modalSetSaldo .modal-body').html(`
                             <div class="row">
@@ -992,163 +912,6 @@ _Kode pesan : #${createRandom()}_
             function setVal2(str){
                 $('#limitTrx').val(formatRupiah(str));
             }
-            
-            function setVal3(str){
-                $('#saldoCair').val(formatRupiah(str));
-            }
-
-            function requestSecretPencairan(){
-
-            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
-            $('#btnSave').attr('disabled', 'disabled');
-            $('#btnSave').css('cursor', 'not-allowed');
-
-            const save2 = async () => {
-                const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('_token')
-                    }
-                }).catch((err) => {
-                    $('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-                    $('#btnSave').attr('disabled', false);
-                    $('#btnSave').css('cursor', 'pointer');
-                    console.log(err.response);
-                });
-
-                if (posts2.status == 201) {
-                    secret_code = posts2.data.data.client_secret;
-
-                    prosCair();
-                }else {
-                    $('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-                    $('#btnSave').attr('disabled', false);
-                    $('#btnSave').css('cursor', 'pointer');
-                }
-            }
-            save2();
-            }
-
-            function prosCair(){
-				
-				let value = $('#saldoCair').val();
-				let pin = $('#pin').val();
-				value = value.replace(/\D/g, "");
-
-				if(value=='0'||value==''){
-
-					$('#btnSave').html('Selesai');
-					$('#btnSave').attr('disabled', false);
-					$('#btnSave').css('cursor', 'pointer');
-					Toastify({
-						text: 'Nominal harus diisi!',
-						duration: 3000,
-						close: true,
-						gravity: "top",
-						position: "right",
-						className: "errorMessage",
-
-					}).showToast();
-					return false;
-				}
-				
-            	var form_data = new FormData();
-				
-				form_data.append('amount', value);
-				form_data.append('account_number', idsett);
-				form_data.append('client_secret', secret_code);
-				form_data.append('pin', pin);
-				
-				let url = '';
-				
-				const save = async (form_data) => {
-					const posts = await axios.post('<?= api_url(); ?>api/v1/wd', form_data, {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
-						}
-					}).catch((err) => {
-                        $('#btnSave').html('Selesai');
-						$('#btnSave').attr('disabled', false);
-						$('#btnSave').css('cursor', 'pointer');
-
-                        if(err.response.data.message=='your balance is not enough!'){
-                            Toastify({
-                                text: 'Saldo tidak cukup!',
-                                duration: 3000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                className: "errorMessage",
-
-                            }).showToast();
-                        }else if(err.response.data.message=='account not found!'){
-                            Toastify({
-                                text: 'PIN tidak benar!',
-                                duration: 3000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                className: "errorMessage",
-
-                            }).showToast();
-                        }
-                        
-					});
-					if (posts.status == 201) {
-
-						if (posts.data.status == true) {
-							
-							Toastify({
-								text: posts.data.message,
-								duration: 3000,
-								close: true,
-								gravity: "top",
-								position: "right",
-								className: "successMessage",
-
-							}).showToast();
-
-							$('#wdMODAL').modal('toggle');
-
-                            showData(endPointGetDataSiswa);
-                            
-						} else {
-							Toastify({
-								text: posts.data.message,
-								duration: 3000,
-								close: true,
-								gravity: "top",
-								position: "right",
-								className: "errorMessage",
-
-							}).showToast();
-						}
-
-						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-						$('#btnSave').attr('disabled', false);
-						$('#btnSave').css('cursor', 'pointer');
-
-					}
-					else {
-						posts.data.error.map((mapping, i) => {
-							Toastify({
-								text: 'Oops!',
-								duration: 3000,
-								close: true,
-								gravity: "top",
-								position: "right",
-								className: "errorMessage",
-
-							}).showToast();
-						});
-						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
-						$('#btnSave').attr('disabled', false);
-						$('#btnSave').css('cursor', 'pointer');
-					}
-				}
-				
-				save(form_data);				
-
-			}
 
 
 			

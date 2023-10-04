@@ -137,6 +137,18 @@
                                             <tbody class="putContentHere">
                                             </tbody>
                                         </table>
+
+                                        <!-- Pagination -->
+                                        <nav class="container mt-5"
+                                            id="siswa-pagination-container"
+                                            aria-label="Page navigation example">
+                                        </nav>
+
+                                        <!-- Pagination details -->
+                                        <div class="container mt-1 text-muted text-center">
+                                            <small id="siswa-pagination-details"></small>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -150,6 +162,19 @@
                                 </div>
 
                                 <div class="col-12">
+
+                                    <div class="row mb-4">
+                                        <div class="col-9">
+                                        Secara <i>default</i>, data yang dimunculkan hanya 20 baris terbaru.<br/>
+                                        Lihat semua data? 
+                                        </div>
+                                        <div class="col-3">
+                                        <div class="form-check form-switch">
+											<input class="form-check-input form-toggle-showdata" type="checkbox" id="onoffpin" onchange="setValToggle();">
+                                            
+										</div>
+                                        </div>
+                                    </div>
                                     
                                     <div class="form-group mb-3">
                                         <label for="siswaGet">Akun</label>
@@ -162,6 +187,16 @@
                                         <label for="invoiceGet">Invoice</label>
                                         <select class="form-select single-select inputFilterItem" id="invoiceGet" data-object='invoice' style="border-radius:0px!important;">
 
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="invoiceGet">Tipe</label>
+                                        <select class="form-select single-select inputFilterItem" id="mTypeGet" data-object='mtype' style="border-radius:0px!important;">
+                                        <option value="">Pilih salah satu tipe</option>
+                                        <option value="buy">Pembelian</option>
+                                        <option value="top_up">Top Up Saldo</option>
+                                        <option value="adminitrasi">Biaya Transaksi</option>
                                         </select>
                                     </div>
                                     
@@ -265,13 +300,14 @@
                 if(isFilterOn){
                     url = urlSetFromFilter;
                 }else {
-                    url = '<?= api_url(); ?>api/v1/rep/jurnal?account_level=users';
+                    url = '<?= api_url(); ?>api/v1/rep/jurnal?usr-model=General';
                 }
 				
 				const save2 = async () => {
 					const posts2 = await axios.get(url, {
 						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : statustoggle
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -282,15 +318,25 @@
 
                             let j = 0;
 
-                            if(posts2.data.data.length==0){
+                            let mmm = posts2.data;
+                        
+                            if(statustoggle==true){
+                                mmm = posts2.data.data;
+                            }else {
+                                mmm = posts2.data.data.data;
+                            }
+
+                            console.log(mmm);
+
+                            if(mmm.length==0){
                                 callJmlDt(j,'');
                                 tableColumn +=`<tr><td colspan="9" class="text-center">Tidak ada data.</td></tr>`;
 								$('.putContentHere').html(tableColumn);return false;
 							}
 
-                            posts2.data.data.map((mapping,i)=>{
+                            mmm.map((mapping,i)=>{
 
-                                if(mapping.user.model=='General'){
+                                if(mapping.account.user.model=='General'){
                                     invoiceDataArray.push({
                                         invoice: mapping.invoice,
                                         date: mapping.created_at
@@ -341,6 +387,7 @@
                             });
 
 						$('.putContentHere').html(tableColumn);
+                        // createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
                         callJmlDt(j,'');							
 					}
 				}
@@ -353,7 +400,7 @@
             function getSiswaData(){
                 $('#siswaGet').html('');
                 const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/general', {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/general/get-inpaging', {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -362,7 +409,7 @@
 					});
 			
 					if (posts2.status == 200) {
-                        if(posts2.data.data.data.length==0){
+                        if(posts2.data.data.length==0){
                             $('#siswaGet').append($('<option>', {
                                 value: '',
                                 text: 'Tidak ada data siswa'
@@ -372,7 +419,7 @@
                             value: '',
                             text: 'Pilih data akun'
                         }));
-                        posts2.data.data.data.map((mapping,i)=>{
+                        posts2.data.data.map((mapping,i)=>{
                             $('#siswaGet').append($('<option>', {
                                 value: mapping.accounts.account_number,
                                 text: mapping.accounts.customers_name+" - "+mapping.jabatan
@@ -389,7 +436,7 @@
                 isFilterOn = true;
 
                 var inputs = $(".inputFilterItem");
-                let urlsets = '<?= api_url(); ?>api/v1/rep/jurnal?';
+                let urlsets = '<?= api_url(); ?>api/v1/rep/jurnal?usr-model=General';
                 let valueData = '';
                 for(var i = 0; i < inputs.length; i++){
                     valueData = $(inputs[i]).data('object');
@@ -440,5 +487,20 @@
                         text : item.invoice 
                     }));
                 });
+            }
+
+            let statustoggle = false;
+
+            function setValToggle(){
+                let valx = $('.form-toggle-showdata').prop('checked');
+                console.log(valx);
+
+                if(valx==true){
+                    statustoggle = true;
+                }else {
+                    statustoggle = false;
+                }
+
+                showData();
             }
 		</script>

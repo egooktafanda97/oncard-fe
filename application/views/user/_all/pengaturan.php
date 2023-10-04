@@ -145,6 +145,25 @@
 										</ul>
 									</div>
 								</div>
+
+                                <!-- <div class="card divonoffpin" style="display:none;">
+									<div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <h5>On / Off Pengaturan</h5>
+                                            </div>
+                                        </div>
+										<div class="row mb-3">
+                                            <div class="col-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="onoffpin" checked="">
+                                                <label class="form-check-label" for="onoffpin">Transaksi menggunakan PIN</label>
+                                            </div>
+                                            </div>
+										</div>
+										
+									</div>
+								</div> -->
 							</div>
 							<div class="col-lg-8">
 								<div class="card">
@@ -317,7 +336,91 @@
 			let accountNumber = '';
             
             let url = '';
+
+            $("#onoffpin").change(function() {
+                if(this.checked) {
+                    togglepinsave(true);
+                }else {
+                    togglepinsave(false);
+                }
+            });
             
+            function togglepinsave(str){
+            
+				var key = 'pin-trx';
+				var value = str;
+				
+				var form_data = new FormData();
+				form_data.append('key', key);
+				form_data.append('value', value);
+				
+                const save = async (form_data) => {
+					const posts = await axios.post('<?= api_url(); ?>api/v1/setting/set', form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+
+						for (const key in err.response.data.error) {
+							Toastify({
+								text: err.response.data.error[key],
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+						
+					});
+					if (posts.status == 201||posts.status == 200) {
+
+						if (posts.data.status == true) {
+
+							Toastify({
+								text: 'Tersimpan!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "successMessage",
+
+							}).showToast();
+
+						} else {
+							Toastify({
+								text: posts.data.message,
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+
+					}else if(posts.status==500){
+						
+						Toastify({
+							text: "Server dalam perbaikan!",
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "infoMessage",
+	
+						}).showToast();
+					} 
+					else {
+						console.log('Developer must be see it!');
+					}
+
+				}
+
+				save(form_data);
+            }
+
             function getAkunPengaturan(roleUserX,accountNumberX){
 
                 if(roleUserX=='agensi'){
@@ -345,6 +448,8 @@
                         if(roleUser=='agensi'){
 							$('#norekBank').prop("disabled", false);
 							$('#norekBank').prop("readonly", false);
+
+                            $('.divonoffpin').attr('style','display:flex;');
 							
 							$('#namadiRekening').prop("disabled", false);
 							$('#namadiRekening').prop("readonly", false);
@@ -392,6 +497,8 @@
                             `;
 
                         }else if(roleUser=='seller'){
+
+                            $('.divonoffpin').attr('style','display:none;');
 							$('.divupdatebankagensi').attr('style','display:none');
                             userIDX = posts2.data.data.id;
                             saldoUser = posts2.data.data.balance;
@@ -949,6 +1056,29 @@
                     placeholder: $(this).data('placeholder'),
                     allowClear: Boolean($(this).data('allow-clear')),
                 });
+
+                getTransaksiPINKonfigurasi();
             });
 
+            function getTransaksiPINKonfigurasi(){
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/setting/get/pin-trx', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+
+					if (posts2.status == 201) {
+                        console.log(posts2.data.data);
+						if(posts2.data.data=='false'){
+                            $('#onoffpin').prop('checked', false);
+                        }else {
+                            $('#onoffpin').prop('checked', true);
+                        }
+					}
+				}
+				save2();
+			}
         </script>

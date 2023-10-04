@@ -217,13 +217,13 @@
 							<div class="tab-pane fade  active show" id="primary-pills-home" role="tabpanel">
 								<div class="row">
 									<div class="col-lg-6 col-12 mb-3">
-										<input type="number" class="display" id="saldoTambah" oninput="setVal(this.value);" autocomplete="off"  />
+										<input type="number" class="display" autocomplete="off" />
 										<div class="buttons">
 											<buttonmm class="operator" data-value="AC">AC</buttonmm>
 											<buttonmm class="operator" data-value="DEL">DEL</buttonmm>
-											<!-- <buttonmm class="operator" data-value="%">%</buttonmm>
-											<buttonmm class="operator" data-value="/">÷</buttonmm> -->
-											<!-- <buttonmm data-value="7">7</buttonmm>
+											<buttonmm class="operator" data-value="%">%</buttonmm>
+											<buttonmm class="operator" data-value="/">÷</buttonmm>
+											<buttonmm data-value="7">7</buttonmm>
 											<buttonmm data-value="8">8</buttonmm>
 											<buttonmm data-value="9">9</buttonmm>
 											<buttonmm class="operator" data-value="*">×</buttonmm>
@@ -238,7 +238,7 @@
 											<buttonmm data-value="0">0</buttonmm>
 											<buttonmm data-value="00">00</buttonmm>
 											<buttonmm data-value=".">.</buttonmm>
-											<buttonmm class="operator equal" data-value="=">=</buttonmm> -->
+											<buttonmm class="operator equal" data-value="=">=</buttonmm>
 										</div>
 									</div>
 									<div class="col-lg-6 col-12">
@@ -374,7 +374,7 @@
 						
 					</div>
 					<div class="modal-footer text-center" style="border:none!important;">
-						<button type="button" onclick="lockCheck();" id="btnSubmitTransaksi" style="display:block;margin:auto;" data-value="" class="btn btn-success">Selesai</button>
+						<button type="button" onclick="commitTransaction();" id="btnSubmitTransaksi" style="display:block;margin:auto;" data-value="" class="btn btn-success">Selesai</button>
 					</div>
 				</div>
 			</div>
@@ -421,6 +421,10 @@
 			$(document).ready(function () {
 
                 openDialogScan('pembelian');
+
+                loadMenu();
+                getConfigBsns();
+                getAuthSeconds();
 
                 $('.page-wrapper').css('opacity','1');
                 
@@ -799,7 +803,6 @@
 				
 				mode = str;
 			}
-
 			$("#textToCard").focus(function(){
 				console.log('input sedang fokus');
 				$('#textIndicator').attr('style','transform:scale(1);transition:all 0.2s linear 0s;padding:5px; padding-left:25px; padding-right:25px; font-size:14px; border-radius:100px; background:#53edaa; color:#fff; display:table; text-align:center; margin:auto;');
@@ -882,7 +885,59 @@
 				}, 1500);
 			});
 
-			let namalengkap = '';
+			function getConfigBsns(){
+				
+                const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/setting/get-config-trx-business', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						$('#textToCard').blur();
+                        return false;
+					});
+					if (posts2.status == 200) {
+                        if(posts2.data.status==false){
+                            Toastify({
+                                text: 'Network is unavailable!',
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+                            }).showToast();
+                            $('#textToCard').blur();
+                            $('#textToCard').focus();
+                            
+                            return false;
+
+                        }
+                        console.log(posts2.data.data);
+                        // posts2.data.map((mapping, i) => {
+                            beaAdmin = posts2.data.data.admin_fee_total;
+                        // });
+                        
+
+					}else {
+                        Toastify({
+                            text: 'Tunggu. Telah terjadi kesalahan pada aplikasi!',
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: "right",
+                            className: "errorMessage",
+                        }).showToast();
+                        // $('#textToCard').blur();
+                        
+                    }
+				}
+				
+				save2();
+				
+				
+			}
+
+            let namalengkap = '';
             let nomoridentitas = '';
             let saldopembeli = '';
             let fotopembeli = '';
@@ -902,6 +957,7 @@
                     }).showToast();
                     return false;
                 }
+                requestSecret();
                 openNextDialogPembelian(namalengkap,nomoridentitas,saldopembeli,fotopembeli);
                 if(usePINorNOT=='false'){
                     $('#textToCard2').val(pinvalue);
@@ -964,6 +1020,9 @@
                             }).showToast();
                             $('#textToCard').blur();
                             $('#textToCard').focus();
+                            
+                            
+                            
                         }
                         
                         if(posts2.data.data.user.model=='Siswa'){
@@ -1001,12 +1060,6 @@
                                     </div>
                                 </div>
                             `);
-
-                            loadMenu();
-                            requestSecret();
-                            // getConfigBsns();
-                            getAuthSeconds();
-                            
                             return false;
                             
                         }else {
@@ -1082,8 +1135,6 @@
 				nominal_belanja = '0';
 				let total = '0';
 				total = $('.display').val();
-                total = total.split('.').join("");
-                total = total.split(',').join("");
 				nominal_belanja = parseInt(total);
 
                 $('#textToCard2').val('');
@@ -1152,9 +1203,11 @@
 				`);
 			}
             
+
+            
             $("#textToCard2").on("keydown",function search(e) {
                 if(e.keyCode == 13) {
-                    lockCheck();
+                    commitTransaction();
                 }
             });
             
@@ -1275,22 +1328,17 @@
 						$('#btnSubmitTransaksi').attr('disabled', false);
 						$('#btnSubmitTransaksi').css('cursor', 'pointer');
 
-                        if(err.response.status==500||err.response.status==402){
+                        
+
+                        if(err.response.status==500){
                             Toastify({
-                                text: 'Tekan tombol Selesai kembali!',
+                                text: 'PIN Tidak Benar!',
                                 duration: 3000,
                                 close: true,
                                 gravity: "top",
                                 position: "right",
-                                className: "infoMessage"
+                                className: "errorMessage"
                             }).showToast();
-
-                            requestSecret();
-
-                            $('#btnSubmitTransaksi').html('Selesai');
-                            $('#btnSubmitTransaksi').attr('disabled', false);
-                            $('#btnSubmitTransaksi').css('cursor', 'pointer');
-
                         }
 
 
@@ -1344,7 +1392,7 @@
 						if (posts.data.status == true) {
 							
 							Toastify({
-								text: 'Transaksi berhasil!',
+								text: posts.data.message,
 								duration: 3000,
 								close: true,
 								gravity: "top",
@@ -1530,7 +1578,7 @@
                     <div class="invoice-card mt-4" style="min-height:auto!important;">
                         <div class="invoice-footer">
                             <button class="btn btn-sm btn-secondary" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                            <button class="btn btn-sm btn-primary" onclick="printDiv();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
                         </div>
                     
                     </div>
@@ -1559,16 +1607,19 @@
 			//Define function to calculate based on button clicked.
 			const calculate = (btnValue) => {
 			display.focus();
-			// if (btnValue === "=" && output !== "") {
-			// 	//If output has '%', replace with '/100' before evaluating.
-			// 	output = eval(output.replace("%", "/100"));
-			// } 
-            if (btnValue === "AC") {
+			if (btnValue === "=" && output !== "") {
+				//If output has '%', replace with '/100' before evaluating.
+				output = eval(output.replace("%", "/100"));
+			} else if (btnValue === "AC") {
 				output = "";
 			} else if (btnValue === "DEL") {
 				//If DEL button is clicked, remove the last character from the output.
 				output = output.toString().slice(0, -1);
-			} 
+			} else {
+				//If output is empty and button is specialChars then return
+				if (output === "" && specialChars.includes(btnValue)) return;
+				output += btnValue;
+			}
 			display.value = output;
 			};
 
@@ -1580,11 +1631,9 @@
 
 
 
-
-
 			function requestSecret(){
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create-trx', {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -1594,64 +1643,6 @@
 
 					if (posts2.status == 201) {
 						secret_code = posts2.data.data.client_secret;
-
-                        // commitTransaction();
-					}
-				}
-				save2();
-			}
-			
-            
-            function lockCheck(){
-
-                $('#btnSubmitTransaksi').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
-				$('#btnSubmitTransaksi').attr('disabled', 'disabled');
-                $('#btnSubmitTransaksi').css('cursor', 'not-allowed');
-                
-				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/lock-check', {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
-						}
-					}).catch((err) => {
-						if(err.response.status==500){
-                            Toastify({
-                                text: 'Tunggu sejenak, transaksi di titik lain sedang berlangsung!',
-                                duration: 3000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                className: "infoMessage"
-                            }).showToast();
-
-                            $('#btnSubmitTransaksi').html('Selesai');
-                            $('#btnSubmitTransaksi').attr('disabled', false);
-                            $('#btnSubmitTransaksi').css('cursor', 'pointer');
-                        }
-					});
-
-					if (posts2.status == 201||posts2.status == 200) {
-                        
-						// secret_code = posts2.data.data.client_secret;
-                        
-                        clearTimeout(timer);
-
-                        let mmm = Math.floor(Math.random() * 1250) + 1;
-                        
-
-                        timer = setTimeout(() => {
-
-                            commitTransaction();
-
-                            console.log(mmm);
-                            // $('#btnSubmitTransaksi').html('Selesai');
-                            // $('#btnSubmitTransaksi').attr('disabled', false);
-                            // $('#btnSubmitTransaksi').css('cursor', 'pointer');
-
-                        }, mmm);
-                        
-
-                        
 					}
 				}
 				save2();
@@ -1661,7 +1652,7 @@
 
             function getAuthSeconds(){
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v2/usr', {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -1706,24 +1697,33 @@
 			
 					if (posts2.status == 200) {
                         
-						accountNumberX = posts2.data.data.account_number;
+						accountNumberX = posts2.data.data[0].account_number;
 
-                        if(posts2.data.data.kantin.pin_setting==0){
-                            usePINorNOT = 'false';
-                        }else {
-                            usePINorNOT = 'true';
-                        }
-
-                        beaAdmin = posts2.data.data.admin_fee.admin_fee_total;
-
-                        
+                        getTransaksiPINKonfigurasi();
                     }
 				}
 				save2();
 			}
 
-            function setVal(str){
-                $('#saldoTambah').val(formatRupiah(str));
-            }
+            function getTransaksiPINKonfigurasi(){
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/usr?q='+accountNumberX, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
 
+					if (posts2.status == 201 || posts2.status == 200) {
+                        console.log(posts2.data.data.kantin.pin_setting);
+						if(posts2.data.data.kantin.pin_setting==0){
+                            usePINorNOT = 'false';
+                        }else {
+                            usePINorNOT = 'true';
+                        }
+					}
+				}
+				save2();
+			}
 		</script>

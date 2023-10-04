@@ -16,147 +16,35 @@
 			<!--navigation-->
 			<ul class="metismenu" id="menu">
 				<li>
-					<a href="<?=base_url().$function;?>">
+					<a href="<?=base_url().$function;?>/Wapage">
 						<div class="parent-icon"><i class='bx bx-home-circle'></i>
 						</div>
-						<div class="menu-title">Dashboard</div>
+						<div class="menu-title">Halaman Utama</div>
 					</a>
 				</li>
-				<?php
-				if($role=='owner'){ ?>
-                <li>
-					<a href="<?=base_url().$function;?>/Agensi">
-						<div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+				<li>
+					<a href="<?=base_url().$function;?>/Wapage_CreateSession">
+						<div class="parent-icon"><i class='bx bx-scan'></i>
 						</div>
-						<div class="menu-title">Agensi</div>
+						<div class="menu-title">Scan QR <i class="bx bx-lock"></i></div>
 					</a>
 				</li>
-				<?php }else if($role=='Host'){ ?>
-					
-					<li>
-						<a href="<?=base_url().$function;?>/Siswa">
-							<div class="parent-icon"><i class='bx bx-user-circle'></i>
-							</div>
-							<div class="menu-title">Siswa</div>
-						</a>
-					</li>
-					
-					<li>
-						<a href="<?=base_url().$function;?>/General">
-							<div class="parent-icon"><i class='bx bx-user-circle'></i>
-							</div>
-							<div class="menu-title">General</div>
-						</a>
-					</li>
-					
-					<li>
-						<a href="<?=base_url().$function;?>/Merchant">
-							<div class="parent-icon"><i class='bx bx-shopping-bag'></i>
-							</div>
-							<div class="menu-title">Merchant</div>
-						</a>
-					</li>
-					
-					
-                    <hr/>
-                    <!-- <li>
-						<a href="<?=base_url().$function;?>/Saldo">
-							<div class="parent-icon"><i class='bx bx-wallet'></i>
-							</div>
-							<div class="menu-title">Tabungan & Saldo</div>
-						</a>
-					</li> -->
-                    
-                    <li>
-						<a href="javascript:;" class="has-arrow">
-							<div class="parent-icon"><i class='bx bx-file'></i>
-							</div>
-							<div class="menu-title">Jurnal</div>
-						</a>
-						<ul>
-							<li> <a href="<?=base_url().$function;?>/Mutasi_Transaksi_Siswa"><i class='bx bx-radio-circle'></i>Laporan Saldo Siswa</a>
-							</li>
-							<li> <a href="<?=base_url().$function;?>/Mutasi_Transaksi_General"><i class='bx bx-radio-circle'></i>Laporan Saldo General</a>
-							</li>
-							<li> <a href="<?=base_url().$function;?>/Mutasi_Transaksi_Kantin"><i class='bx bx-radio-circle'></i>Laporan Saldo Kantin</a>
-							</li>
-							<li> <a href="<?=base_url().$function;?>/Mutasi_Withdrawal"><i class='bx bx-radio-circle'></i>Mutasi Pencairan Saldo</a>
-							</li>
-							<!-- <li> <a href="<?=base_url().$function;?>/Mutasi_Top_Up"><i class='bx bx-radio-circle'></i>Mutasi Top-Up Saldo</a>
-							</li> -->
-							<!-- <li> <a href="<?=base_url().$function;?>/Mutasi_Pendapatan"><i class='bx bx-radio-circle'></i>Mutasi Saldo</a>
-							</li> -->
-						</ul>
-					</li>
-					
-					<hr/>
-
-					<li>
-						<a href="<?=base_url().$function;?>/WDStakeHolders">
-							<div class="parent-icon"><i class='bx bx-transfer'></i>
-							</div>
-							<div class="menu-title">Pencairan Bagi Hasil</div>
-						</a>
-					</li>
-
-                    
-					<!-- <li>
-						<a href="<?=base_url().$function;?>/WD">
-							<div class="parent-icon"><i class='bx bx-transfer-alt'></i>
-							</div>
-							<div class="menu-title">Pencairan Dana</div>
-						</a>
-					</li> -->
-				<?php }else if($role=='Merchant'){ ?>
-					
-					<li>
-						<a href="<?=base_url().$function;?>/Transaksi">
-							<div class="parent-icon"><i class='bx bx-calculator'></i>
-							</div>
-							<div class="menu-title">Transaksi</div>
-						</a>
-					</li>
-
-					<li>
-						<a href="<?=base_url().$function;?>/Produk">
-							<div class="parent-icon"><i class='bx bx-shopping-bag'></i>
-							</div>
-							<div class="menu-title">Produk</div>
-						</a>
-					</li>
-					
-					<hr/>
-
-					<li>
-						<a href="javascript:;" class="has-arrow">
-							<div class="parent-icon"><i class='bx bx-file'></i>
-							</div>
-							<div class="menu-title">Jurnal</div>
-						</a>
-						<ul>
-							<li> <a href="<?=base_url().$function;?>/Riwayat"><i class='bx bx-radio-circle'></i>Riwayat Transaksi</a>
-							</li>
-							<li> <a href="<?=base_url().$function;?>/Mutasi_Withdrawal"><i class='bx bx-radio-circle'></i>Mutasi Pencairan Saldo</a>
-							</li>
-							<!-- <li> <a href="<?=base_url().$function;?>/Mutasi_Top_Up"><i class='bx bx-radio-circle'></i>Mutasi Top-Up Saldo</a>
-							</li> -->
-							<!-- <li> <a href="<?=base_url().$function;?>/Mutasi_Pendapatan"><i class='bx bx-radio-circle'></i>Mutasi Saldo</a>
-							</li> -->
-						</ul>
-					</li>
-					
-					
-				<?php } else { ?>
-					<!-- empty menu -->
-				<?php } ?>
-
-					<li>
-						<a href="<?=base_url().$function;?>/Profil">
-							<div class="parent-icon"><i class='bx bx-cog'></i>
-							</div>
-							<div class="menu-title">Pengaturan</div>
-						</a>
-					</li>
+				<li>
+					<a href="<?=base_url().$function;?>/Wapage_BulkMessage">
+						<div class="parent-icon"><i class='bx bx-mail-send'></i>
+						</div>
+						<div class="menu-title">Kirim Pesan Personal</div>
+					</a>
+				</li>
+				
+                <li>
+					<a href="<?=base_url().$function;?>/Wapage_BulkMessageBroadcast">
+						<div class="parent-icon"><i class='bx bx-mail-send'></i>
+						</div>
+						<div class="menu-title">Kirim Pesan Broadcast</div>
+					</a>
+				</li>
+				
 			</ul>
 			<!--end navigation-->
 		</div>
