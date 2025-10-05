@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--favicon-->
-	<link rel="icon" href="<?=base_url();?>assets/png/icon.png" type="image/png" />
+	<link rel="icon" href="<?=base_url();?>assets_oncard/logo/o_white.png" type="image/png" />
   
 	<!--plugins-->
 	<link href="<?=base_url();?>assets_oncard/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
@@ -48,7 +48,7 @@
 				<div class="row row-cols-1 row-cols-lg-7 row-cols-xl-5">
 					<div class="col mx-auto">
 						<div class="mb-4 text-center">
-							<img src="<?=base_url();?>assets/png/icon.png" width="180" alt="" />
+							<img src="<?=base_url();?>assets_oncard/logo/logo_dongker.png" width="180" alt="" />
 						</div>
 						<div class="card">
 							<div class="card-body">
@@ -206,8 +206,16 @@
                     localStorage.setItem('_permission', login.data.result.data.permission);
 					sessionStorage.setItem('_user', login.data.result.data.users.username);
                     localStorage.setItem('_user', login.data.result.data.users.username);
+					localStorage.setItem('_instansi_id', login.data.result.data.users.instansi_id);
+					sessionStorage.setItem('_instansi_id', login.data.result.data.users.instansi_id);
 
-					window.location.href = "<?= base_url('CPanel_Admin') ?>";
+                    if(login.data.result.data.permission=='owner'){
+                        window.location.href = "<?= base_url('CPanel_Admin/GetAccessThen') ?>";
+                    }else {
+                        window.location.href = "<?= base_url('CPanel_Admin') ?>";
+                    }
+
+					
 				} else if(login.data.status==500){
 						
 					Toastify({

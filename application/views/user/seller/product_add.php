@@ -51,27 +51,32 @@
 							<div class="col-lg-6">
 							<div class="border border-3 p-4 rounded">
                               <div class="row g-3">
-								  <div class="col-md-6">
-									<label for="jenis" class="form-label">Jenis Produk</label>
-									<select class="form-control" id="jenis">
-										<option value="Makanan">Makanan</option>
-										<option value="Minuman">Minuman</option>
-										<option value="Alat Tulis">Alat Tulis</option>
-										<option value="Pakaian">Pakaian</option>
-										<option value="Perlengkapan Lainnya">Perlengkapan Lainnya</option>
-									</select>
-								  </div>
-								  <div class="col-md-6">
+								  
+								  <div class="col-md-12">
 									<label for="kategori" class="form-label">Kategori Produk</label>
 									<select class="form-control" id="kategori">
-										<option value="Belum ada kategori" selected>Belum ada kategori</option>
+                                        <option value="Favorit">Favorit</option>
+                                        <option value="Makanan Ringan">Makanan Ringan</option>
+                                        <option value="Makanan Berat">Makanan Berat</option>
+                                            <option value="Minuman Kemasan">Minuman Kemasan</option>
+                                            <option value="Minuman Racikan">Minuman Racikan</option>
+                                            <option value="Alat Tulis">Alat Tulis</option>
+                                            <option value="Pakaian">Pakaian</option>
+                                            <option value="Perlengkapan Lainnya">Perlengkapan Lainnya</option>
+                                            <option value="Lainnya">Lainnya</option>
 									</select>
 								  </div>
-								  <div class="col-md-12">
-									<label for="harga" class="form-label">Harga</label>
-									<input type="text" class="form-control" id="harga" placeholder="Rp0">
+
+                                  <div class="col-md-6">
+									<label for="harga" class="form-label">Harga Modal</label>
+									<input type="text" class="form-control" id="harga_modal" oninput="setVal4(this.value);" placeholder="Rp0">
 								  </div>
 
+								  <div class="col-md-6">
+									<label for="harga" class="form-label">Harga Jual</label>
+									<input type="text" class="form-control" id="harga" oninput="setVal3(this.value);" placeholder="Rp0">
+								  </div>
+								  
 								  <div class="col-md-6">
 									<label for="satuan" class="form-label">Satuan</label>
 									<select class="form-control" id="satuan">
@@ -134,19 +139,22 @@
 				var namaProduk = $("#namaProduk").val();
 				var deskripsi = $("#deskripsi").val();
 				var imageuploadify = $("#file")[0].files[0];
-				var jenis = $("#jenis").val();
 				var kategori = $("#kategori").val();
 				var harga = $("#harga").val();
+				var harga_modal = $("#harga_modal").val();
 				var satuan = $("#satuan").val();
 				var stok = $("#stok").val();
 				
+                harga = harga.split('.').join("");
+                harga_modal = harga_modal.split('.').join("");
+
 				var form_data = new FormData();
 				form_data.append('nama_produk', namaProduk);
 				form_data.append('deskripsi', deskripsi);
 				form_data.append('gambar', imageuploadify);
-				form_data.append('jenis_produk', jenis);
 				form_data.append('kategori_produk', kategori);
 				form_data.append('harga', harga);
+				form_data.append('harga_modal', harga_modal);
 				form_data.append('satuan', satuan);
 				form_data.append('stok', stok);
 
@@ -283,6 +291,7 @@
 						$("#jenis").val(posts.data.data.jenis_produk);
 						$("#kategori").val(posts.data.data.kategori_produk);
 						$("#harga").val(posts.data.data.harga);
+						$("#harga_modal").val(posts.data.data.harga_modal);
 						$("#satuan").val(posts.data.data.satuan);
 						$("#stok").val(posts.data.data.stok);
 						
@@ -305,5 +314,12 @@
 				}
 				return result;
 			}
+
+            function setVal3(str){
+                $('#harga').val(formatRupiah(str));
+            }
+            function setVal4(str){
+                $('#harga_modal').val(formatRupiah(str));
+            }
 
         </script>

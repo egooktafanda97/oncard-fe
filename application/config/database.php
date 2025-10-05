@@ -101,9 +101,32 @@ $db['default'] = array(
 $db['second'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'onca_oncard_v2',
-	'password' => 'komputer88',
-	'database' => 'onca_oncard_v2',
+	'username' => 'api_management_tagihan',
+	'password' => 'api_management_tagihan@@@',
+	'database' => 'api_management_tagihan',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+
+$db['third'] = array(
+	'dsn'	=> '',
+	'hostname' => 'localhost',
+	'username' => 'api_ego',
+	'password' => 'Oktober1997@',
+	'database' => 'api_core',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

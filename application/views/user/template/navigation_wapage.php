@@ -1,15 +1,13 @@
 <body>
 	<!--wrapper-->
-	<div class="wrapper">
+	<div class="wrapper" id="menuicosss">
 		<!--sidebar wrapper -->
 		<div class="sidebar-wrapper" data-simplebar="true">
 			<div class="sidebar-header">
 				<div>
-					<img src="<?=base_url();?>assets/png/icon.png" class="logo-icon" alt="logo icon">
+                <img src="<?=base_url();?>assets_oncard/logo/logo_dongker.png" class="logo-icon" alt="logo icon" style="width:140px;">
 				</div>
-				<div>
-					<h4 class="logo-text text-success">ON<b>CARD</b></h4>
-				</div>
+				
 				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left text-success'></i>
 				</div>
 			</div>
@@ -23,17 +21,32 @@
 					</a>
 				</li>
 				<li>
+					<a href="<?=base_url().$function;?>/Wapage_TestKirim">
+						<div class="parent-icon"><i class='bx bx-send'></i>
+						</div>
+						<div class="menu-title">Test Kirim</div>
+					</a>
+				
+				<!-- <li>
 					<a href="<?=base_url().$function;?>/Wapage_CreateSession">
 						<div class="parent-icon"><i class='bx bx-scan'></i>
 						</div>
 						<div class="menu-title">Scan QR <i class="bx bx-lock"></i></div>
 					</a>
-				</li>
+				</li> -->
 				<li>
 					<a href="<?=base_url().$function;?>/Wapage_BulkMessage">
 						<div class="parent-icon"><i class='bx bx-mail-send'></i>
 						</div>
-						<div class="menu-title">Kirim Pesan Personal</div>
+						<div class="menu-title">Kirim Pesan Personal (Siswa)</div>
+					</a>
+				</li>
+				
+                <li>
+					<a href="<?=base_url().$function;?>/Wapage_BulkMessageGeneral">
+						<div class="parent-icon"><i class='bx bx-mail-send'></i>
+						</div>
+						<div class="menu-title">Kirim Pesan Personal (General)</div>
 					</a>
 				</li>
 				
@@ -45,6 +58,14 @@
 					</a>
 				</li>
 				
+                <hr/>
+                <li>
+					<a href="<?=base_url().$function;?>/" class="text-danger">
+						<div class="parent-icon"><i class='bx bx-arrow-back'></i>
+						</div>
+						<div class="menu-title">Ke Portal Host </div>
+					</a>
+				</li>
 			</ul>
 			<!--end navigation-->
 		</div>

@@ -4,6 +4,7 @@ Class Home_model extends CI_Model{
             parent::__construct();
             //load our second db and put in $db2
             $this->db2 = $this->load->database('second', TRUE);
+            $this->db3 = $this->load->database('third', TRUE);
     }
 
 	public function getData($tableName, $where){
@@ -198,6 +199,11 @@ Class Home_model extends CI_Model{
 
 	public function getSelectData2nd($select, $tableName, $where){
 		$result = $this->db2->query("select $select from $tableName $where");
+		return $result;
+	}
+
+	public function getSelectData3rd($select, $tableName, $where){
+		$result = $this->db3->query("select $select from $tableName $where");
 		return $result;
 	}
 

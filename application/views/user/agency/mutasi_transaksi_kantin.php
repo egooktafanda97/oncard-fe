@@ -93,18 +93,44 @@
     margin-right: 5px;
     }
 
+    .text-container {
+        display: inline-block; /* Keep inline layout */
+        max-width: 100px; /* Set the maximum width to 100px */
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Add ellipsis to overflow text */
+        vertical-align: middle;
+        transition: max-width 0.3s ease; /* Smooth transition for width change */
+    }
+
+    td:hover .text-container {
+        max-width: 100%; /* Expand max width on hover */
+    }
+
+    /* Optional: Add tooltip for better usability */
+    td:hover::after {
+        content: attr(data-full-text);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        white-space: nowrap;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 4px;
+        z-index: 1;
+    }
 </style>
 <div class="page-wrapper">
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Laporan Saldo Merchant</div>
+					<div class="breadcrumb-title pe-3">Jurnal Merchant</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Laporan Saldo Merchant</li>
+								<li class="breadcrumb-item active" aria-current="page">Jurnal Merchant</li>
 							</ol>
 						</nav>
 					</div>
@@ -232,6 +258,7 @@
 			$(document).ready(function () {
                 // getSiswaData();
                 showData();
+                getDataMerchant();
 
                 $('.single-select').select2({
                     theme: 'bootstrap4',
@@ -328,12 +355,14 @@
 
                             mmm.map((mapping,i)=>{
 
-                                invoiceDataArray.push({
-                                    invoice: mapping.invoice,
-                                    date: mapping.created_at,
-                                    customers_name: mapping.account.customers_name,
-                                    account_number: mapping.account.account_number,
-                                });
+                                if(mapping.account.account_type=='primary'){
+                                    invoiceDataArray.push({
+                                        invoice: mapping.invoice,
+                                        date: mapping.created_at,
+                                        customers_name: mapping.account.customers_name,
+                                        account_number: mapping.account.account_number,
+                                    });
+                                }
                             
                                 j++;
 
@@ -376,7 +405,11 @@
                                         </td>
                                         <td width="70">${moment(mapping.created_at).format('DD-MM-YYYY')}</td>
                                         <td width="70">${moment(mapping.created_at).format('HH:mm:ss')} WIB</td>
-                                        <td width="160">${mapping.invoice}</td>
+                                        <td data-full-text="${mapping.invoice}">
+                                            <span class="text-container">
+                                        ${mapping.invoice}
+                                        </span>
+                                        </td>
                                         <td>${namaNya}</td>
                                         <td>${namaMerchant}</td>
                                         <td>Rp${formatRupiah(amount.toString())}</td>
@@ -490,17 +523,17 @@
                 });
                 
                 // FILTER 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                $('#siswaGet').html('');
-                $('#siswaGet').append($('<option>', { 
-                    value: '',
-                    text : 'Pilih akun'
-                }));
-                $.each(dataAkun, function (i, item) {
-                    $('#siswaGet').append($('<option>', { 
-                        value: item.account_number,
-                        text : item.customers_name 
-                    }));
-                });
+                // $('#siswaGet').html('');
+                // $('#siswaGet').append($('<option>', { 
+                //     value: '',
+                //     text : 'Pilih akun'
+                // }));
+                // $.each(dataAkun, function (i, item) {
+                //     $('#siswaGet').append($('<option>', { 
+                //         value: item.account_number,
+                //         text : item.customers_name 
+                //     }));
+                // });
             }
 
             let statustoggle = false;
@@ -517,4 +550,43 @@
 
                 showData();
             }
+
+            function getDataMerchant(){
+				let num = 0;
+				let tableColumn = '';
+				tableColumn += `<tr><td colspan="8" class="text-center">Loading...</td></tr>`;
+				$('.putContentHere').html(tableColumn);
+				
+				const save2 = async () => {
+					const posts2 = await axios.get( '<?= api_url(); ?>api/v1/kantin' , {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'nopaginate' : true
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+							num += 1;
+							tableColumn = '';
+
+                            $('#siswaGet').html('');
+                            $('#siswaGet').append($('<option>', { 
+                                value: '',
+                                text : 'Pilih akun merchant'
+                            }));
+
+							posts2.data.data.map((mapping,i)=>{
+							        $('#siswaGet').append($('<option>', { 
+                                        value: mapping.accounts.account_number,
+                                        text : mapping.accounts.customers_name
+                                    }));
+							});
+						
+					}
+				}
+				save2();
+			}
+
 		</script>

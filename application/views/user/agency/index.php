@@ -1,59 +1,59 @@
+
 <div class="page-wrapper">
 			<div class="page-content">
-				<div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
                    <div class="col">
-					 <div class="card radius-10 border-start border-0 border-3 border-info">
-						<div class="card-body">
-							<div class="d-flex align-items-center">
-								<div>
-									<p class="mb-0 text-secondary">Nama Instansi</p>
-									<h4 class="my-1 text-primary box1val" style="font-size:20px!important;"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
-                                    <p class="mb-0 font-13 box1val2">-</p>
-								</div>
-							</div>
-						</div>
-					 </div>
-				   </div>
-				   <div class="col">
-					<div class="card radius-10 border-start border-0 border-3 border-danger">
-					   <div class="card-body">
+					<div class="card radius-10 border-success" style="">
+					   <div class="card-body  px-4 py-2" style="">
 						   <div class="d-flex align-items-center">
+                              <div>
+                                <img src="<?=base_url();?>assets_oncard/images/icon_user.png" alt="logo icon" style="width:50px;margin-right:30px; width:50px;object-fit:cover!important;">
+                              </div>
 							   <div>
-								   <p class="mb-0 text-secondary">Total Siswa</p>
-								   <h4 class="my-1 text-danger box2val"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
+								   <p class="mb-0 text-dongker " style="font-weight:800;">Jumlah Siswa</p>
 								   <p class="mb-0 font-13 box2val2">-</p>
 							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto" style="width:50px!important;height:50px!important;"><i class='bx bxs-group'></i>
+							   <div class="ms-auto" style="width:auto!important;height:50px!important;">
+                               <!-- <i class='bx bxs-group'></i> -->
+                               <h4 class="my-1 text-dongker box2val pt-2 font-mob" style="font-weight:800; font-size:20px!important;margin-top:15px;display:block;"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
 							   </div>
 						   </div>
 					   </div>
 					</div>
 				  </div>
 				  <div class="col">
-					<div class="card radius-10 border-start border-0 border-3 border-success">
-					   <div class="card-body">
+                    <div class="card radius-10 border-success" style="">
+					   <div class="card-body  px-4 py-2" style="">
 						   <div class="d-flex align-items-center">
+                           <div>
+                                <img src="<?=base_url();?>assets_oncard/images/icon_merchant.png" alt="logo icon" style="width:50px;margin-right:30px; width:50px;object-fit:cover!important;">
+                              </div>
 							   <div>
-								   <p class="mb-0 text-secondary">Total Kantin</p>
-								   <h4 class="my-1 text-success box3val"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
-								   <p class="mb-0 font-13 box3val2"><a href="<?=base_url().$function;?>/Merchant">Lihat daftar kantin</a></p>
+								   <p class="mb-0 text-dongker" style="font-weight:800;">Jumlah Merchant</p>
+								   
+								   <p class="mb-0 font-13 box3val2 "><a href="<?=base_url().$function;?>/Merchant">Lihat daftar merchant</a></p>
 							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i class='bx bxs-bar-chart-alt-2' ></i>
+							   <div class="ms-auto" style="width:50px!important;height:50px!important;">
+                               <h4 class="my-1 text-dongker box3val font-mob" style="font-weight:800;font-size:20px!important; padding-top:10px;display:block;"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
 							   </div>
 						   </div>
 					   </div>
 					</div>
 				  </div>
 				  <div class="col">
-					<div class="card radius-10 border-start border-0 border-3 border-warning">
-					   <div class="card-body">
+                  <div class="card radius-10 border-success" style="">
+					   <div class="card-body  px-4 py-2" style="">
 						   <div class="d-flex align-items-center">
+                           <div>
+                                <img src="<?=base_url();?>assets_oncard/images/icon_rupiah.png" alt="logo icon" style="width:50px;margin-right:30px; width:50px;object-fit:cover!important;">
+                              </div>
 							   <div>
-								   <p class="mb-0 text-secondary">Saldo Akun</p>
-								   <h4 class="my-1 text-warning box4val"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
-								   <p class="mb-0 font-13"><a href="#/">Total saldo keseluruhan.</a></p>
+                               <p class="mb-0 text-dongker" style="font-weight:800;">Jumlah Saldo</p>
+								   
+								   <p class="mb-0 font-13"><a href="<?=base_url('CPanel_Admin/SebaranSaldo');?>">Sebaran jumlah saldo</a></p>
 							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class='bx bxs-wallet'></i>
+							   <div class="ms-auto" style="width:auto!important;height:50px!important;">
+                                <h4 class="my-1 text-dongker box4val font-mob" style="font-weight:800;font-size:20px!important;padding-top:10px;"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
 							   </div>
 						   </div>
 					   </div>
@@ -61,11 +61,17 @@
 				  </div> 
 				</div><!--end row-->
 
-				<div class="row">
+				<div class="row rowslider" style="display:none;">
 					<div class="col-12">
 						<div class="card radius-10 w-100" style="overflow:hidden;">
 							<div class="row" >
-								<img src="<?=base_url();?>assets_oncard/images/bg_new.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/>
+								<!-- <img src="<?=base_url();?>assets_oncard/images/bg_new.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/> -->
+								<div class="siema">
+                                <div><img src="<?=base_url();?>assets_oncard/images/banner_new.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/></div>
+                                <div><img src="<?=base_url();?>assets_oncard/images/bg_new7.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/></div>
+								<!-- <div><img src="<?=base_url();?>assets_oncard/images/bg_new6.png" style="width:100%; object-fit:cover;object-position:center;height:200px;"/></div> -->
+								<!-- <div><img src="<?=base_url();?>assets_oncard/images/bg_new3.png" style="width:100%; object-fit:cover;object-position:center;height:200px;"/></div> -->
+								</div>
 							</div>
 						</div>
 					</div>
@@ -73,34 +79,80 @@
 				
 				<div class="row row-cols-1 row-cols-lg-3">
 						 <div class="col d-flex">
-                           <div class="card radius-10 w-100">
-							   <div class="card-body">
-								<p class="font-weight-bold mb-1 text-secondary">Grafik Transaksi</p>
-								<div class="d-flex align-items-center mb-4">
-									<div>
-										<h4 class="mb-0 totalTransaksiGrafik">0</h4>
-									</div>
-								</div>
-								<div class="chart-container-0">
-									<canvas id="chart3"></canvas>
-								</div>
-
-								<p class="text-sm font-weight-bold mt-3 text-secondary"><i class="text-primary bx bx-info-square" data-bs-toggle="tooltip" data-bs-placement="top" title="7 hari terakhir seluruh transaksi yang terjadi dari semua kantin"></i> Data dari 7 hari terakhir</p>
-							   </div>
-							   
-						   </div>
-						 </div>
-						 <div class="col d-flex">
 							<div class="card radius-10 w-100">
 								<div class="card-header bg-transparent">
 									<div class="d-flex align-items-center">
 										<div>
-											<h6 class="mb-0">Sebaran Saldo</h6>
+											<h6 class="mb-0 statusTextheader">Loading...</h6>
 										</div>
 										
 									</div>
 								</div>
 								<div class="card-body">
+
+									<div class="bxnx">
+										<button type="button" class="btn btn-outline-secondary" style="display:block;margin:auto;" onclick="getGraph1('totaltransaksi');">Tampilkan grafik dan data status hari ini</button>
+									</div>
+
+									<div class="chart-container-1 chart3DIV">
+										<canvas id="chart3"></canvas>
+									</div>
+									<div class="row rowrowrow">
+										
+									</div>
+								</div>
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center"><b>Status Hari Ini</b>
+									</li>
+									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Transaksi <span class="badge bg-gradient-quepal transaksiToday rounded-pill">0</span>
+									</li>
+									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Nominal Transaksi <span class="badge bg-gradient-quepal uangBeralihToday rounded-pill">Rp0</span>
+									</li>
+									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Income Sekolah <span class="badge bg-gradient-deepblue saldoInstansiToday rounded-pill">Rp0</span>
+									</li>
+									<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Income Oncard <span class="badge bg-gradient-bloody saldoOwnerToday rounded-pill">Rp0</span>
+									</li>
+								</ul>
+							</div>
+						 </div>
+
+                         <div class="col d-flex">
+							<div class="card radius-10 w-100">
+								 <div class="card-header bg-transparent">
+									<div class="d-flex align-items-center">
+										<div>
+											<h6 class="mb-0">Saldo Merchant</h6>
+										</div>
+										
+									 </div>
+								 </div>
+								<div class="card-body">
+								   <div class="">
+
+                                   <swiper-container class="mySwiper putListKantinSaldoHere" init="false">
+
+                                    </swiper-container>
+
+								   </div>
+
+								</div>
+							</div>
+						  </div>
+
+						 <div class="col d-flex">
+							<div class="card radius-10 w-100">
+								<div class="card-header bg-transparent">
+									<div class="d-flex align-items-center">
+										<div>
+											<h6 class="mb-0">Sebaran Jumlah Saldo</h6>
+										</div>
+										
+									</div>
+								</div>
+								<div class="card-body">
+									<div class="bxnx">
+										<button type="button" class="btn btn-outline-secondary" style="display:block;margin:auto;" onclick="getGraph1('totaltransaksi');">Tampilkan grafik</button>
+									</div>
 									<div class="chart-container-1">
 										<canvas id="chart4"></canvas>
 									</div>
@@ -119,26 +171,7 @@
 								</ul>
 							</div>
 						  </div>
-						  <div class="col d-flex">
-							<div class="card radius-10 w-100">
-								 <div class="card-header bg-transparent">
-									<div class="d-flex align-items-center">
-										<div>
-											<h6 class="mb-0">Saldo Merchant</h6>
-										</div>
-										
-									 </div>
-								 </div>
-								<div class="card-body">
-								   <div class="putListKantinSaldoHere">
-								   </div>
-								   <hr/>
-								   <div class="chart-container-4">
-										<canvas id="chart5"></canvas>
-									</div>
-								</div>
-							</div>
-						  </div>
+						  
 					 </div><!--end row-->
 
                      <div class="row">
@@ -165,6 +198,10 @@
 			</div>
 		</div>
 
+		<script src="https://pawelgrzybek.github.io/siema/assets/siema.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+
+
         <script type="text/javascript">
 
 			let invoiceDataArray = [];
@@ -179,8 +216,46 @@
 			let saldTot = 0;
 			let saldoKantinTotal = 0;
             let saldoAll = 0;
+
+            const swiperEl = document.querySelector('swiper-container')
+
+            const params = {
+            injectStyles: [`
+            .swiper-pagination-bullet {
+                margin-top:25px;
+                width: 20px;
+                height: 20px;
+                text-align: center;
+                line-height: 20px;
+                font-size: 12px;
+                color: #000;
+                opacity: 1;
+                background: rgba(0, 0, 0, 0.2);
+            }
+
+            .swiper-pagination-bullet-active {
+                color: #fff;
+                background: #007aff;
+            }
+            `],
+            pagination: {
+                clickable: true,
+                renderBullet: function (index, className) {
+                return '<span class="' + className + '">' + (index + 1) + "</span>";
+                },
+            },
+            }
+
+            Object.assign(swiperEl, params)
+
+            swiperEl.initialize();
             $(document).ready(function () {
 				getSaldoOwner();
+
+                $('.rowslider').attr('style','display:block');
+
+                const mySiema = new Siema({
+			    easing: "cubic-bezier(.17,.67,.32,1.34)" });
                 
             });
 
@@ -203,6 +278,9 @@
 			
 					if (posts2.status == 200) {
                         saldoOwner= posts2.data.data.data[0].balance;
+
+						$('.saldoOwner').html("Rp"+formatRupiah(saldoOwner.toString()));
+
                         saldoAll=parseInt(saldoOwner);
 						getSiswa();
 
@@ -235,7 +313,7 @@
                         jmlData = posts2.data.data.length;
                         
                         posts2.data.data.map((mapping,i)=>{
-                            if(mapping.accounts.card_id){
+                            if(mapping.accounts?.card_id){
                                 jmlDataConnect++;
                             }
 
@@ -271,12 +349,13 @@
                                 `;
                             }
 
-							saldo += parseInt(mapping.accounts.balance);
+							saldo += parseInt(mapping.accounts?.balance);
                         });
 
                         percentage = (jmlDataConnect/jmlData)*100;
-                        $('.box2val').html(posts2.data.data.length);
-                        $('.box2val2').html(formatRupiah(jmlDataConnect.toString())+"/"+formatRupiah(jmlData.toString())+"("+percentage+"%) akun terkoneksi.");
+                        percentage = percentage.toFixed(2);
+                        $('.box2val').html("<font class='text-dongker'>"+jmlDataConnect.toString()+"</font>"+"<font style='font-size:13px; font-weight:450;'> / "+formatRupiah(jmlData.toString())+"</font>");
+                        $('.box2val2').html(percentage+"% terkoneksi kartu");
 
 						
 						arrSebaranSaldo.push(saldo);
@@ -325,31 +404,41 @@
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/kantin', {
 						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'nopaginate' : true
 						}
 					}).catch((err) => {
 						console.log(err.response);
 					});
 			
 					if (posts2.status == 200) {
-                        $('.box3val').html(posts2.data.data.data.length);
+                        $('.box3val').html(posts2.data.data.length);
 
 						tableColumn = '';
 						let num = 0;
 						let saldo = 0;
 
-						if(posts2.data.data.data.length==0){
+                        let kantinArray = [];
+                        let result = [];
+
+						if(posts2.data.data.length==0){
 							tableColumn +=`<tr><td colspan="7" class="text-center">Tidak ada data.</td></tr>`;
 							$('.putContentHere').html(tableColumn);return false;
 						}
 						
 						// console.log(posts2.data.data.data);
-						posts2.data.data.data.map((mapping,i)=>{
+						posts2.data.data.map((mapping,i)=>{
 
 						saldo += parseInt(mapping.accounts.balance);
 
                         let nmkntn = mapping.nama_kantin;
-                        
+
+                        kantinArray.push({
+                            'namakantin' : mapping.nama_kantin,
+                            'saldokantin' : mapping.accounts.balance,
+                        });
+
+                        kantinArray.sort((a, b) => b.saldokantin - a.saldokantin); // ordered desc by saldokantin
                         nmkntn = nmkntn.replace("'","");
 
 						NewDataArrayForGraph5.push({
@@ -358,17 +447,6 @@
 						});
 
                         
-						
-
-						num += 1;
-						tableColumn +=`
-						<div class="row pb-4">
-							<div class="col-12 d-flex">
-							<img src="<?=base_url();?>assets/png/canteen_ico.webp" class="me-2" style="width:100%; object-fit:cover;object-position:center;height:35px;width:35px;"/> ${mapping.nama_kantin}<br/>Rp${formatRupiah(mapping.accounts.balance)}
-							</div>
-						</div>
-						`;
-						
 						});
 
 						
@@ -376,6 +454,30 @@
 						
 						arrSebaranSaldo.push(saldo);
                         saldoAll+=saldo;
+
+
+
+                        for (let i = 0; i < kantinArray.length; i += 10) {
+                            result.push(kantinArray.slice(i, i + 10));
+                        }
+                        result.forEach((chunk, index) => {
+                            tableColumn += `<swiper-slide>`;
+                            chunk.forEach((item) => {
+                                num += 1;
+                                tableColumn +=`
+                                
+                                <div class="row pb-2" style="font-size:12px!important;">
+                                    <div class="col-12" style="display:inline-block;">
+                                    <img src="<?=base_url();?>assets/png/shop.png" class="me-2" style="width:100%; object-fit:cover;object-position:center;height:35px;width:35px;padding:5px;"/> ${item.namakantin}<font style="float:right!important;margin-top:7px!important;">Rp${formatRupiah(item.saldokantin)}</font>
+                                    </div>
+                                </div>
+                                
+                                `;
+                                // You can add any additional actions here for each item
+                            });
+                            tableColumn+=`</swiper-slide>`;
+                        });
+                        console.log(result);
 						
 					$('.putListKantinSaldoHere').html(tableColumn);
 					$('.saldoKantin').html("Rp"+formatRupiah(saldo.toString()));
@@ -401,16 +503,16 @@
 			
 					if (posts2.status == 200) {
                         // console.log(posts2.data.data);
-                        let statusInstansi = '';
-                        if(posts2.data.data[1].status.status=='Active'){
-                            statusInstansi = `Verified <i class="bx bxs-badge-check text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Instansi ini telah secara resmi bergabung dengan sistem Oncard.id" ></i>`;
-                        }else {
-                            statusInstansi = 'Not set';
-                        }
-                        $('.box1val').html(posts2.data.data[1].instansi.nama);
-                        $('.box1val2').html(statusInstansi);
-                        
-                        saldTot = parseInt(posts2.data.data[1].balance);
+                        // let statusInstansi = '';
+                        // if(posts2.data.data[1].status.status=='Active'){
+                        //     // statusInstansi = `Verified <i class="bx bxs-badge-check text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Instansi ini telah secara resmi bergabung dengan sistem Oncard.id" ></i>`;
+                        // }else {
+                        //     statusInstansi = 'Not set';
+                        // }
+                        // $('.box1val').html(posts2.data.data[1].instansi.nama);
+                        // $('.box1val2').html(statusInstansi);
+
+						saldTot = parseInt(posts2.data.data[1].balance);
                         $('.saldoInstansi').html("Rp"+formatRupiah(posts2.data.data[2].balance));
 
 						arrSebaranSaldo.push(parseInt(posts2.data.data[2].balance));
@@ -435,7 +537,7 @@
 
                         console.log('saldoAllLama', formatRupiah(saldoAll.toString()));
 
-                        $('.box4val').html(formatRupiah(saldoAll.toString()));
+                        $('.box4val').html("Rp"+formatRupiah(saldoAll.toString()));
 						
 
                     }
@@ -457,7 +559,7 @@
 					if (posts2.status == 200) {	
 						beaAdmin = posts2.data.data[0].admin_fee_total;
 
-						getGraph1();
+						// getGraph1('totaltransaksi');
 						
 					}
 
@@ -465,12 +567,32 @@
 				save2();				
 			}
             
-			function getGraph1(){
+			function getGraph1(str){
+
+				$('.bxnx').remove();
+
+				$('.statusTextheader').html('Loading...');
+				$('.chart3DIV').html(`Sedang memproses...<br/><small>Kami sedang mempersiapkan datanya, mohon bersabar menunggu.</small>`);
+
+				setGraph2();
+				setGraph3();
+
+				let setDaysAgo = 2;
+
+				let dateToday = moment(new Date()).format('YYYY-MM-DD');
+				let threedaysAgo = moment().subtract(setDaysAgo, "days").format('YYYY-MM-DD');
+				let totalTransaksi = 0;
+				let totalUang = 0;
+				let totalDistribusiInstansi = 0;
+				let totalDistribusiOncard = 0;
+
+				
 				
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/history?type=sell', {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?date_from='+dateToday+'&date_to='+dateToday, {
 						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+							'paginate' : true,
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -480,36 +602,138 @@
 					let num = 0;
 
 					if (posts2.status == 200) {	
-				
-						posts2.data.data.data.map((mapping,i)=>{
-							
-								let totalPayment = parseInt(beaAdmin)+parseInt(mapping.transaction_amount);
-								
-								graphtot += totalPayment;
 
-								let dateModified = moment(mapping.created_at).format('YYYY-MM-DD');
-								// console.log(totalPayment,graphtot);
-								invoiceDataArray.push({
-									date: dateModified,
-									total_payment: totalPayment,
-									date_origin: mapping.created_at,
-								});
+						console.log("fees",posts2.data.data);
+				
+						posts2.data.data.map((mapping,i)=>{
+
+
+							// console.log("trx",mapping.account.account_number,accountNumberBisnisX)
+
+							if(mapping.description=='shopping transactions' && mapping.management_type.name_type=='sell'){
+								
+								totalUang+= parseInt(mapping.credit_amount);
+							}
+							
+							if(mapping.account.account_number==accountNumberBisnisX && mapping.description=="admin fee"){
+								totalDistribusiInstansi+= parseInt(mapping.credit_amount);
+								totalTransaksi++;
+							}
+							if((mapping.description=="debit admin fee agency transactions")){
+								totalDistribusiInstansi+= parseInt(mapping.credit_amount);
+							}
+
+							if(mapping.account.account_number!=accountNumberBisnisX && mapping.description=="admin fee"){
+								totalDistribusiOncard+= parseInt(mapping.credit_amount);
+							}
+							if((mapping.description=="debit admin fee owner transactions")){
+								totalDistribusiOncard+= parseInt(mapping.credit_amount);
+							}
+						
 							
 						});
 						
 					}
 
-					$('.totalTransaksiGrafik').html("Rp"+formatRupiah(graphtot.toString()));
+					$('.transaksiToday').html(formatRupiah(totalTransaksi.toString())+" kali");
+					$('.uangBeralihToday').html("Rp"+formatRupiah(totalUang.toString()));
+					$('.saldoInstansiToday').html("Rp"+formatRupiah(totalDistribusiInstansi.toString()));
+					$('.saldoOwnerToday').html("Rp"+formatRupiah(totalDistribusiOncard.toString()));
 
-					callFilterDateGraph1();
+					// callFilterDateGraph1();
+
+					
 
 				}
 				save2();				
-			}
-			
-			
+				
+				
+				const save3 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?mtype=buy&date_from='+threedaysAgo+'&date_to='+dateToday, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+							'paginate' : true
+						}
+					}).catch((err) => {
+						console.log(err.response);
+                        filterTabungan = 0;
+					});
 
-			function callFilterDateGraph1(){
+					let num = 0;
+
+					if (posts2.status == 200) {	
+
+						$('.statusTextheader').html('Loading...');
+						$('.chart3DIV').html(`Sedang memproses...`);
+
+						invoiceDataArray = [];
+
+						// console.log(posts2.data.data);
+				
+						posts2.data.data.map((mapping,i)=>{
+
+
+							let totalPayment = parseInt(beaAdmin)+parseInt(mapping.debit_amount);
+								
+							graphtot += totalPayment;
+
+							let mmm = 0;
+
+							if(str=='totaltransaksi'){
+								if(mapping.management_type.name_type=="buy"){
+									mmm = 1;
+								}
+								$('.statusTextheader').html('Total Transaksi dalam '+(setDaysAgo+1)+' hari terakhir.');
+
+								let dateModified = moment(mapping.created_at).format('YYYY-MM-DD');
+								let existingInvoice = invoiceDataArray.find(invoice => invoice.invoice_number === mapping.invoice);
+
+								if (!existingInvoice) {
+									invoiceDataArray.push({
+										invoice_number: mapping.invoice,
+										date: dateModified,
+										total_payment: mmm,
+										date_origin: mapping.created_at,
+									});
+								}
+								
+							}else if(str=='uangberalih'){
+								if(mapping.management_type.name_type=="buy"){
+									mmm = parseInt(mapping.credit_amount);
+								}
+								$('.statusTextheader').html('Nominal Transaksi dalam '+(setDaysAgo+1)+' hari terakhir.');
+
+								let dateModified = moment(mapping.created_at).format('YYYY-MM-DD');
+								invoiceDataArray.push({
+									invoice_number: mapping.invoice,
+									date: dateModified,
+									total_payment: mmm,
+									date_origin: mapping.created_at,
+								});
+								
+							}
+							
+						});
+
+						$('.chart3DIV').html(`<canvas id="chart3"></canvas>`);
+
+						callFilterDateGraph1(str);
+
+						$('.rowrowrow').html(`
+						<div class="col-6">
+							<button type="button" onclick="getGraph1('totaltransaksi');" class="btn btn-sm btn-outline-primary" style="display:block;width:100%;">Total Transaksi</button>
+						</div>
+						<div class="col-6">
+							<button type="button" onclick="getGraph1('uangberalih');" class="btn btn-sm btn-outline-primary" style="display:block;width:100%;">Nominal Transaksi</button>
+						</div>
+						`);
+						
+					}
+				}
+				save3();				
+			}
+
+			function callFilterDateGraph1(str){
 				function get_date_parts(iso_string) {
 				const [year, month, day] = iso_string.split(/\D/g);
 
@@ -535,16 +759,24 @@
 
 
 				// console.log(NewInvoiceDataArray);
-				setGraph1();
+				setGraph1(str);
+				// setGraph2();
+				// setGraph3();
 				
 			}
 
-			function setGraph1(){
+			function setGraph1(str){
 				var ctx = document.getElementById('chart3').getContext('2d');
 
 				var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
 				gradientStroke1.addColorStop(0, '#008cff');
 				gradientStroke1.addColorStop(1, 'rgba(22, 195, 233, 0.1)');
+
+				if(str=='totaltransaksi'){
+					str = 'Total transaksi';
+				}else if(str=='uangberalih'){
+					str = 'Nominal Transaksi';
+				}
 
 				let namaLabel = [];
 				let dataValue = [];
@@ -553,7 +785,11 @@
 				$.each(NewInvoiceDataArray, function (i, item) {
 					if(num<7){
 					namaLabel.push(item.dayname);
-					dataValue.push(item.value);
+					if(str=='uangberalih'){
+						dataValue.push(formatRupiah(item.value));
+					}else {
+						dataValue.push(item.value);
+					}
 					}num++;
                 });
 				
@@ -562,7 +798,7 @@
 					data: {
 					labels: namaLabel,
 					datasets: [{
-						label: 'Total Transaksi',
+						label: str,
 						data: dataValue,
 						pointBorderWidth: 2,
 						pointHoverBackgroundColor: gradientStroke1,
@@ -578,19 +814,33 @@
 						display:false
 						},
 						tooltips: {
-						displayColors:false,	
-						mode: 'nearest',
-						intersect: false,
-						position: 'nearest',
-						xPadding: 10,
-						yPadding: 10,
-						caretPadding: 10
+							displayColors:false,	
+							mode: 'nearest',
+							intersect: false,
+							position: 'nearest',
+							xPadding: 10,
+							yPadding: 10,
+							caretPadding: 10,
+							callbacks: {
+								label: function(context) {
+									let label = str;
+									let val = context.yLabel;
+
+									
+									if (label) {
+										label += ': ';
+									}
+									if (context.yLabel !== null) {
+										label += formatRupiah(val.toString());
+									}
+									return label;
+								}
+							}
 						}
 					}
 				});
 
-				setGraph2();
-				setGraph3();
+				
 			}
 			
 			function setGraph2(){
@@ -607,7 +857,7 @@
 					graph2Data.push(mtk);
                 });
 
-				$('.saldoOwner').html("Rp"+formatRupiah(saldoOwner.toString()));
+				// $('.saldoOwner').html("Rp"+formatRupiah(saldoOwner.toString()));
 
 				var ctx = document.getElementById("chart4").getContext('2d');
 
@@ -697,141 +947,141 @@
 					
                 });
 
-                console.log(graph5DataLabel);
+                // console.log(graph5DataLabel);
 
-				var ctx = document.getElementById("chart5").getContext('2d');
+				// var ctx = document.getElementById("chart5").getContext('2d');
 
-					var myChart = new Chart(ctx, {
-						type: 'pie',
-						data: {
-						labels: graph5DataLabel,
-						datasets: [{
-							backgroundColor: coloR,
-							hoverBackgroundColor: coloR,
-							data: graph5DataValue,
-							borderWidth: [1, 1, 1,1]
-						}]
-						},
+				// 	var myChart = new Chart(ctx, {
+				// 		type: 'pie',
+				// 		data: {
+				// 		labels: graph5DataLabel,
+				// 		datasets: [{
+				// 			backgroundColor: coloR,
+				// 			hoverBackgroundColor: coloR,
+				// 			data: graph5DataValue,
+				// 			borderWidth: [1, 1, 1,1]
+				// 		}]
+				// 		},
 						
-						options: {
-							maintainAspectRatio: false,
-							cutoutPercentage: 0,
-							legend: {
-							position: 'right',
-							display: true,
-							labels: {
-								boxWidth:8
-							}
-							},
-							tooltips: {
-							displayColors:false,
-							},
-						},
+				// 		options: {
+				// 			maintainAspectRatio: false,
+				// 			cutoutPercentage: 0,
+				// 			legend: {
+				// 			position: 'right',
+				// 			display: true,
+				// 			labels: {
+				// 				boxWidth:8
+				// 			}
+				// 			},
+				// 			tooltips: {
+				// 			displayColors:false,
+				// 			},
+				// 		},
 
-					});
+				// 	});
 
 			}
 
 
-            let totalSALDOTOPUPALL = 0;
-            let totalSALDOWITHDRAW = 0;
+            // let totalSALDOTOPUPALL = 0;
+            // let totalSALDOWITHDRAW = 0;
 
 
-            let totalsaldotopup = 0;
-            topuptotal();
-            function topuptotal(){
+            // let totalsaldotopup = 0;
+            // topuptotal();
+            // function topuptotal(){
 
-                totalsaldotopup = 0;
-                totalSALDOTOPUPALL = 0;
+            //     totalsaldotopup = 0;
+            //     totalSALDOTOPUPALL = 0;
 
-				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?mtype=top_up', {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
-                            'paginate' : true
-						}
-					}).catch((err) => {
-						console.log(err.response);
-					});
+			// 	const save2 = async () => {
+			// 		const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?mtype=top_up', {
+			// 			headers: {
+			// 				'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+            //                 'paginate' : true
+			// 			}
+			// 		}).catch((err) => {
+			// 			console.log(err.response);
+			// 		});
 			
-					if (posts2.status == 200) {
-                        posts2.data.data.map((mapping,i)=>{
-                            totalsaldotopup += parseInt(mapping.credit_amount);
-                        });
+			// 		if (posts2.status == 200) {
+            //             posts2.data.data.map((mapping,i)=>{
+            //                 totalsaldotopup += parseInt(mapping.credit_amount);
+            //             });
 
-                        console.log("topup", formatRupiah(totalsaldotopup.toString()));
+            //             console.log("topup", formatRupiah(totalsaldotopup.toString()));
 
-                        totalSALDOTOPUPALL +=totalsaldotopup;
-                        wdtotal();
-                    }
-				}
-				save2();
-			}
+            //             totalSALDOTOPUPALL +=totalsaldotopup;
+            //             wdtotal();
+            //         }
+			// 	}
+			// 	save2();
+			// }
             
             
-            let totalsaldowd = 0;
+            // let totalsaldowd = 0;
             
-            function wdtotal(){
+            // function wdtotal(){
 
-                totalsaldowd = 0;
+            //     totalsaldowd = 0;
 
-				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?account_type=business&mtype=withdrawal', {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
-                            'paginate' : true
-						}
-					}).catch((err) => {
-						console.log(err.response);
-					});
+			// 	const save2 = async () => {
+			// 		const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?account_type=business&mtype=withdrawal', {
+			// 			headers: {
+			// 				'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+            //                 'paginate' : true
+			// 			}
+			// 		}).catch((err) => {
+			// 			console.log(err.response);
+			// 		});
 			
-					if (posts2.status == 200) {
-                        posts2.data.data.map((mapping,i)=>{
-                            totalsaldowd += parseInt(mapping.debit_amount);
-                        });
+			// 		if (posts2.status == 200) {
+            //             posts2.data.data.map((mapping,i)=>{
+            //                 totalsaldowd += parseInt(mapping.debit_amount);
+            //             });
 
-                        console.log("wd1", formatRupiah(totalsaldowd.toString()));
-                        totalSALDOWITHDRAW +=totalsaldowd;
-                        wdtotal2();
-                    }
-				}
-				save2();
-			}
+            //             console.log("wd1", formatRupiah(totalsaldowd.toString()));
+            //             totalSALDOWITHDRAW +=totalsaldowd;
+            //             wdtotal2();
+            //         }
+			// 	}
+			// 	save2();
+			// }
             
             
-            let totalsaldowd2 = 0;
+            // let totalsaldowd2 = 0;
             
-            function wdtotal2(){
+            // function wdtotal2(){
 
-                totalsaldowd2 = 0;
+            //     totalsaldowd2 = 0;
 
-				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?account_type=primary&mtype=withdrawal', {
-						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
-                            'paginate' : true
-						}
-					}).catch((err) => {
-						console.log(err.response);
-					});
+			// 	const save2 = async () => {
+			// 		const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?account_type=primary&mtype=withdrawal', {
+			// 			headers: {
+			// 				'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+            //                 'paginate' : true
+			// 			}
+			// 		}).catch((err) => {
+			// 			console.log(err.response);
+			// 		});
 			
-					if (posts2.status == 200) {
-                        posts2.data.data.map((mapping,i)=>{
-                            totalsaldowd2 += parseInt(mapping.debit_amount);
-                        });
+			// 		if (posts2.status == 200) {
+            //             posts2.data.data.map((mapping,i)=>{
+            //                 totalsaldowd2 += parseInt(mapping.debit_amount);
+            //             });
 
-                        console.log("wd2", formatRupiah(totalsaldowd2.toString()));
-                        totalSALDOWITHDRAW +=totalsaldowd2;
+            //             console.log("wd2", formatRupiah(totalsaldowd2.toString()));
+            //             totalSALDOWITHDRAW +=totalsaldowd2;
 
-                        let tttls = totalSALDOTOPUPALL - totalSALDOWITHDRAW;
+            //             let tttls = totalSALDOTOPUPALL - totalSALDOWITHDRAW;
 
-                        console.log("saldoAllBARU",formatRupiah(tttls.toString()));
+            //             console.log("saldoAllBARU",formatRupiah(tttls.toString()));
 
-                        // $('.box4val').html(formatRupiah(tttls.toString()));
-                    }
-				}
-				save2();
-			}
+            //             // $('.box4val').html(formatRupiah(tttls.toString()));
+            //         }
+			// 	}
+			// 	save2();
+			// }
 
 
             

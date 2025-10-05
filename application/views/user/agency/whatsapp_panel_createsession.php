@@ -80,13 +80,13 @@
                     
                     response.data.map((mapping,i)=>{
                         console.log(mapping);
-                        // if(mapping=='ppsrSess'){
+                        // if(mapping=='oncard'){
                             $('.puthere').html(`
                                 <p class="p-4">Session masih digunakan. Untuk saat ini layanan Whatsapp masih <strong>AKTIF</strong>.<br/>Anda yakin akan memperbaharui session? Klik tombol berikut untuk membuat session baru<br/>
                                 <button class="btn btn-sm btn-primary" onclick="createSessionWA();">Create New Session</butto>
                             `);
                             return false;
-                        if(mapping=='ppsrSess'){
+                        if(mapping=='oncard'){
                             $('.puthere').html(`
                                 <p class="p-4">Session masih digunakan. Untuk saat ini layanan Whatsapp masih <strong>AKTIF</strong>.<br/>Anda yakin akan memperbaharui session? Klik tombol berikut untuk membuat session baru<br/>
                                 <button class="btn btn-sm btn-primary" onclick="createSessionWA();">Create New Session</butto>
@@ -105,7 +105,7 @@
             function createSessionWA(){
                 $('.puthere').html(`<img class="mb-3" src="#/" id="putImageSessionHere" style="width:100%; height:100%!important; border-radius:5px; object-fit:contain; object-position:center; display:block;"/>
                                 <p style="margin:0;">Session akan otomatis ter-generate selang waktu 2 menit.</p>`);
-                let code = "ppsrSess";
+                let code = "oncard";
                 axios.get("https://v3.gigades.id/rest/api/v1/wa/new-session/"+code)
                 .then((res) => {
                     if (res.data.status === true) {

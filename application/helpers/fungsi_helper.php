@@ -17,6 +17,16 @@ function random($length = 8)
     return $string;
 }
 
+// function removeAfostrop($str){
+//     $str = str_replace($str,"'",":::");
+//     return $str;
+// }
+
+// function disRemoveAfostrop($str){
+//     $str = str_replace($str,":::","'");
+//     return $str;
+// }
+
 function acak($str)
 {
     $kunci = '979a218e0632df2935317f98d47956c7';
@@ -206,6 +216,21 @@ function api_url($url = null)
 {
     return base_url('app/' . $url);
 }
+
+function api_url_tagihan($url = null)
+{
+    return 'https://api.management-tagihan.oncard.id/' . $url;
+}
+function api_url_core($url = null)
+{
+    return 'https://api2.oncard.id/' . $url;
+}
+
+function api_url_zoom($url = null)
+{
+    return 'https://api.zoom.us/v2/' . $url;
+}
+
 function api_url_pr($url = null)
 {
     return 'https://prphoenix.gigades.id/rest/System/public/api/' . $url;

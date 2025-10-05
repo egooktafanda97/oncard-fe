@@ -1,3 +1,13 @@
+<style>
+    #keteranganCair {
+        position: relative;
+        height:30px;
+        -webkit-transition:all 0.1s linear 0s;
+    }
+    #keteranganCair:focus {
+        height:150px;
+    }
+</style>
 <div class="page-wrapper">
 			<div class="page-content">
 				<!--breadcrumb-->
@@ -29,7 +39,6 @@
 							<table class="table mb-0 tabelkantin" id="tabelPrint">
 								<thead class="table-light">
 									<tr>
-										<th>No.</th>
 										<th>Nama Merchant</th>
 										<th>Rekening</th>
 										<th>Nomor WA</th>
@@ -38,12 +47,25 @@
 										<th></th>
 										<th>Limit Tr.</th>
 										<th>Pin</th>
+										<th>Kust.Debit</th>
 
 									</tr>
 								</thead>
 								<tbody class="putContentHere">
 								</tbody>
 							</table>
+
+                            <!-- Pagination -->
+							<nav class="container mt-5"
+								id="siswa-pagination-container"
+								aria-label="Page navigation example">
+							</nav>
+
+							<!-- Pagination details -->
+							<div class="container mt-1 text-muted text-center">
+								<small id="siswa-pagination-details"></small>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -69,9 +91,14 @@
                                 <label for="namaSiswa" class="form-label">Sisa Saldo</label>
                                 <font style="font-weight:bold;display:block;" id="saldoPengguna">Loading...</font>
                             </div>
+                            
                             <div class="mb-3">
                                 <label for="namaSiswa" class="form-label">Saldo Dicairkan</label>
                                 <input type="text" class="form-control" id="saldoCair" placeholder="Ketikkan saldo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="keteranganCair" class="form-label">Keterangan</label>
+                                <textarea name="keteranganCair" class="form-control" id="keteranganCair" rows="1" placeholder="Biarkan kosong apabila tidak ada keterangan..."></textarea>
                             </div>
                             <h5 class="mt-4">PIN Pengguna</h5>
                             <div class="mb-3">
@@ -157,8 +184,9 @@
 		<script type="text/javascript">
             let secret_code = '';
 			let idsett = '';
+            let endPointGetDataSiswa = '<?= api_url(); ?>api/v1/kantin';
 			$(document).ready(function () {
-                showData();
+                showData(endPointGetDataSiswa);
 
 				$("#floatingInput").on("keyup", function() {
 					let value = $(this).val().toLowerCase();
@@ -168,16 +196,17 @@
 				});
             });
 
-            function showData(){
+            function showData(params){
 				let num = 0;
 				let tableColumn = '';
-				tableColumn += `<tr><td colspan="7" class="text-center">Loading...</td></tr>`;
+				tableColumn += `<tr><td colspan="12" class="text-center">Loading...</td></tr>`;
 				$('.putContentHere').html(tableColumn);
 				
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/kantin', {
+					const posts2 = await axios.get(params, {
 						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'nopaginate' : false
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -194,21 +223,13 @@
 							}
 							
 							console.log(posts2.data.data.data);
+                            
 							posts2.data.data.data.map((mapping,i)=>{
-							num += 1;
+							num += +1;
 
-							tableColumn +=`
+                            tableColumn +=`
 								<tr>
-									<td>
-										<div class="d-flex align-items-center">
-											<div>
-												<input class="form-check-input me-3" type="checkbox" value="" aria-label="...">
-											</div>
-											<div class="ms-2">
-												<h6 class="mb-0 font-14">${num}.</h6>
-											</div>
-										</div>
-									</td>
+									
 									<td>${mapping.nama_kantin} ${(mapping.accounts.bank_account_number!=null && mapping.user.foto!=null)?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}<br/><small class="text-muted">${mapping.user.username}</small></td>
 									<td>${mapping.accounts.bank_account_number}<br/><small class="text-muted">${mapping.accounts.bank_account_name}</small></td>
 									<td>${mapping.no_telepon}</td>
@@ -232,11 +253,17 @@
 											<input class="form-check-input form-toggle-pin-${mapping.id}" type="checkbox" id="onoffpin" ${(mapping.pin_setting==0)?'':'checked'} onclick="idsett='${mapping.id}';runProsesUpdateSettingPin(${mapping.id});">
 										</div>
 									</td>
+									<td>
+										<div class="form-check form-switch">
+											<input class="form-check-input form-toggle-kustdebit-${mapping.id}" type="checkbox" id="onoffkustdebit" ${(mapping.seller_type=='default')?'':'checked'} onclick="idsett='${mapping.id}';runProsesUpdateSettingKustDebit(${mapping.id});">
+										</div>
+									</td>
 								</tr>
 							`;
 							});
 							
 						$('.putContentHere').html(tableColumn);
+                        createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
 							
 					}
 				}
@@ -307,6 +334,12 @@
 				
 				let value = $('#saldoCair').val();
 				let pin = $('#pin').val();
+				let keteranganCair = $('#keteranganCair').val();
+
+                if(keteranganCair==''){
+                    keteranganCair = 'withdrawal transactions';
+                }
+
 				value = value.replace(/\D/g, "");
 
 				if(value=='0'||value==''){
@@ -332,6 +365,7 @@
 				form_data.append('account_number', idsett);
 				form_data.append('client_secret', secret_code);
 				form_data.append('pin', pin);
+				form_data.append('description', keteranganCair);
 				
 				let url = '';
 				
@@ -383,8 +417,9 @@
 							}).showToast();
 
 							$('#wdMODAL').modal('toggle');
-							showData();
+							showData(endPointGetDataSiswa);
 
+                            $('#keteranganCair').val('');
                             
 						} else {
 							Toastify({
@@ -580,7 +615,7 @@
 
 						}).showToast();
 
-						showData();
+						showData(endPointGetDataSiswa);
 
 						$('#upBankAccount').modal('toggle');
 						$('#btnSaveBank').html('<i class="bx bx-save"></i> Simpan');
@@ -665,6 +700,16 @@
                     togglesettingconf('limit_trx_setting',0);
                 }
             };
+			
+            function runProsesUpdateSettingKustDebit(val){
+				let valx = $('.form-toggle-kustdebit-'+val).prop('checked');
+				console.log(valx);
+                if(valx) {
+                    togglesettingconf('seller_type','AKTIF');
+                }else {
+                    togglesettingconf('seller_type','default');
+                }
+            };
 
 			function togglesettingconf(kolom, str){
             
@@ -672,7 +717,7 @@
 			var value = str;
 			
 			var form_data = new FormData();
-			form_data.append(key, parseInt(value));
+			form_data.append(key, value);
 			
 			const save = async (form_data) => {
 				const posts = await axios.post('<?= api_url(); ?>api/v1/kantin/update/'+idsett, form_data, {

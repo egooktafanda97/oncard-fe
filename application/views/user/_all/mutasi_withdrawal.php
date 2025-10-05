@@ -69,7 +69,7 @@
     }
 
     .invoice-table tbody tr td {
-        padding: 8px 0;
+        padding: 3px 0;
         letter-spacing: 0;
     }
 
@@ -98,13 +98,13 @@
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Mutasi Pencairan Saldo</div>
+					<div class="breadcrumb-title pe-3">Jurnal Pencairan</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Mutasi Pencairan Saldo</li>
+								<li class="breadcrumb-item active" aria-current="page">Jurnal Pencairan</li>
 							</ol>
 						</nav>
 					</div>
@@ -164,15 +164,48 @@
 										</div>
                                         </div>
                                     </div>
-                                
 
                                     <div class="form-group mb-3">
-                                        <label for="akunGet">Akun</label>
-                                        <select class="form-select single-select inputFilterItem" id="akunGet" data-object='account_number' style="border-radius:0px!important;">
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" onclick="clearfiltertab('akunGetSantri');" type="button" role="tab" aria-controls="pills-home" aria-selected="true" style="padding:5px 8px;">Santri</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" onclick="clearfiltertab('akunGetGeneral');" type="button" role="tab" aria-controls="pills-profile" aria-selected="false" style="padding:5px 8px;">General</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" onclick="clearfiltertab('akunGetMerchant');" type="button" role="tab" aria-controls="pills-contact" aria-selected="false" style="padding:5px 8px;">Merchant</button>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+    <div class="form-group mb-3">
+        <label for="akunGetSantri">Akun</label>
+        <select class="form-select single-select inputFilterItem" id="akunGetSantri" data-object='account_number' style="border-radius:0px!important;">
 
-                                        </select>
+        </select>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+    <div class="form-group mb-3">
+        <label for="akunGetGeneral">Akun</label>
+        <select class="form-select single-select inputFilterItem" id="akunGetGeneral" data-object='account_number' style="border-radius:0px!important;">
+
+        </select>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+    <div class="form-group mb-3">
+        <label for="akunGetMerchant">Akun</label>
+        <select class="form-select single-select inputFilterItem" id="akunGetMerchant" data-object='account_number' style="border-radius:0px!important;">
+
+        </select>
+    </div>
+  </div>
+</div>
                                     </div>
-                                    
+                                
+
                                     <div class="form-group mb-3">
                                         <label for="invoiceGet">Invoice</label>
                                         <select class="form-select single-select inputFilterItem" id="invoiceGet" data-object='invoice' style="border-radius:0px!important;">
@@ -222,7 +255,9 @@
 			$(document).ready(function () {
                 // getSiswaData();
                 showData();
-
+                getDataSantri();
+                getDataGeneral();
+                getDataMerchant();
                 $('.single-select').select2({
                     theme: 'bootstrap4',
                     width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
@@ -385,75 +420,109 @@
 
             function openInvoice(str){
                 let htmlx = '';
+                let desc = '';
 
                 var x = findElement(invoiceDataArray, "invoice", str);
                 console.log(invoiceDataArray);
                 let listPembelian = '';
 
-                let initial_balance = x['initial_balance'];
-                let nomialPencairan = x['transaction_amount'];
-                let nomialSisaSaldo = x['current_balance'];
+                const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?invoice='+ x['invoice'], {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : statustoggle
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+                        let mmm = posts2.data.data.data;
+                        mmm.map((mapping,i)=>{
+                            if(mapping.status_id==10){
+                                desc = mapping.description;
+                            }
+                        });	
 
-                htmlx = `
-                    <div class="invoice-card" id="divToPRINT">
-                        <div class="invoice-title">
-                            <div id="main-title" style="display:block!important;">
-                            <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;">INVOICE</h4>
-                            <span style=" color:black!important; display:block; font-size:12px!important;">#${x['invoice']}</span>
-                            </div>
-                            
-                            <span id="date" style=" color:black!important;">${moment(x['date']).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
-                            <span style="font-size:11px; color:black!important;">- - -</span>
-                        </div>
-                        <div style="text-align:center;">
-                        WITHDRAWAL
-                        <small style="display:block;color: rgba(0, 0, 0, 0.4); color:black!important;">Beringin Taluk, Kec. Kuantan Tengah, Kabupaten Kuantan Singingi, Riau 29566</small>
-                        
-                        </div>
-                        
-                        <div class="invoice-details">
-                            <table class="invoice-table" style="width:100%;">
-                            <tbody class="detailTabelInvoice">
-                                <tr class="calc-row">
-                                    <td colspan="2">Saldo Awal</td>
-                                <td>Rp${formatRupiah(initial_balance)}</td></tr>
-                                <tr><td colspan="3">
-                                    <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
-                                </td></tr>
+                        let initial_balance = x['initial_balance'];
+                        let nomialPencairan = x['transaction_amount'];
+                        let nomialSisaSaldo = x['current_balance'];
+
+                        htmlx = `
+                            <div class="invoice-card" id="divToPRINT">
+                                <div class="invoice-title">
+                                    <div id="main-title" style="display:block!important;">
+                                    <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;">INVOICE</h4>
+                                    <span style=" color:black!important; display:block; font-size:12px!important;">#${x['invoice']}</span>
+                                    </div>
+                                    
+                                    <span id="date" style=" color:black!important;">${moment(x['date']).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
+                                    <span style="font-size:11px; color:black!important;">- - -</span>
+                                </div>
+                                <div style="text-align:center;font-weight:bolder;">
+                                WITHDRAWAL<br/>${instansiNameX}
+                                </div>
                                 
-                                <tr class="calc-row">
-                                <td colspan="2">Pencairan Saldo</td>
-                                <td>Rp${formatRupiah(nomialPencairan)}</td></tr>
-                                <tr><td colspan="3">
-                                    <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
-                                </td></tr>
-                                <tr class="calc-row">
-                                <td colspan="2"><b>Sisa Saldo</b></td>
-                                <td>Rp${formatRupiah(nomialSisaSaldo)}</td>
-                                </tr>
+                                <div class="invoice-details">
+                                    <table class="invoice-table" style="width:100%;">
+                                    <tbody class="detailTabelInvoice">
+                                        <tr class="calc-row">
+                                            <td colspan="2">Saldo Awal</td>
+                                        <td>Rp${formatRupiah(initial_balance)}</td></tr>
+                                        <tr><td colspan="3">
+                                            <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                        </td></tr>
+                                        
+                                        <tr class="calc-row">
+                                        <td colspan="2">Pencairan Saldo</td>
+                                        <td>Rp${formatRupiah(nomialPencairan)}</td></tr>
+                                        <tr><td colspan="3">
+                                            <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                        </td></tr>
+                                        <tr class="calc-row">
+                                        <td colspan="2"><b>Sisa Saldo</b></td>
+                                        <td>Rp${formatRupiah(nomialSisaSaldo)}</td>
+                                        </tr>
+                                        
+                                        <tr><td colspan="3">
+                                            <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                        </td></tr>
+                                        
+                                        <tr class="">
+                                        <td colspan="3"><b>Keterangan</b></td>
+                                        </tr>
+                                        <tr class="">
+                                        <td colspan="3" style="font-size:13px!important;">${desc}</td>
+                                        </tr>
 
-                                <tr><td colspan="3">
-                                    <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
-                                </td></tr>
+                                        <tr><td colspan="3">
+                                            <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                        </td></tr>
 
-                            </tbody>
-                            </table>
-                        </div>
+                                    </tbody>
+                                    </table>
+                                </div>
+                                
+                                
+                            </div>
+
+                            <div class="invoice-card mt-4" style="min-height:auto!important;">
+                                <div class="invoice-footer">
+                                    <button class="btn btn-sm btn-secondary" data-dismiss="modal" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
+                                    <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                                </div>
+                            
+                            </div>
+                        `;
+
+                        $('#invoiceModal .modal-body').html(htmlx);
+                        $('#invoiceModal').modal('toggle');
+
                         
-                        
-                    </div>
-
-                    <div class="invoice-card mt-4" style="min-height:auto!important;">
-                        <div class="invoice-footer">
-                            <button class="btn btn-sm btn-secondary" data-dismiss="modal" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
-                            <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
-                        </div>
-                    
-                    </div>
-                `;
-
-                $('#invoiceModal .modal-body').html(htmlx);
-                $('#invoiceModal').modal('toggle');
+					}
+				}
+				
+				save2();
 
                 
 
@@ -469,7 +538,7 @@
                 let valueData = '';
                 for(var i = 0; i < inputs.length; i++){
                     valueData = $(inputs[i]).data('object');
-                    if($(inputs[i]).val()!=''){
+                    if($(inputs[i]).val()!='' && $(inputs[i]).val()!=null){
                         urlsets+='&'+valueData+'='+$(inputs[i]).val();
                     }
                     
@@ -519,17 +588,17 @@
                 });
 
                 // FILTER 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                $('#akunGet').html('');
-                $('#akunGet').append($('<option>', { 
-                    value: '',
-                    text : 'Pilih akun'
-                }));
-                $.each(dataAkun, function (i, item) {
-                    $('#akunGet').append($('<option>', { 
-                        value: item.account_number,
-                        text : item.customers_name 
-                    }));
-                });
+                // $('#akunGet').html('');
+                // $('#akunGet').append($('<option>', { 
+                //     value: '',
+                //     text : 'Pilih akun'
+                // }));
+                // $.each(dataAkun, function (i, item) {
+                //     $('#akunGet').append($('<option>', { 
+                //         value: item.account_number,
+                //         text : item.customers_name 
+                //     }));
+                // });
             }
 
             let statustoggle = false;
@@ -546,4 +615,128 @@
 
                 showData();
             }
-		</script>
+
+
+            function getDataSantri(){
+				let num = 0;
+				let tableColumn = '';
+				tableColumn += `<tr><td colspan="8" class="text-center">Loading...</td></tr>`;
+				$('.putContentHere').html(tableColumn);
+				
+				const save2 = async () => {
+					const posts2 = await axios.get( '<?= api_url(); ?>api/v1/siswa/get-inpaging' , {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+							num += 1;
+							tableColumn = '';
+
+                            $('#akunGetSantri').html('');
+                            $('#akunGetSantri').append($('<option>', { 
+                                value: '',
+                                text : 'Pilih akun santri'
+                            }));
+
+							posts2.data.data.map((mapping,i)=>{
+							        $('#akunGetSantri').append($('<option>', { 
+                                        value: mapping.accounts?.account_number??'',
+                                        text : mapping.accounts?.customers_name??''
+                                    }));
+							});
+						
+					}
+				}
+				save2();
+			}
+            
+            function getDataGeneral(){
+				let num = 0;
+				let tableColumn = '';
+				tableColumn += `<tr><td colspan="8" class="text-center">Loading...</td></tr>`;
+				$('.putContentHere').html(tableColumn);
+				
+				const save2 = async () => {
+					const posts2 = await axios.get( '<?= api_url(); ?>api/v1/general/get-inpaging' , {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+							num += 1;
+							tableColumn = '';
+
+                            $('#akunGetGeneral').html('');
+                            $('#akunGetGeneral').append($('<option>', { 
+                                value: '',
+                                text : 'Pilih akun general'
+                            }));
+
+							posts2.data.data.map((mapping,i)=>{
+							        $('#akunGetGeneral').append($('<option>', { 
+                                        value: mapping.accounts.account_number,
+                                        text : mapping.accounts.customers_name
+                                    }));
+							});
+						
+					}
+				}
+				save2();
+			}
+            
+            function getDataMerchant(){
+				let num = 0;
+				let tableColumn = '';
+				tableColumn += `<tr><td colspan="8" class="text-center">Loading...</td></tr>`;
+				$('.putContentHere').html(tableColumn);
+				
+				const save2 = async () => {
+					const posts2 = await axios.get( '<?= api_url(); ?>api/v1/kantin' , {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+							num += 1;
+							tableColumn = '';
+
+                            $('#akunGetMerchant').html('');
+                            $('#akunGetMerchant').append($('<option>', { 
+                                value: '',
+                                text : 'Pilih akun merchant'
+                            }));
+
+							posts2.data.data.data.map((mapping,i)=>{
+							        $('#akunGetMerchant').append($('<option>', { 
+                                        value: mapping.accounts.account_number,
+                                        text : mapping.accounts.customers_name
+                                    }));
+							});
+						
+					}
+				}
+				save2();
+			}
+
+            function clearfiltertab(str){
+                var selectElement = document.getElementById(str);
+
+                // Mengeset nilai seleksi ke string kosong
+                selectElement.value = '';
+
+                // Jika Anda ingin memastikan bahwa perubahan nilai dipicu, Anda dapat memicu event change
+                var event = new Event('change');
+                selectElement.dispatchEvent(event);
+
+            }
+    </script>

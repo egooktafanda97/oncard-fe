@@ -1,6 +1,6 @@
 
 
-<div class="overlay toggle-icon"></div>
+		<div class="overlay toggle-icon"></div>
 		<!--end overlay-->
 		<!--Start Back To Top Button-->
 		  <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
@@ -10,6 +10,7 @@
 		</footer>
 	</div>
 
+	
 	<div class="modal fade" id="modalDelete" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
@@ -70,7 +71,7 @@
 
 	<script type="text/javascript">
 
-        
+        let userNameX = '';
 		let uidsett = '';
 		let tablesett = '';
 		function openModalDelete(id, table){
@@ -85,9 +86,67 @@
 			tablesett = table;
 		}
 
+        var y;
 		
         $(document).ready(function () {
             getAuth();
+
+            y = localStorage.getItem("menutoggle");
+
+            if(y){
+                if(y=='open'){
+                    $('.wrapper').removeClass('toggled');
+                    $('.logo-icon').attr('src','<?=base_url();?>assets_oncard/logo/logo_dongker.png');
+                    $('.logo-icon').removeClass('setkecil');
+                }else {
+                    $('.wrapper').addClass('toggled');
+                    $('.logo-icon').attr('src','<?=base_url();?>assets_oncard/logo/o_navy.png');
+                    $('.logo-icon').addClass('setkecil');
+                }
+            }else {
+                localStorage.setItem("menutoggle","open");
+            }
+        });
+
+        function changemethod(){
+            var myElement = document.getElementById("menuicosss");
+            if (myElement && myElement.classList.contains("toggled")) {
+                localStorage.setItem("menutoggle","open");
+            } else {
+                localStorage.setItem("menutoggle","close");
+            }
+
+            console.log(myElement.classList.contains("toggled"));
+        }
+
+        var hoveredElement = document.querySelector(".sidebar-wrapper");
+        hoveredElement.addEventListener("mouseover", function () {
+            var myElement = document.getElementById("menuicosss");
+            
+            if (myElement && myElement.classList.contains("toggled") ) {
+                $('.wrapper').addClass('sidebar-hovered');
+                $('.logo-icon').attr('src','<?=base_url();?>assets_oncard/logo/logo_dongker.png');
+                $('.logo-icon').removeClass('setkecil');
+                
+            } else {
+                $('.wrapper').removeClass('sidebar-hovered');
+                $('.logo-icon').attr('src','<?=base_url();?>assets_oncard/logo/logo_dongker.png');
+                $('.logo-icon').removeClass('setkecil');
+                
+            }
+
+        });
+        hoveredElement.addEventListener("mouseout", function () {
+            var myElement = document.getElementById("menuicosss");
+            if (myElement && myElement.classList.contains("toggled")) {
+                $('.wrapper').removeClass('sidebar-hovered');
+                $('.logo-icon').attr('src','<?=base_url();?>assets_oncard/logo/o_navy.png');
+                $('.logo-icon').addClass('setkecil');
+            } else {
+                $('.wrapper').addClass('sidebar-hovered');
+                $('.logo-icon').attr('src','<?=base_url();?>assets_oncard/logo/logo_dongker.png');
+                $('.logo-icon').removeClass('setkecil');
+            }
         });
 
 		function underMaintanance(){
@@ -106,6 +165,8 @@
 			let url = '';
 			if(tablesett == 'general'){
 				url = '<?= api_url(); ?>api/v1/'+tablesett+'/' + uidsett;
+			}else if(tablesett == 'card-reader'){
+				url = '<?= api_url(); ?>api/v1/'+tablesett+'/destory/' + uidsett;
 			}else {
 				url = '<?= api_url(); ?>api/v1/'+tablesett+'/destroy/' + uidsett;
 			}
@@ -172,9 +233,15 @@
 
 		let roleUserX = '';
 		let accountNumberX = '';
+		let accountNumberBisnisX = '';
 		let userIDX = '';
 		let bankAccountNumber = '';
         let instansiNameX = '';
+        
+        let pjshsX = '';
+        
+        let kodeInstansiX = '';
+        let idInstansiX = '';
         function getAuth(){
 				const save2 = async () => {
 					const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/auth', {
@@ -196,7 +263,8 @@
                             return false;
                         }
 						Toastify({
-							text: 'Maaf. Sesi telah berakhir. Silahkan login kembali.',
+							// text: 'Maaf. Sesi telah berakhir. Silahkan login kembali.',
+							text: 'Maaf. Silahkan refresh kembali halaman Anda.',
 							duration: 30000,
 							close: true,
 							gravity: "bottom",
@@ -205,17 +273,17 @@
 
 						}).showToast();
 
-						setTimeout(function() {
-							Toastify({
-								text: 'Logout terlebih dahulu, lalu LOGIN kembali.',
-								duration: 28500,
-								close: true,
-								gravity: "bottom",
-								position: "right",
-								className: "errorMessage",
+						// setTimeout(function() {
+						// 	Toastify({
+						// 		text: 'Logout terlebih dahulu, lalu LOGIN kembali.',
+						// 		duration: 28500,
+						// 		close: true,
+						// 		gravity: "bottom",
+						// 		position: "right",
+						// 		className: "errorMessage",
 
-							}).showToast();
-						}, 1500);
+						// 	}).showToast();
+						// }, 1500);
 
 						return false;
 					});
@@ -225,11 +293,37 @@
                         if(posts2.data.data[0].user.foto!=undefined && posts2.data.data[0].user.foto!='undefined' && posts2.data.data[0].user.foto!=null){
                             $('.image-profile').attr('src','<?=base_url();?>app/assets/users/foto/'+posts2.data.data[0].user.foto);
                         }
+
+                        let statusInstansi = '';
+                        if(posts2.data.data[1].status.status=='Active'){
+                            // statusInstansi = `Verified <i class="bx bxs-badge-check text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Instansi ini telah secara resmi bergabung dengan sistem Oncard.id" ></i>`;
+                        }else {
+                            statusInstansi = 'Not set';
+                        }
+                        $('.box1val').html(posts2.data.data[1].instansi.nama);
+                        $('.box10val').html(posts2.data.data[1].instansi.alamat);
+                        $('.box1val2').html(statusInstansi);
+
+				        userNameX = posts2.data.data[0].user.username;
 						accountNumberX = posts2.data.data[0].account_number;
+                        posts2.data.data.map((mapping,i)=>{
+                            if(mapping.account_type=='business' && mapping.account_level=='agency'){
+                                accountNumberBisnisX = mapping.account_number;
+                            }
+                        });
+
+                        console.log("accountNumberBisnisX",accountNumberBisnisX);
+                        
+						idInstansiX = posts2.data.data[0].instansi.id;
 						instansiNameX = posts2.data.data[0].instansi.nama;
+                        kodeInstansiX = posts2.data.data[0].instansi.kode_instansi;
 						roleUserX = posts2.data.data[0].user.role;
 						bankAccountNumber = posts2.data.data[0].bank_account_number;
+						pjshsX = posts2.data.data[0].pin;
+						
 						getAkunPengaturan(roleUserX,accountNumberX);
+
+                        // $('.first-h1').text(instansiNameX);
                     }
 				}
 				save2();
@@ -320,21 +414,23 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,600;0,800;1,800&display=swap" rel="stylesheet">
 			<link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/style_universal.css">
-			<style type="text/css">body {font-family: 'JetBrains Mono', monospace;
-			}* { -webkit-print-color-adjust: exact !important;color-adjust: exact !important;print-color-adjust: exact !important;}</style>
+			<style type="text/css">
+            body {font-family: 'JetBrains Mono', monospace;
+			}* { -webkit-print-color-adjust: exact !important;color-adjust: exact !important;print-color-adjust: exact !important;}
+            </style>
 			`+printContents;
 			
 
             localStorage.setItem("struk", m);
 
-            window.open("<?=base_url();?>CPanel_Admin/PrintStruk", '_blank', 'location=yes,height=570,width=220,scrollbars=yes,status=yes');
+            window.open("<?=base_url();?>CPanel_Admin/PrintStrukAuto", '_blank', 'location=yes,height=570,width=220,scrollbars=yes,status=yes');
 
 		}
 
 		function saveToExcel(className){
 			let table = document.getElementsByClassName(className);
 			TableToExcel.convert(table[0], { 
-			name: `excel_oncard_report_${moment(new Date()).format("dddd_DD_MMMM_YYYY-H_m_s")}.xlsx`,
+			name: `excel_oncard_report_${moment(new Date()).format("ddddDDMMMMYYYY-Hms")}.xlsx`,
 			sheet: {
 			name: 'Sheet 1'
 			}
@@ -483,6 +579,62 @@
 			const paginationDetails = `Menampilkan ${params?.from}-${params?.to} dari ${params?.total} jumlah seluruh data.`;
 			$("#" + PaginationDetailsContainer).html(paginationDetails);
 		}
+
+        function removeHtmlTags(inputHtml) {
+        const tempElement = document.createElement('div');
+
+        tempElement.innerHTML = inputHtml;
+
+        const textContent = tempElement.textContent || tempElement.innerText;
+
+        tempElement.remove();
+
+        return textContent;
+        }
+
+        // Helper function to show toast notifications
+        function showToast(type, message) {
+            // Implement your toast notification system or use this simple alert
+            const toastClass = type === 'error' ? 'text-bg-danger' : 
+                                type === 'success' ? 'text-bg-success' : 'text-bg-info';
+            
+            // Simple implementation using Bootstrap toasts
+            const toastEl = document.createElement('div');
+            toastEl.className = `toast align-items-center ${toastClass} border-0 show`;
+            toastEl.setAttribute('role', 'alert');
+            toastEl.setAttribute('aria-live', 'assertive');
+            toastEl.setAttribute('aria-atomic', 'true');
+            
+            toastEl.innerHTML = `
+                <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+            
+            const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+            toastContainer.appendChild(toastEl);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                toastEl.classList.remove('show');
+                setTimeout(() => toastEl.remove(), 300);
+            }, 5000);
+        }
+
+        function createToastContainer() {
+        const container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.style.position = 'fixed';
+        container.style.top = '20px';
+        container.style.right = '20px';
+        container.style.zIndex = '1100';
+        document.body.appendChild(container);
+        return container;
+        }
+
 	</script>
 </body>
 

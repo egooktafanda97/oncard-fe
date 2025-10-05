@@ -26,6 +26,7 @@
 									<tr>
 										<th>Tipe</th>
 										<th>Nama Pengguna</th>
+										<th>Foto</th>
 										<th>Koneksi Kartu</th>
 										<th>Saldo</th>
 										<th>Limit Transaksi</th>
@@ -180,19 +181,24 @@
 							
 							console.log(posts2.data.data);
 							posts2.data.data.map((mapping,i)=>{
-							tableColumn +=`
-								<tr>
-									<td >
-										<h6 class="mb-0 font-14">${mapping.jabatan}</h6>
-									</td>
-									<td>${mapping.nama_lengkap} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}</td>
-                                    <td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
-									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
-									<td >Rp${formatRupiah(mapping.accounts.limit_trx)}
-									</td>
-									
-								</tr>
-							`;
+
+                                if(mapping.jabatan!='membership'){
+                                    tableColumn +=`
+                                        <tr>
+                                            <td >
+                                                <h6 class="mb-0 font-14">${mapping.jabatan}</h6>
+                                            </td>
+                                            <td>${mapping.nama_lengkap} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}</td>
+                                            <td>${(mapping.user.foto!="default.jpg")?"ADA":"TIDAK ADA"}</td>
+                                            <td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
+                                            <td >Rp${formatRupiah(mapping.accounts.balance)}</td>
+                                            <td >Rp${formatRupiah(mapping.accounts.limit_trx)}
+                                            </td>
+                                            
+                                        </tr>
+                                    `;
+                                }
+							
 							});
 							
 						$('.putContentHere').html(tableColumn);

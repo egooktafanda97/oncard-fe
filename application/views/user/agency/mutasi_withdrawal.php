@@ -362,7 +362,7 @@
                         }));
                         posts2.data.data.data.map((mapping,i)=>{
                             $('#siswaGet').append($('<option>', {
-                                value: mapping.accounts.account_number,
+                                value: mapping.accounts?.account_number??'',
                                 text: mapping.accounts.customers_name+" - "+mapping.nis
                             }));
                         });

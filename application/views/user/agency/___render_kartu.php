@@ -169,12 +169,50 @@
                             let dataokcount = 0;
 
                             posts2.data.data.map((mapping,i)=>{
-                                num++;
+                                
 
-                                if(num>=501 && num <700){
+                                let inisiateNama = mapping.nama_lengkap;
+                                inisiateNama = inisiateNama.toLowerCase();
+                                if(inisiateNama.includes('nugra bai')||
+                                inisiateNama.includes('rul azzam')||
+                                inisiateNama.includes('ffa apria')||
+                                inisiateNama.includes('khairun nabi')||
+                                inisiateNama.includes('io algifari')||
+                                inisiateNama.includes('hya mahzu')||
+                                inisiateNama.includes('il adia')||
+                                inisiateNama.includes('ammad raza')||
+                                inisiateNama.includes('y gusven al')||
+                                inisiateNama.includes('ani donat')||
+                                inisiateNama.includes('ahsan al-taq')||
+                                inisiateNama.includes('ad gilang juli')||
+                                inisiateNama.includes('zikk')||
+                                inisiateNama.includes('faaza')||
+                                inisiateNama.includes('mardino')||
+                                inisiateNama.includes('zikrullah')||
+                                inisiateNama.includes('oren')||
+                                inisiateNama.includes('ali faith')||
+                                inisiateNama.includes('abdul lati')||
+                                inisiateNama.includes('afga ria')||
+                                inisiateNama.includes('muhammad raihan')||
+                                inisiateNama.includes('fharuq')||
+                                inisiateNama.includes('affan ca')||
+                                inisiateNama.includes('adjie')||
+                                inisiateNama.includes('azmi')||
+                                inisiateNama.includes('khafi')||
+                                inisiateNama.includes('auffa')||
+                                inisiateNama.includes('seina')||
+                                inisiateNama.includes('fadil ak')||
+                                inisiateNama.includes('oby sa')||
+                                inisiateNama.includes('halqi')||
+                                inisiateNama.includes('hamiid')
+                                
+                                ){
+
+                                // if(num>=501 && num <700){
 
                                 if(mapping.user.foto!='default.jpg' && mapping.user.foto!='null'){
                                     dataokcount++;
+                                    num++;
 
                                     let namalengkap = mapping.nama_lengkap;
                                     namalengkap = namalengkap.toLowerCase();
@@ -187,13 +225,15 @@
                                     if(textNama[1]=='a'){
                                         textTingkat = 'Madrasah Aliyah';
                                         dataMALengkap++;
-                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_ma_1.webp';
+                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/foto_kartu_ppsr_2/front_siswa_ma.webp';
+                                        // urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_ma_1.webp';
                                         // urlBgBelakang = '<?=base_url();?>assets_oncard/images/kartu/back_siswa_ma.webp';
                                     }
                                     else if(textNama[1]=='ts'){
                                         textTingkat = 'Madrasah Tsanawiyah';
                                         dataMtsLengkap++;
-                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_mts_1.webp';
+                                        urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/foto_kartu_ppsr_2/front_siswa_mts.webp';
+                                        // urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_siswa_mts_1.webp';
                                         // urlBgBelakang = '<?=base_url();?>assets_oncard/images/kartu/back_siswa_mts.webp';
                                     }else {
                                         dataTidakJelas = dataTidakJelas+1;
@@ -251,6 +291,17 @@
                         //         <td colspan="3">NIS belum ditentukan<br/>
                         //         <a href="#/" onclick="showModalDataNISN();">Lihat ${arrNoNISN.length} data NIS yang belum lengkap</a>
                         //         </td>
+                        //         </tr>
+                        //     </table>
+                        // `);
+                        
+                        
+                        // $('.resumeData').html(`
+                        //     <table class="table table-bordered">
+                        //         <tr>
+                        //         <td width="100%"><font class="jmldataok"></font><a href="#/" onclick="showModalData();">Total ${num}</a>
+                        //         </td>
+                                
                         //         </tr>
                         //     </table>
                         // `);

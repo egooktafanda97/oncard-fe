@@ -4,9 +4,10 @@
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<!--favicon-->
-	<link rel="icon" href="<?=base_url();?>assets/png/icon.png" type="image/png" />
+	<link rel="icon" href="<?=base_url();?>assets_oncard/logo/o_white.png" type="image/png" />
   
 	<script src="<?=base_url();?>assets_oncard/js/jquery.min.js"></script>
 	
@@ -43,8 +44,19 @@
     <link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/style_universal.css">
   
     <title>Portal Oncard</title>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght,YTLC@0,6..12,75..125,200..1000,440..540;1,6..12,75..125,200..1000,440..540&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+    </style>
+    
     <style type="text/css">
 		
+        body {
+            /* font-family: "Plus Jakarta Sans", serif; */
+            font-family: "Nunito Sans", sans-serif;
+
+        }
+
         #loaderXXX {
             position:absolute;
             width:100vh;
@@ -99,6 +111,38 @@
             -webkit-text-fill-color: transparent!important;
         }
 
+        .border-success,.text-dongker {
+            /* background:#363466!important; */
+            border-color:#363466!important;
+            color:#363466!important;
+        }
+        
+        .text-bloody {
+            background: linear-gradient(209deg, #db9520, #df783d);
+            background-size: 400% 400%;
+            -webkit-background-clip: text!important;
+            -webkit-text-fill-color: transparent!important;
+            -webkit-animation: AnimationName 1s ease infinite;
+            -moz-animation: AnimationName 1s ease infinite;
+            animation: AnimationName 1s ease infinite;
+        }
+
+        @-webkit-keyframes AnimationName {
+            0%{background-position:0% 97%}
+            50%{background-position:100% 4%}
+            100%{background-position:0% 97%}
+        }
+        @-moz-keyframes AnimationName {
+            0%{background-position:0% 97%}
+            50%{background-position:100% 4%}
+            100%{background-position:0% 97%}
+        }
+        @keyframes AnimationName {
+            0%{background-position:0% 97%}
+            50%{background-position:100% 4%}
+            100%{background-position:0% 97%}
+        }
+
         .skeleton-box {
             display: inline-block;
             height: 1em;
@@ -118,6 +162,18 @@
             -webkit-animation: shimmer 2s infinite;
             animation: shimmer 2s infinite;
             content: "";
+        }
+        
+        .expandable-text {
+        width: 50px; /* Initial width */
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis; /* Optional: show ellipsis (...) if text overflows */
+        transition: width 0.3s ease; /* Smooth transition effect */
+        }
+
+        .expandable-text:hover {
+        width: auto; /* Expand on hover */
         }
 
         @-webkit-keyframes shimmer {
@@ -172,6 +228,78 @@
             -o-transform: scale(1.1, 1.1);
             -ms-transform: scale(1.1, 1.1);
             -moz-transform: scale(1.1, 1.1);
+        }
+
+        .setkecil {
+            width:30px!important; 
+            height:30px!important;
+        }
+        .setnormal {
+            width:auto!important;
+            width:auto!important;
+        }
+
+        #menu li a {
+            font-size:12px;
+        }
+        .sidebar-wrapper .metismenu .mm-active>a, .sidebar-wrapper .metismenu a:active, .sidebar-wrapper .metismenu a:focus, .sidebar-wrapper .metismenu a:hover{
+            border-radius:10px;
+            color:black!important;
+            font-weight:800;
+        }
+
+        .box1val {
+            font-size:15px!important;text-transform:uppercase; font-weight:800;width:500px;padding-top:5px;   
+        }
+        .box10val {
+            font-size:9px!important;margin-top:-7px;text-transform:uppercase; font-weight:550;width:100%;
+        }
+
+        .font-mob {
+            position:relative;
+        }
+        
+        /* Tablet screens: width <= 768px */
+        @media (max-width: 768px) {
+            .box1val {
+                font-size:11px!important;text-transform:uppercase; font-weight:800;width:auto;padding-top:5px;
+            }
+            .box10val {
+                display:none;
+            }
+            .image-profile {
+                align-items:center;
+            }
+            .dropdown-large {
+                transform:scale(0,0);
+            }
+            .font-mob {
+                font-size:16px;
+            }
+        }
+
+        /* Mobile screens: width <= 480px */
+        @media (max-width: 480px) {
+            .box1val {
+                width: 100%; /* Full width for mobile */
+                padding: 10px;
+            }
+            .mobile-toggle-menu {
+                position:absolute;
+                right:45px;
+            }
+            .image-profile {
+                align-items:center;
+            }
+            .saldow {
+                display:none;
+            }
+            .font-mob {
+                font-size:16px!important;
+            }
+        }
+        #toastContainer > .toast{
+            margin-bottom:5px!important;
         }
     </style>
 </head>

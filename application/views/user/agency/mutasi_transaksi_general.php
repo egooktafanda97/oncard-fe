@@ -1,4 +1,7 @@
 <style type="text/css">
+    .bg-gradient-pelunasan {
+        background: linear-gradient( 45deg , #24b5b1, #96e7eb)!important;
+    }
     .invoice-card {
     display: flex;
     flex-direction: column;
@@ -93,18 +96,45 @@
     margin-right: 5px;
     }
 
+    .text-container {
+        display: inline-block; /* Keep inline layout */
+        max-width: 100px; /* Set the maximum width to 100px */
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Add ellipsis to overflow text */
+        vertical-align: middle;
+        transition: max-width 0.3s ease; /* Smooth transition for width change */
+    }
+
+    td:hover .text-container {
+        max-width: 100%; /* Expand max width on hover */
+    }
+
+    /* Optional: Add tooltip for better usability */
+    td:hover::after {
+        content: attr(data-full-text);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        white-space: nowrap;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 4px;
+        z-index: 1;
+    }
+
 </style>
 <div class="page-wrapper">
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Laporan Saldo Pengguna General</div>
+					<div class="breadcrumb-title pe-3">Jurnal General</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Laporan Saldo Pengguna</li>
+								<li class="breadcrumb-item active" aria-current="page">Jurnal Pengguna</li>
 							</ol>
 						</nav>
 					</div>
@@ -132,6 +162,8 @@
                                                     <th>Akun</th>
                                                     <th>Nominal</th>
                                                     <th>Keterangan</th>
+                                                    <th>Status</th>
+                                                    <th>Invoice</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="putContentHere">
@@ -195,8 +227,10 @@
                                         <select class="form-select single-select inputFilterItem" id="mTypeGet" data-object='mtype' style="border-radius:0px!important;">
                                         <option value="">Pilih salah satu tipe</option>
                                         <option value="buy">Pembelian</option>
-                                        <option value="top_up">Top Up Saldo</option>
                                         <option value="adminitrasi">Biaya Transaksi</option>
+                                        <option value="withdrawal">Pencairan Saldo</option>
+                                        <option value="top_up">Top Up</option>
+                                        <option value="topup_via_vendor">Top Up - Transfer BRKS</option>
                                         </select>
                                     </div>
                                     
@@ -307,7 +341,8 @@
 					const posts2 = await axios.get(url, {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
-                            'paginate' : statustoggle
+                            'paginate' : statustoggle,
+                            'take' : 20,
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -326,6 +361,8 @@
                                 mmm = posts2.data.data.data;
                             }
 
+                            mmm = posts2.data.data;
+                            
                             console.log(mmm);
 
                             if(mmm.length==0){
@@ -345,6 +382,7 @@
                                     j++;
 
                                     let statusText = '';
+                                    let statusTextTransaksi = '';
 
                                     if(mapping.management_type.name_type=='buy'){
                                         statusText = '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">Pembelian</span>';
@@ -353,12 +391,41 @@
                                     }else if(mapping.management_type.name_type=='withdrawal'){
                                         statusText = '<span class="badge bg-gradient-bloody text-white shadow-sm w-100">Pencairan Saldo</span>';
                                     }else if(mapping.management_type.name_type=='top_up'){
-                                        statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Pengisian Saldo</span>';
+
+                                        if(mapping.description=='setor_tunai'){
+                                            statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Setor ke Host</span>';
+                                        }else if(mapping.description=='transfer_ortu'){
+                                            statusText = '<span class="badge bg-danger text-white shadow-sm w-100">Transfer</span>';
+                                        }else {
+                                            statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Setor ke Host</span>';
+                                        }
+                                        // statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Setor ke Host</span>';
+                                    }else if(mapping.management_type.name_type=='topup_via_vendor'){
+                                        statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Transfer BRKs</span>';
+                                    }else if(mapping.management_type.name_type=='debts_payment'){
+                                        statusText = '<span class="badge bg-gradient-pelunasan text-white shadow-sm w-100">Pelunasan</span>';
                                     }
+
+                                    if(mapping.status.id==6||mapping.status.id==10){
+                                        statusTextTransaksi = '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">Paid</span>';
+                                    }else if(mapping.status.id==16){
+                                        statusTextTransaksi = '<span class="badge bg-gradient-bloody text-white shadow-sm w-100">Hutang</span>';
+                                    }
+
                                     let namaNya = '';
                                     let amount ='0';
+                                    let invoicx ='-';
                                     let cond1 = mapping.management_type.name_type;
                                     if(cond1 =='top_up'){
+                                        namaNya = mapping.credit_account?.customers_name;
+                                        amount = mapping.credit_amount??'0';
+                                        invoicx = 'yes';
+                                    }else if(mapping.management_type.name_type=='topup_via_vendor'){
+                                        namaNya = mapping.credit_account?.customers_name;
+                                        amount = mapping.credit_amount??'0';
+                                        invoicx = 'yes';
+                                    }
+                                    else if(cond1 =='debts_payment'){
                                         namaNya = mapping.credit_account?.customers_name;
                                         amount = mapping.credit_amount??'0';
                                     }else {
@@ -377,10 +444,16 @@
                                             </td>
                                             <td width="70">${moment(mapping.created_at).format('DD-MM-YYYY')}</td>
                                             <td width="70">${moment(mapping.created_at).format('HH:mm:ss')} WIB</td>
-                                            <td width="160">${mapping.invoice}</td>
+                                            <td data-full-text="${mapping.invoice}">
+                                            <span class="text-container">
+                                            ${mapping.invoice}
+                                            </span>
+                                            </td>
                                             <td>${namaNya}</td>
                                             <td>Rp${formatRupiah(amount.toString())}</td>
                                             <td>${statusText}</td>
+                                            <td>${statusTextTransaksi}</td>
+                                            ${(invoicx=='yes')?`<td><a href="javascript:;" onclick="openInvoice('${mapping.invoice}','${removeHtmlTags(statusText)}');" class="btn btn-success btn-sm" style="padding:0px!important;font-size:12px!important; padding-left:8px!important; padding-right:8px!important;border-radius:100!important;"><i class='bx bxs-printer' style="font-size:12px!important;"></i> Invoice</a></td>`:'<td>'+invoicx+'</td>'}
                                         </tr>
                                     `;
                                 }
@@ -436,7 +509,7 @@
                 isFilterOn = true;
 
                 var inputs = $(".inputFilterItem");
-                let urlsets = '<?= api_url(); ?>api/v1/rep/jurnal?usr-model=General';
+                let urlsets = '<?= api_url(); ?>api/v1/rep/jurnal?usr-model=General&';
                 let valueData = '';
                 for(var i = 0; i < inputs.length; i++){
                     valueData = $(inputs[i]).data('object');
@@ -502,5 +575,127 @@
                 }
 
                 showData();
+            }
+
+            function openInvoice(str,keterangan){
+                let htmlx = '';
+                let desc = '';
+
+                var x = findElement(invoiceDataArray, "invoice", str);
+                console.log(invoiceDataArray);
+                let listPembelian = '';
+
+                const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?invoice='+ x['invoice'], {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : statustoggle
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+                        let mmm = '';
+                        if(!statustoggle){
+                            mmm = posts2.data.data.data;
+                        }else {
+                            mmm = posts2.data.data;
+                        }
+                        
+                        mmm.map((mapping,i)=>{
+                            let saldoawal = 0;
+                            let desc = mapping.description;
+                            if(i==0){
+                            saldoawal = parseInt(mapping.balance)-parseInt(mapping.credit_amount);
+                            htmlx = `
+                                <div class="invoice-card" id="divToPRINT">
+                                    <div class="invoice-title">
+                                        <div id="main-title" style="display:block!important;">
+                                        <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;text-transform:uppercase;font-size:14px;">TOPUP SALDO ${mapping.status.description}</h4>
+                                        <span style=" color:black!important; display:block; font-size:9px!important;">#${mapping.invoice}</span>
+                                        </div>
+                                        
+                                        <span id="date" style=" color:black!important;">${moment(mapping.created_at).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
+                                        <span style="font-size:11px; color:black!important;">- - -</span>
+                                    </div>
+                                    <div style="text-align:center;font-weight:bolder;">
+                                    TOPUP<br/>${instansiNameX}
+                                    </div>
+                                    
+                                    <div class="invoice-details">
+                                        <table class="invoice-table" style="width:100%;">
+                                        <tbody class="detailTabelInvoice">
+                                            <tr class="calc-row">
+                                            <td colspan="2">Saldo Sebelumnya</td>
+                                            <td>Rp${formatRupiahNew(saldoawal.toString())}</td></tr>
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                            </td></tr>
+                                            <tr class="calc-row">
+                                            <td colspan="2">Penambahan Saldo</td>
+                                            <td>Rp${formatRupiah(mapping.credit_amount)}</td></tr>
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                            </td></tr>
+                                            <tr class="calc-row">
+                                            <td colspan="2"><b>Saldo Saat Ini</b></td>
+                                            <td>Rp${formatRupiah(mapping.balance)}</td>
+                                            </tr>
+                                            
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                            </td></tr>
+                                            
+                                            <tr class="">
+                                            <td colspan="3"><b>Keterangan</b></td>
+                                            </tr>
+                                            <tr class="">
+                                            <td colspan="3" style="font-size:13px!important;">${desc}</td>
+                                            </tr>
+
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                            </td></tr>
+
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    
+                                </div>
+
+                                <div class="invoice-card mt-4" style="min-height:auto!important;">
+                                    <div class="invoice-footer">
+                                        <button class="btn btn-sm btn-secondary" data-dismiss="modal" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
+                                        <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                                    </div>
+                                
+                                </div>
+                            `;
+
+                            }
+
+                        });	
+
+                        $('#invoiceModal .modal-body').html(htmlx);
+                        $('#invoiceModal').modal('toggle');
+
+                        
+					}
+				}
+				
+				save2();
+
+                
+
+            }
+
+            function formatRupiahNew(amount) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
             }
 		</script>

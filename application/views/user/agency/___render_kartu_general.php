@@ -54,7 +54,7 @@
 					});
 			
 					if (posts2.status == 200) {
-							num += 1;
+							
 							tableColumn = '';
 
                             let arr = [];
@@ -97,12 +97,15 @@
 
                             posts2.data.data.map((mapping,i)=>{
 
-                            // let inisiateNama = mapping.nama_lengkap;
-                            // inisiateNama = inisiateNama.toLowerCase();
-                            // if(inisiateNama.includes('ridho ok')||inisiateNama.includes('sumitr')||inisiateNama.includes('mifta')||inisiateNama.includes('elsamia')||inisiateNama.includes('fitri kh')||inisiateNama.includes('amiru')||inisiateNama.includes('zikri')||inisiateNama.includes('mahjor')||inisiateNama.includes('ari ag')||inisiateNama.includes('jami')||inisiateNama.includes('saidul')||inisiateNama.includes('yusmawa')||inisiateNama.includes('ikhsan ka')||inisiateNama.includes('bagas')||inisiateNama.includes('safri')){
+                                let inisiateNama = mapping.nama_lengkap;
+                                inisiateNama = inisiateNama.toLowerCase();
+                                if((!(inisiateNama.includes('ridho ok')||inisiateNama.includes('sumitr')||inisiateNama.includes('mifta')||inisiateNama.includes('elsamia')||inisiateNama.includes('fitri kh')||inisiateNama.includes('amiru')||inisiateNama.includes('zikri')||inisiateNama.includes('mahjor')||inisiateNama.includes('ari ag')||inisiateNama.includes('jami')||inisiateNama.includes('saidul')||inisiateNama.includes('yusmawa')||inisiateNama.includes('ikhsan ka')||inisiateNama.includes('bagas')||inisiateNama.includes('safri'))) && mapping.id > 49){
+                                // if(((inisiateNama.includes('firmansyah')))){
 
                                 if(mapping.user.foto!='default.jpg'){
                                     dataokcount++;
+
+                                    num += 1;
 
                                     let namalengkap = mapping.nama_lengkap;
                                     namalengkap = namalengkap.toLowerCase();
@@ -112,8 +115,8 @@
                                     let textNama = textNamaA.split("-m");
                                     let urlBgDepan = '';
                                     let urlBgBelakang = '';
-                                    urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/front_general.webp';
-                                    urlBgBelakang = '<?=base_url();?>assets_oncard/images/kartu/back_general.webp';
+                                    urlBgDepan = '<?=base_url();?>assets_oncard/images/kartu/foto_kartu_ppsr_2/front_general.webp';
+                                    urlBgBelakang = '<?=base_url();?>assets_oncard/images/kartu/foto_kartu_ppsr_2/back_general.webp';
                                     
                                     let alamat = mapping?.alamat_lengkap;
                                     alamat = alamat?.toLowerCase();
@@ -137,7 +140,7 @@
                                     `;
                                 }
 
-                            // }
+                            }
 							});
 
                         // $('.resumeData').html(`
@@ -146,6 +149,16 @@
                         //         <td width="33.3%"><font class="jmldataok"></font><a href="#/" onclick="showModalData();">Lihat ${arr.length} data yang belum lengkap</a></td>
                         //         <td width="33.3%">${dataokcount} data sudah lengkap</td>
                         //         <td width="33.3%"> TOTAL DATA : ${posts2.data.data.length} DATA.</td>
+                        //         </tr>
+                        //     </table>
+                        // `);
+
+                        // $('.resumeData').html(`
+                        //     <table class="table table-bordered">
+                        //         <tr>
+                        //         <td width="100%"><font class="jmldataok"></font><a href="#/" onclick="showModalData();">Total ${num}</a>
+                        //         </td>
+                                
                         //         </tr>
                         //     </table>
                         // `);

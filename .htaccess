@@ -6,6 +6,14 @@ RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
 
 ### End CyberPanel Generated Rules.
 
+### Rewrite Rules Added by CyberPanel Rewrite Rule Generator
+
+RewriteEngine On
+RewriteCond %{HTTPS}  !=on
+RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+
+### End CyberPanel Generated Rules.
+
 # Checks to see if the user is attempting to access a valid file,
 # such as an image or css document, if this isn’t true it sends the
 # request to index.php

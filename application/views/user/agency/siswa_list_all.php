@@ -26,8 +26,9 @@
 									<tr>
 										<th>#NIS</th>
 										<th>Nama siswa</th>
+                                        <th>Foto</th>
 										<th>Koneksi Kartu</th>
-										<!-- <th>Diinput Pada</th> -->
+										<th>PIN</th>
 										<th>KODE KARTU</th>
 										<th>Saldo</th>
 										<th>Limit Transaksi</th>
@@ -182,12 +183,52 @@
 
                                 let mmmsaldo = mapping.accounts.balance;
                                 
-								if(textNama[1]=='A'){
-									textTingkat = 'Madrasah Aliyah';
-								}
-								if(textNama[1]=='TS'){
-									textTingkat = 'Madrasah Tsanawiyah';
-								}
+								if(textNama.length>0 && (textNamaA.includes('-MA') || textNamaA.includes('-MTS'))){
+                                    if(textNama[1]=='A'){
+                                        textTingkat = 'Madrasah Aliyah';
+                                    }
+                                    if(textNama[1]=='TS'){
+                                        textTingkat = 'Madrasah Tsanawiyah';
+                                    }
+
+                                    if(textNama[1]==undefined){
+                                        textTingkat = '-';
+                                    }
+                                }else {
+                                    if (textNamaA.includes('-TK')) {
+                                        let parts = textNamaA.split('-TK');
+                                        let beforeTK = parts[0].trim(); // The part before -TK
+                                        let afterTK = parts[1] ? parts[1].trim() : ''; // The part after -TK
+
+                                        textNama = parts;
+                                        textTingkat = 'TK';
+                                    }
+                                    else if (textNamaA.includes('-SD')) {
+                                        let parts = textNamaA.split('-SD');
+                                        let beforeTK = parts[0].trim(); // The part before -TK
+                                        let afterTK = parts[1] ? parts[1].trim() : ''; // The part after -TK
+
+                                        textNama = parts;
+                                        textTingkat = 'Sekolah Dasar';
+                                    }
+                                    else if (textNamaA.includes('-SMP')) {
+                                        let parts = textNamaA.split('-SMP');
+                                        let beforeTK = parts[0].trim(); // The part before -TK
+                                        let afterTK = parts[1] ? parts[1].trim() : ''; // The part after -TK
+
+                                        textNama = parts;
+                                        textTingkat = 'Sekolah Menengah Pertama';
+                                    }
+                                    else if (textNamaA.includes('-SMK')) {
+                                        let parts = textNamaA.split('-SMK');
+                                        let beforeTK = parts[0].trim(); // The part before -TK
+                                        let afterTK = parts[1] ? parts[1].trim() : ''; // The part after -TK
+
+                                        textNama = parts;
+                                        textTingkat = 'Sekolah Menengah Kejuruan';
+                                    }
+                                }
+								
                                 let nisclear = mapping.nis;
                                 nisclear = nisclear.replace(/\s/g, "");
 
@@ -207,8 +248,11 @@
 									</td>
 									<td>${textNama[0]} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}
 									<br/><small class="text-muted">${textTingkat}</small> </td>
+                                    <td>${(mapping.user.foto!="default.jpg")?"ADA":"TIDAK ADA"}</td>
 									<td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
+									<td>${mapping.accounts.pin}</td>
 									<td>${mapping.accounts.card_id}</td>
+									
 									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
 									<td >Rp${formatRupiah(mapping.accounts.limit_trx)}</td>
 									

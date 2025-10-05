@@ -14,6 +14,12 @@
     box-shadow: 0px 10px 30px 5px rgba(0, 0, 0, 0.15);
     }
 
+    .bg-dongker1 {
+        background:#de73f7;
+    }
+    .bg-dongker2 {
+        background:#1e0ccd;
+    }
     .invoice-card > div {
     margin: 5px 0;
     }
@@ -93,18 +99,45 @@
     margin-right: 5px;
     }
 
+    .text-container {
+        display: inline-block; /* Keep inline layout */
+        max-width: 100px; /* Set the maximum width to 100px */
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Add ellipsis to overflow text */
+        vertical-align: middle;
+        transition: max-width 0.3s ease; /* Smooth transition for width change */
+    }
+
+    td:hover .text-container {
+        max-width: 100%; /* Expand max width on hover */
+    }
+
+    /* Optional: Add tooltip for better usability */
+    td:hover::after {
+        content: attr(data-full-text);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        white-space: nowrap;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 4px;
+        z-index: 1;
+    }
+
 </style>
 <div class="page-wrapper">
 			<div class="page-content">
 				<!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Laporan Saldo Siswa</div>
+					<div class="breadcrumb-title pe-3">Jurnal Siswa</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page">Laporan Saldo Siswa</li>
+								<li class="breadcrumb-item active" aria-current="page">Jurnal Siswa</li>
 							</ol>
 						</nav>
 					</div>
@@ -132,6 +165,7 @@
                                                     <th>Akun</th>
                                                     <th>Nominal</th>
                                                     <th>Keterangan</th>
+                                                    <th>Invoice</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="putContentHere">
@@ -194,8 +228,10 @@
                                         <select class="form-select single-select inputFilterItem" id="mTypeGet" data-object='mtype' style="border-radius:0px!important;">
                                         <option value="">Pilih salah satu tipe</option>
                                         <option value="buy">Pembelian</option>
-                                        <option value="top_up">Top Up Saldo</option>
                                         <option value="adminitrasi">Biaya Transaksi</option>
+                                        <option value="withdrawal">Pencairan Saldo</option>
+                                        <option value="top_up">Standard Top Up</option>
+                                        <option value="topup_via_vendor">Top Up - Transfer BRKS</option>
                                         </select>
                                     </div>
                                     
@@ -309,7 +345,8 @@
 					const posts2 = await axios.get(url, {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
-                            'paginate' : statustoggle
+                            'paginate' : statustoggle,
+                            'take' : 20,
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -328,6 +365,8 @@
                                 mmm = posts2.data.data.data;
                             }
 
+                            mmm = posts2.data.data;
+
                             console.log(mmm);
                             
 
@@ -339,8 +378,10 @@
 
                             mmm.map((mapping,i)=>{
 
-                                if(mapping.account.user.model=='Siswa'){
+                                if (mapping?.account?.user?.model === 'Siswa') {
+ 
                                     invoiceDataArray.push({
+                                        uid: mapping.uid,
                                         invoice: mapping.invoice,
                                         date: mapping.created_at
                                     });
@@ -349,22 +390,60 @@
 
                                     let statusText = '';
 
-                                    if(mapping.management_type.name_type=='buy'){
-                                        statusText = '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">Pembelian</span>';
+                                    if(mapping.management_type.name_type=='buy' || mapping.management_type.name_type=='sell'){
+                                        if(mapping.trans_type=="oncard-pay"){
+                                            statusText = '<span class="badge text-white shadow-sm w-100" style="background: none !important;background-color: #3d76aa !important;">OncardPay</span>';
+                                        }else {
+                                            statusText = '<span class="badge bg-gradient-blooker text-white shadow-sm w-100" style="background: linear-gradient(45deg, #e26363, #e8e069) !important;">Pembelian</span>';
+                                        }
+                                        // statusText = '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">Pembelian</span>';
+
                                     }else if(mapping.management_type.name_type=='adminitrasi'){
                                         statusText = '<span class="badge bg-gradient-blooker text-white shadow-sm w-100">Biaya Admin</span>';
                                     }else if(mapping.management_type.name_type=='withdrawal'){
-                                        statusText = '<span class="badge bg-gradient-bloody text-white shadow-sm w-100">Pencairan Saldo</span>';
+                                        statusText = `<span class="badge bg-gradient-bloody text-white shadow-sm w-100">Pencairan Saldo</span><br/><small class="text-muted" style="font-size:9px;">${mapping.description??"-"}</small>`;
                                     }else if(mapping.management_type.name_type=='top_up'){
-                                        statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Pengisian Saldo</span>';
+                                        if(mapping.description=='setor_tunai'){
+                                            statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Setor ke Host</span>';
+                                        }else if(mapping.description=='transfer_ortu'){
+                                            statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Transfer Ortu</span>';
+                                        }else {
+                                            statusText = '<span class="badge bg-primary text-white shadow-sm w-100" style="background-color:#22ddcc!important;">Direct Topup</span>';
+                                        }
+                                        
+                                    }else if(mapping.management_type.name_type=='topup_via_vendor'){
+                                        statusText = '<span class="badge bg-primary text-white shadow-sm w-100">Transfer BRKs</span>';
+                                    }
+                                    else if(mapping.management_type.name_type=='transfer_sender'){
+                                        statusText = '<span class="badge bg-dongker1 text-white shadow-sm w-100">Transfer Out</span>';
+                                    }
+                                    else if(mapping.management_type.name_type=='payment'){
+                                        statusText = '<span class="badge bg-dongker1 text-white shadow-sm w-100">Cetak Kartu</span>';
+                                    }
+                                    else if(mapping.management_type.name_type=='transfer_recipient'){
+                                        statusText = '<span class="badge bg-dongker2 text-white shadow-sm w-100">Transfer In</span>';
                                     }
                                     let namaNya = '';
                                     let amount ='0';
+                                    let invoicx = '-';
                                     let cond1 = mapping.management_type.name_type;
-                                    if(cond1 =='top_up'){
+                                    if(cond1 =='top_up'|| cond1 =='topup_via_vendor'){
                                         namaNya = mapping.credit_account?.customers_name;
                                         amount = mapping.credit_amount??'0';
-                                    }else {
+                                        invoicx = 'yes';
+                                    }else if(cond1=='transfer_sender'){
+                                        namaNya = mapping.debit_account?.customers_name;
+                                        amount = mapping.debit_amount??'0';
+                                    }
+                                    else if(cond1=='transfer_recipient'){
+                                        namaNya = mapping.credit_account?.customers_name;
+                                        amount = mapping.credit_amount??'0';
+                                    }
+                                    else if(cond1=='payment'){
+                                        namaNya = mapping.credit_account?.customers_name;
+                                        amount = mapping.credit_amount??'0';
+                                    }
+                                    else {
                                         namaNya = mapping.debit_account?.customers_name;
                                         amount = mapping.debit_amount??'0';
                                     }
@@ -380,10 +459,14 @@
                                             </td>
                                             <td width="70">${moment(mapping.created_at).format('DD-MM-YYYY')}</td>
                                             <td width="70">${moment(mapping.created_at).format('HH:mm:ss')} WIB</td>
-                                            <td width="160">${mapping.invoice}</td>
+                                            <td data-full-text="${mapping.invoice}">
+                                            <span class="text-container">
+                                            ${mapping.invoice}</span>
+                                            </td>
                                             <td>${namaNya}</td>
                                             <td>Rp${formatRupiah(amount.toString())}</td>
                                             <td>${statusText}</td>
+                                            ${(invoicx=='yes')?`<td><a href="javascript:;" onclick="openInvoice('${mapping.invoice}','${removeHtmlTags(statusText)}');" class="btn btn-success btn-sm" style="padding:0px!important;font-size:12px!important; padding-left:8px!important; padding-right:8px!important;border-radius:100!important;"><i class='bx bxs-printer' style="font-size:12px!important;"></i> Invoice</a></td>`:'<td>'+invoicx+'</td>'}
                                         </tr>
                                     `;
                                 }
@@ -505,5 +588,127 @@
                 }
 
                 showData();
+            }
+
+            function openInvoice(str, keterangan){
+                let htmlx = '';
+                let desc = '';
+
+                var x = findElement(invoiceDataArray, "invoice", str);
+                console.log(invoiceDataArray);
+                let listPembelian = '';
+
+                const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v1/rep/jurnal?invoice='+ x['invoice'], {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : statustoggle
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+                    let mmm = '';
+					if (posts2.status == 200) {
+                        if(!statustoggle){
+                             mmm = posts2.data.data.data;
+                        }else {
+                            mmm = posts2.data.data;
+                        }
+
+                        
+                        
+                        mmm.map((mapping,i)=>{
+                            if(i===0){
+                            let saldoawal = 0;
+                            let desc = mapping.description;
+                            saldoawal = parseInt(mapping.balance)-parseInt(mapping.credit_amount);
+                            htmlx = `
+                                <div class="invoice-card" id="divToPRINT">
+                                    <div class="invoice-title">
+                                        <div id="main-title" style="display:block!important;">
+                                        <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;text-transform:uppercase;font-size:14px;">TOPUP SALDO ${mapping.status.description}</h4>
+                                        <span style=" color:black!important; display:block; font-size:9px!important;">#${mapping.invoice}</span>
+                                        </div>
+                                        
+                                        <span id="date" style=" color:black!important;">${moment(mapping.created_at).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
+                                        <span style="font-size:11px; color:black!important;">- ${mapping.account.customers_name} -</span>
+                                    </div>
+                                    <div style="text-align:center;font-weight:bolder;">
+                                    TOPUP<br/>${instansiNameX}
+                                    </div>
+                                    
+                                    <div class="invoice-details">
+                                        <table class="invoice-table" style="width:100%;">
+                                        <tbody class="detailTabelInvoice">
+                                            <tr class="calc-row">
+                                            <td colspan="2">Saldo Sebelumnya</td>
+                                            <td>${formatRupiahNew(saldoawal)}</td></tr>
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                            </td></tr>
+                                            <tr class="calc-row">
+                                            <td colspan="2">Penambahan Saldo</td>
+                                            <td>Rp${formatRupiah(mapping.credit_amount)}</td></tr>
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                            </td></tr>
+                                            <tr class="calc-row">
+                                            <td colspan="2"><b>Saldo Saat Ini</b></td>
+                                            <td>Rp${formatRupiah(mapping.balance)}</td>
+                                            </tr>
+                                            
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                            </td></tr>
+                                            
+                                            <tr class="">
+                                            <td colspan="3"><b>Keterangan</b></td>
+                                            </tr>
+                                            <tr class="">
+                                            <td colspan="3" style="font-size:13px!important;">${desc}</td>
+                                            </tr>
+
+                                            <tr><td colspan="3">
+                                                <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                            </td></tr>
+
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    
+                                </div>
+
+                                <div class="invoice-card mt-4" style="min-height:auto!important;">
+                                    <div class="invoice-footer">
+                                        <button class="btn btn-sm btn-secondary" data-dismiss="modal" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
+                                        <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                                    </div>
+                                
+                                </div>
+                            `;
+                            }
+
+                        });	
+
+                        $('#invoiceModal .modal-body').html(htmlx);
+                        $('#invoiceModal').modal('toggle');
+
+                        
+					}
+				}
+				
+				save2();
+
+                
+
+            }
+
+            function formatRupiahNew(amount) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
             }
 		</script>

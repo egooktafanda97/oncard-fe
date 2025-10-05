@@ -37,12 +37,19 @@
                                                 <option value="Barbershop">Barbershop</option>
                                                 <option value="Laundry">Laundry</option>
                                                 <option value="Petugas Kebersihan">Petugas Kebersihan</option>
-												<option value="Petugas Kantin">Petugas Kantin</option>
+                                                <option value="Kepala Unit Usaha">Kepala Unit Usaha</option>
+                                                <option value="Adm. dan Keuangan Unit Usaha">Adm. dan Keuangan Unit Usaha</option>
+												<option value="Karyawan Syafaat Mart">Karyawan Syafa'at Mart</option>
                                                 <option value="Pembina Asrama">Pembina Asrama</option>
-                                                <option value="Lainnya">Lainnya</option>
+                                                <option value="Security">Security</option>
+                                                <option value="Karyawan">Karyawan</option>
+                                                <option value="Kartu Kredit">Kartu Kredit</option>
 												<option value="Staf Sekolah">Staf Sekolah</option>
 												<option value="Kepala Madrasah Tsanawiyah">Kepala Madrasah Tsanawiyah</option>
 												<option value="Kepala Madrasah Aliyah">Kepala Madrasah Aliyah</option>
+												<option value="Pimpinan Pesantren">Pimpinan Pesantren</option>
+												<option value="Wakil Pimpinan Pesantren">Wakil Pimpinan Pesantren</option>
+												<option value="Kepala Sekolah">Kepala Sekolah</option>
                                             </select>
                                         </div>
 									</div>
@@ -93,6 +100,13 @@
 										<label for="noTelp" class="form-label">Nomor Whatsapp <i>(Harus dimulai dengan 62)</i></label>
 										<input type="text" class="form-control" id="noTelp" placeholder="Ketik nama lengkap pengguna">
 									</div>
+
+                                    <hr class="my-4" style="display:block;width:100%;">
+									
+                                    <div class="mb-3">
+										<label for="nip" class="form-label">NIP <i>(Jika ada)</i></label>
+										<input type="text" class="form-control" id="nip" placeholder="Masukkan NIP yang benar">
+									</div>
                                     
 								</div>
 							</div>
@@ -121,12 +135,8 @@
 										<input type="text" class="form-control" id="username" placeholder="Ketik username">
 									</div>
 									<div class="col-md-6">
-										<label for="password" class="form-label">PIN<br/><small><i>Default : 123456</i></small></label>
-										<input type="password" class="form-control" value="123456" id="password" placeholder="Minimal 6 karakter">
-									</div>
-									<div class="col-md-6">
 										<label for="email" class="form-label">Email</label>
-										<input type="email" class="form-control" id="email" placeholder="Email siswa">
+										<input type="email" class="form-control" id="email" placeholder="Email">
 									</div>
 									<div class="col-md-6">
 										<label for="pin" class="form-label">Jenis Kelamin</label>
@@ -135,7 +145,7 @@
 											<option value="P">Perempuan</option>
 										</select>
 									</div>
-									<div class="col-md-12">
+									<div class="col-md-6">
 										<label for="agama" class="form-label">Agama</label>
 										<select class="form-control" id="agama">
 											<option value="Islam">Islam</option>
@@ -160,6 +170,22 @@
 									</div>
 								</div> 
 								</div>
+
+                                <div class="border border-3 p-4 rounded mt-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label for="password" class="form-label">PIN Transaksi<br/><small><i>Default : 123456</i></small></label>
+                                            <input type="password" class="form-control" value="123456" id="password" placeholder="Minimal 6 karakter">
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="d-grid">
+                                                <button type="button" id="btnSavePIN" class="btn btn-primary" onclick="updatePIN();"><i class="bx bx-save"></i> Update PIN</button>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
 							</div>
 							
 						  </div>
@@ -177,13 +203,15 @@
         <script type="text/javascript">
 
 			let pageMode = '<?=$pageMode;?>';
+            let idsett = '';
 			console.log(pageMode);
-			let userIDX = '';
+			let userIDXX = '';
 			if(pageMode!='add'){
 				$('.fotodiv').attr('style','display:none!important;');
 				$('.fotodivupdate').attr('style','display:block!important;');
 			}else {
 				$('.fotodivupdate').attr('style','display:none!important;');
+                $('#btnSavePIN').attr('style','display:none!important;');
 			}
 
             $(document).ready(function () {
@@ -230,6 +258,7 @@
 				// var waOrtu = $("#waOrtu").val();
 				var jabatan = $("#jabatan").val();
 				var noTelp = $("#noTelp").val();
+				var nip = $("#nip").val();
 				
 				var form_data = new FormData();
 				
@@ -251,6 +280,7 @@
 				form_data.append('agama', agama);
 				form_data.append('alamat_lengkap', alamatGuru);
 				form_data.append('telpon', noTelp);
+				form_data.append('nip', nip);
 
 				if(imageuploadify!='' && pageMode=='add'){
 					form_data.append('foto', imageuploadify);	
@@ -262,7 +292,7 @@
 				let url = '';
 
 				if(pageMode!='add'){
-					url = '<?= api_url(); ?>api/v1/general/update/'+userIDX;
+					url = '<?= api_url(); ?>api/v1/general/update/'+userIDXX;
 				}else {
 					url = '<?= api_url(); ?>api/v1/general/store';
 				}
@@ -388,7 +418,7 @@
 				let url = '';
 
 				if(pageMode!='add'){
-					url = '<?= api_url(); ?>api/v1/usr/upadate-me/'+userIDX;
+					url = '<?= api_url(); ?>api/v1/usr/upadate-me/'+userIDXX;
 				}
 				
 				const save = async (form_data) => {
@@ -516,6 +546,9 @@
 							$('.bagianguru').attr('style','display:none');
 						}
 						
+
+                        idsett = posts.data.data.accounts.id;
+                        
 						$("#username").val(posts.data.data.user.username);
 						$("#alamatGuru").val(posts.data.data.alamat_lengkap);
 						$("#tempatLahir").val(posts.data.data.tempat_lahir);
@@ -527,7 +560,7 @@
 						$("#jabatan").val(posts.data.data.jabatan);
 						$("#noTelp").val(posts.data.data.telpon);
 						
-						userIDX  = posts.data.data.user.id;
+						userIDXX  = posts.data.data.user.id;
 						$('#password').val('');
 						$('#password').attr('placeholder','Kosongkan bila tidak ingin diubah!');
 						
@@ -554,5 +587,132 @@
 				}
 				return result;
 			}
+
+            function updatePIN() {
+
+                $('#btnSavePIN').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+                $('#btnSavePIN').attr('disabled', 'disabled');
+                $('#btnSavePIN').css('cursor', 'not-allowed');
+
+
+                var password = $("#password").val();
+
+                if(password==''){
+                    Toastify({
+                        text: 'Proses tidak dapat dilanjutkan karena PIN masih kosong.',
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        className: "errorMessage",
+
+                    }).showToast();
+
+                    $('#btnSavePIN').html('<i class="bx bx-save"></i> Update PIN');
+                    $('#btnSavePIN').attr('disabled', false);
+                    $('#btnSavePIN').css('cursor', 'pointer');
+                    return false;
+                }
+
+                var form_data = new FormData();
+
+                let url = '';
+
+
+                if(password!=''){
+                    form_data.append('pin', password);
+                }
+
+                const save = async (form_data) => {
+                    const posts = await axios.post('<?= api_url(); ?>api/v1/account/update/'+idsett, form_data, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('_token')
+                        }
+                    }).catch((err) => {
+
+                        for (const key in err.response.data.error) {
+                            Toastify({
+                                text: err.response.data.error[key],
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+
+                            }).showToast();
+                        }
+                        
+                        $('#btnSavePIN').html('<i class="bx bx-save"></i> Update PIN');
+                        $('#btnSavePIN').attr('disabled', false);
+                        $('#btnSavePIN').css('cursor', 'pointer');
+                    });
+                    if (posts.status == 201||posts.status == 200) {
+
+                        if (posts.data.status == true) {
+
+                            if(pageMode!='add'){
+                                callDataToUpdate(pageMode);
+                            }
+
+                            Toastify({
+                                text: 'PIN berhasil diubah!',
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "successMessage",
+
+                            }).showToast();
+
+                        } else {
+                            Toastify({
+                                text: posts.data.message,
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+
+                            }).showToast();
+                        }
+
+                        $('#btnSavePIN').html('<i class="bx bx-save"></i> Update PIN');
+                        $('#btnSavePIN').attr('disabled', false);
+                        $('#btnSavePIN').css('cursor', 'pointer');
+
+                    }else if(posts.status==500){
+                        
+                        Toastify({
+                            text: "Server dalam perbaikan!",
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: "right",
+                            className: "infoMessage",
+
+                        }).showToast();
+                    } 
+                    else {
+                        posts.data.error.map((mapping, i) => {
+                            Toastify({
+                                text: 'Oops!',
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+
+                            }).showToast();
+                        });
+                        $('#btnSavePIN').html('<i class="bx bx-save"></i> Simpan');
+                        $('#btnSavePIN').attr('disabled', false);
+                        $('#btnSavePIN').css('cursor', 'pointer');
+                    }
+
+                }
+
+                save(form_data);
+
+                }
 
         </script>

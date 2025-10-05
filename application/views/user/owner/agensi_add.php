@@ -105,6 +105,9 @@
                 $('#image-uploadify').imageuploadify();
 				let rands = randstr(3)+"."+randstr(3)+"."+randstr(3);
 				$('#kodeInstansi').val(rands);
+
+                $('.box1val').attr('style','display:none;');
+                $('.box10val').attr('style','display:none;');
             });
 
 			function addData() {

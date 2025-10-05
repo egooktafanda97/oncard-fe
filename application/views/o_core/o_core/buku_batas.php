@@ -1,0 +1,895 @@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+.swal-custom-text .swal2-html-container {
+    color: white !important;
+}
+
+.break-word {
+    word-break: break-word; /* Break words when necessary */
+    overflow-wrap: break-word; /* Ensures long words break correctly */
+    white-space: normal; /* Allows the text to wrap normally */
+}
+.quota-info {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+.progress-container {
+	width: 100%;
+	margin: 0 auto;
+}
+.select2-container--open {
+    z-index: 9999999 !important; /* Ensure Select2 dropdown appears above the modal */
+}
+.text-right {
+        text-align: right;
+    }
+
+.dropdown-checkbox-wrapper {
+  position: relative;
+  display: inline-block;
+  width:100%;
+  text-align:left;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  width: 200px;
+}
+
+.dropdown-checkbox-wrapper.open .dropdown-content {
+  display: block;
+  text-align:left;
+}
+
+.dropdown-content label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+</style>
+
+<div class="page-wrapper">
+			<div class="page-content">
+				<div class="row">
+                   <div class="col">
+					 <div class="card radius-1">
+						<div class="card-body">
+							<div class="d-lg-flex align-items-center mb-4 gap-3">
+							<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+								<div class="breadcrumb-title pe-3"><?=$pageTitle;?></div>
+								<div class="ps-3">
+									<nav aria-label="breadcrumb">
+										<ol class="breadcrumb mb-0 p-0">
+											<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+											</li>
+											<li class="breadcrumb-item active" aria-current="page">Kelola <?=$pageTitle;?></li>
+										</ol>
+									</nav>
+								</div>
+							</div>
+							
+							<div class="ms-auto">
+                            <button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:100px;"><i class="bx bxs-file-pdf mx-1" style="margin:0px;"></i></button>
+                            <button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelsiswa');" style="border-radius:100px;"><i class="bx bxs-file mx-1" style="margin:0px;"></i></button>
+                            
+							</div>
+						</div>
+                        <div class="row">
+                            
+                        <div class="col-lg-12 col-12">
+                            <div class="row">
+                            <h4>Tampilkan Data Filter</h4>
+                            <div class="col-3">
+                                <div class="mb-3">
+                                    <label for="filter-start-date">Pilih Tanggal:</label>
+                                        <input type="date" id="date-filter" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="mb-3 mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="goNext();">Tampilkan Data</button>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="mb-3 mt-3">
+                                    <button type="button" class="btn btn-danger" onclick="location.reload();">Reset Filter</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        </div>
+                        </div>
+                        <hr>
+						<div class="showdataafterget" style="display:none;">
+					
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <font class="head" style="font-size:30px; font-weight:900;"></font>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="mb-3">
+                                                <label for="filter-user-kategori">Filter by Jenis Absen:</label>
+                                                <select id="filter-user-kategori" class="form-control" style="width:200px;">
+                                                    <option value="">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="mb-3">
+                                                <label for="filter-keterangan-absen">Filter by Keterangan Absen:</label>
+                                                <select id="filter-keterangan-absen" class="form-control" style="width:200px;">
+                                                    <option value="">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <div class="mb-3">
+                                                <br/>
+                                                <button id="reset-filters" class="btn btn-secondary" style="display:block;">Reset Filters</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="mb-3">
+                                                <label for="filter-sub-kelas">Filter by Kelas:</label>
+                                                <select id="filter-sub-kelas" class="form-control" style="width:200px;">
+                                                    <option value="">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="mb-3">
+                                                <label for="filter-matapelajaran">Filter by Matapelajaran:</label>
+                                                <select id="filter-matapelajaran" class="form-control" style="width:200px;">
+                                                    <option value="">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-12">
+                                            <div id="summary-cards" class="row g-3 mb-3"></div>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div id="summarynotulensi" class="card mt-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Ringkasan Waktu Kehadiran</h5>
+                                            <ul class="list-group">
+                                            <li class="list-group-item d-flex justify-content-between"><span>Total Record</span><strong id="total-record">0</strong></li>
+                                            <li class="list-group-item d-flex justify-content-between"><span>Total Terlambat</span><strong class="text-danger" id="total-late">0</strong></li>
+                                            <li class="list-group-item d-flex justify-content-between"><span>Total Lebih Cepat</span><strong class="text-success" id="total-early">0</strong></li>
+                                            <li class="list-group-item d-flex justify-content-between"><span>Persentase Terlambat</span><strong id="late-percent">0%</strong></li>
+                                            <li class="list-group-item d-flex justify-content-between"><span>Rata-rata Selisih Waktu</span><strong id="avg-diff">-</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            
+                            <div class="table-responsive">
+							<table id="example" class="tabelsiswa table table-hover tabelproduk" style="width:100%;font-size:12px!important;">
+								<thead class="table-light">
+									<tr>
+										<th>No.</th>
+										<th>Waktu</th>
+										<th>Tanggal</th>
+										<th>Nama</th>
+										<th>Matapelajaran</th>
+										<th>Kategori</th>
+										<th>Tipe</th>
+										<th>Tipe</th>
+										<th>Tipe</th>
+										<th>Tipe</th>
+										
+									</tr>
+								</thead>
+							</table>
+						    </div>
+						</div>
+					 </div>
+				   </div>
+				  </div>
+				</div><!--end row-->
+
+			</div>
+
+			<div class="modal fade" id="modalViewDetails" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog modal-sm modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title titledetail">Details</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body puter table-responsive">
+
+						</div>
+						<div class="modal-footer text-center">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="modalSetTagihan" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog modal-sm modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Formulir Kategori Absen</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body addmodify">
+							<div class="row g-3">
+								<div class="col-md-12">
+								<label for="setTingkat" style="display:block;" class="form-label">Kategori</label>
+									<div class="input-group">
+										<input type="text" class="form-control" id="namaKategori" placeholder="ex: Absen Kehadiran" aria-label="Text input with prefix" aria-describedby="basic-addon1">
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						<div class="modal-footer text-center">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+							<button type="button" class="btn btn-success" id="submitBtnTagihan" onclick="procModifyKategoriAbsen();">Simpan</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <!-- Modal for Image -->
+            <div class="modal fade" id="modalImage" tabindex="-1" aria-labelledby="modalImageLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalImageLabel">Lampiran Gambar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="imgLampiran" src="" alt="Lampiran" class="img-fluid" style="max-height: 400px;">
+                </div>
+                </div>
+            </div>
+            </div>
+
+			
+		</div>
+
+		<script src="https://pawelgrzybek.github.io/siema/assets/siema.min.js"></script>
+
+        <script type="text/javascript">
+			
+			let idsett;
+			let idsett2;
+			let modesett;
+
+            let kategori_arr = [];
+            let kategori_text = '';
+
+			let tahun_mulai_sett;
+			let tahun_selesai_sett;
+
+			let table;
+
+            let summary = {};
+
+			$(document).ready(function () {
+				// getTahunAkademik();
+
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('date-filter').value = today;
+                
+                getKategoriAbsen();
+                
+            });
+
+
+            function goNext() {
+                let tgl_select = $('#date-filter').val();
+
+                summary = {};
+
+                if (!tgl_select) {
+                    Toastify({
+                        text: 'Tanggal Belum Dipilih',
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        className: "errorMessage",
+                    }).showToast();
+                    return false;
+                }
+
+                const ajaxReload = function () {
+                    axios.get('<?= api_url_core(); ?>api/absensi/multi-kategori?kategori_absen=' + id_absen_keluar_kelas + '&dates=' + tgl_select, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'pagination': false
+                        }
+                    }).then(response => {
+                        $('.showdataafterget').css('display', 'block');
+
+                        const dataGroup = response.data[tgl_select]; // array with multiple kategori_absen_id groups
+                        let allDetails = [];
+                        let allDetailsHeader = [];
+
+                        dataGroup.forEach(item => {
+                            if (Array.isArray(item.details)) {
+                                // Only include details with user_type === "GURU"
+                                const guruDetails = item.details.filter(detail => detail.user_type === "GURU");
+                                allDetails = allDetails.concat(guruDetails);
+
+                                if (guruDetails.length > 0) {
+                                    allDetailsHeader.push(guruDetails[0].kategori_absen.name ?? '_');
+                                }
+                            }
+                        });
+
+
+                        table.clear().rows.add(allDetails).draw();
+
+                        const records = allDetails;
+                        const records2  = allDetailsHeader.join('-');
+                        // table.clear().rows.add(records).draw();
+
+                        $('.head').html(records2);
+
+                        $('#total-records').text(records.length);
+                        const userTypes2 = [...new Set(records.map(item => item.keterangan_absen.name))];
+                        $('#filter-keterangan-absen').empty().append(`<option value="">Semua</option>`);
+                        userTypes2.forEach(type => {
+                            $('#filter-keterangan-absen').append(`<option value="${type}">${type}</option>`);
+                        });
+                        
+                        const userTypes3 = [...new Set(records.map(item => item.kategori_absen.name))];
+                        $('#filter-user-kategori').empty().append(`<option value="">Semua</option>`);
+                        userTypes3.forEach(type => {
+                            $('#filter-user-kategori').append(`<option value="${type}">${type}</option>`);
+                        });
+
+                         // Populate Sub Kelas filter
+                         const subKelasOptions = [...new Set(records.map(item => item.sub_kelas?.name || '-'))].sort();
+                        $('#filter-sub-kelas').empty().append(`<option value="">Semua</option>`);
+                        subKelasOptions.forEach(type => {
+                            $('#filter-sub-kelas').append(`<option value="${type}">${type}</option>`);
+                        });
+
+                        // Populate Matapelajaran filter
+                        const matapelajaranOptions = [...new Set(records.map(item => item.mata_pelajaran?.name || '-'))].sort();
+                        $('#filter-matapelajaran').empty().append(`<option value="">Semua</option>`);
+                        matapelajaranOptions.forEach(type => {
+                            $('#filter-matapelajaran').append(`<option value="${type}">${type}</option>`);
+                        });
+
+
+                        // Group and count
+                        let groupedSummary = {};
+                        records.forEach(item => {
+                            const userType = item.user_type || 'Unknown';
+                            const ket = item.keterangan_absen?.name || 'Tidak ada';
+
+                            if (!groupedSummary[userType]) {
+                                groupedSummary[userType] = {};
+                            }
+
+                            groupedSummary[userType][ket] = (groupedSummary[userType][ket] || 0) + 1;
+                        });
+
+                        console.log("summary",groupedSummary);
+
+                        let summaryHtml = '';
+
+                        Object.entries(groupedSummary).forEach(([userType, ketCounts]) => {
+                            summaryHtml += `
+                            <div class="col">
+                                <h5 class="mb-2">${userType}</h5>
+                                <div class="d-flex overflow-auto mb-4 gap-3 flex-nowrap">
+                            `;
+
+                            Object.entries(ketCounts).forEach(([ket, count]) => {
+                                summaryHtml += `
+                                    <div class="card shadow-sm border-info" style="min-width: 220px; flex-shrink: 0;">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-info">${ket}</h6>
+                                            <p class="card-text fw-bold" style="font-size:26px;">${count}</p>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+
+                            summaryHtml += `</div></div>
+                            
+                            `;
+                        });
+
+
+                        $('#summary-cards').html(summaryHtml);
+
+
+                    }).catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+                };
+
+                if ( $.fn.DataTable.isDataTable('#example') ) {
+                    // Already initialized, just reload data
+                    table = $('#example').DataTable();
+                    ajaxReload();
+                } else {
+                    // First time init
+                    table = $('#example').DataTable({
+                        fixedHeader: true,
+                        processing: true,
+                        searching: true,
+                        columnDefs: [{ className: 'text-right' }],
+                        order: [[0, 'desc']],
+                        data: [], // Empty until loaded
+                        columns: [
+                            {
+                                data: null, title: 'No.', orderable: false, className: 'text-center',
+                                render: (data, type, row, meta) => meta.row + 1
+                            },
+                            { data: 'user_absensi.name', title: 'Nama' },
+                            {
+                                data: 'mata_pelajaran', title: 'Matapelajaran',
+                                render: (data, type, row) =>
+                                    `<span class="kode-kunjungan text-dark" style="font-weight: bold;">${row.mata_pelajaran?.name ?? '-'}</span>`
+                            },
+                            {
+                                data: 'kelas', title: 'Kelas',
+                                render: (data, type, row) =>
+                                    `<span class="kode-kunjungan text-dark" style="font-weight: bold;">${row.sub_kelas?.name ?? '-'}</span>`
+                            },
+                            {
+                                data: 'jadwal.jam_selesai', title: 'Waktu Selesai',
+                                render: (data, type, row) =>
+                                    `<span class="kode-kunjungan text-dark" style="font-weight: bold;">${row.jadwal?.jam_selesai ?? '-'}</span>`
+                            },
+                            {
+                                data: 'jam_absen', title: 'Waktu Record',
+                                render: (data, type, row) =>
+                                    `<span class="kode-kunjungan text-dark" style="font-weight: bold;">${moment(row.created_at).format('DD-MM-YYYY HH:mm:ss')}</span>`
+                            },
+                            {
+                                data: 'user_type', title: 'Selisih Waktu',
+                                render: (data, type, row) => {
+                                    const waktuRecord = moment(row.created_at);
+                                    const jamSelesai = row.jadwal?.jam_selesai;
+
+                                    if (!jamSelesai) return '<span class="text-muted">-</span>';
+
+                                    const waktuSelesai = moment(waktuRecord.format('YYYY-MM-DD') + ' ' + jamSelesai, 'YYYY-MM-DD HH:mm:ss');
+                                    const duration = moment.duration(waktuRecord.diff(waktuSelesai));
+                                    const isLate = duration.asMilliseconds() > 0;
+
+                                    const hours = Math.floor(Math.abs(duration.asHours()));
+                                    const minutes = Math.floor(Math.abs(duration.asMinutes()) % 60);
+                                    const seconds = Math.floor(Math.abs(duration.asSeconds()) % 60);
+
+                                    const formatted = `${hours}j ${minutes}m ${seconds}d`;
+                                    const label = isLate ? 'Lebih Lambat' : 'Lebih Cepat';
+                                    const color = isLate ? 'text-info' : 'text-success';
+                                    const icon = isLate
+                                        ? '<i class="fas fa-clock"></i>' // icon jam merah
+                                        : '<i class="fas fa-check-circle"></i>'; // icon centang hijau
+
+                                    return `<span class="${color} font-weight-bold">${icon} ${label} (${formatted})</span>`;
+                                }
+                            },
+                            {
+                                data: 'keterangan_absen', title: 'Keterangan Absen',
+                                render: (data, type, row) =>
+                                    `<span class="kode-kunjungan text-dark" style="font-weight: bold;">${row.keterangan_absen.name}</span>`
+                            },
+                            {
+                                data: null,
+                                title: 'Buku Batas',
+                                orderable: false,
+                                render: function (data, type, row) {
+                                    const not = row.notulensi || 'Tidak ada';
+                                    return `<div class="d-block" style="width:200px; white-space: normal; word-wrap: break-word;">${not}</div>`;
+
+                                }
+                            },
+                            {
+                                data: null,
+                                title: 'Lampiran & Notulei',
+                                orderable: false,
+                                render: function (data, type, row) {
+                                    const hasImage = row.lampiran && row.lampiran !== '';
+                                    const not = row.notulensi || 'Tidak ada';
+                                    const imageBtn = `<button class="btn btn-sm btn-${hasImage ? 'info' : 'secondary'} me-2 show-image" ${hasImage ? `data-img="${row.lampiran}"` : 'disabled'}>
+                                                        <i class="bx bx-image"></i> Gambar
+                                                    </button>`;
+
+                                    return `<div class="d-flex">${imageBtn}</div>`;
+                                }
+                            }
+
+                        ],
+                        lengthMenu: [[20, 35, 50, -1], [20, 35, 50, "All"]],
+                        pageLength: -1
+                    });
+
+
+                    ajaxReload();
+
+                    $('#example').on('click', '.show-image', function () {
+                        const imgUrl = $(this).data('img');
+                        $('#imgLampiran').attr('src', '<?=api_url_core();?>'+imgUrl);
+                        $('#modalImage').modal('show');
+                    });
+
+                    $('#example').on('click', '.show-note', function () {
+                        const note = $(this).data('note');
+                        Swal.fire({
+                            title: 'Notulensi',
+                            text: note,
+                            icon: 'info',
+                            confirmButtonText: 'Tutup',
+                            customClass: {
+                                popup: 'swal-custom-text'
+                            }
+                        });
+
+                    });
+
+                    updateSummaryFromRenderedTable();
+
+
+                    
+                }
+            }
+
+            $('#example').on('draw.dt', function () {
+                updateSummaryFromRenderedTable();
+            });
+
+            function updateSummaryFromRenderedTable() {
+                let total = 0;
+                let countLate = 0;
+                let countEarly = 0;
+                let countOntime = 0;
+
+                let totalLateSeconds = 0;
+                let totalEarlySeconds = 0;
+
+                $('#example tbody tr').each(function () {
+                    const cell = $(this).find('td').eq(5); // change index accordingly
+                    const text = cell.text().trim(); // e.g., "Terlambat (0j 42m 11d)"
+
+                    const statusMatch = text.match(/^(Terlambat|Tepat Waktu|Lebih Cepat)/);
+                    const timeMatch = text.match(/\((\d+)j\s+(\d+)m\s+(\d+)d\)/);
+
+                    if (!statusMatch || !timeMatch) return;
+
+                    const status = statusMatch[1];
+                    const hours = parseInt(timeMatch[1]);
+                    const minutes = parseInt(timeMatch[2]);
+                    const seconds = parseInt(timeMatch[3]);
+                    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+
+                    total++;
+
+                    if (status === "Terlambat") {
+                        countLate++;
+                        totalLateSeconds += totalSeconds;
+                    } else if (status === "Lebih Cepat") {
+                        countEarly++;
+                        totalEarlySeconds += totalSeconds;
+                    } else if (status === "Tepat Waktu") {
+                        countOntime++;
+                    }
+                });
+
+                const percent = (count) => total ? ((count / total) * 100).toFixed(1) + '%' : '0%';
+
+                const formatDuration = (totalSec) => {
+                    const dur = moment.duration(totalSec, 'seconds');
+                    return `${Math.floor(dur.asHours())}j ${dur.minutes()}m ${dur.seconds()}d`;
+                };
+
+                $('#summarynotulensi').html(`
+                <div class="card-body">
+                    <h5 class="card-title">Ringkasan Selisih Waktu</h5>
+                    <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between"><span>Total Data</span><strong>${total}</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Lebih Lambat</span><strong class="text-info">${countLate} (${percent(countLate)})</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Lebih Cepat</span><strong class="text-success">${countEarly} (${percent(countEarly)})</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Tepat Waktu</span><strong class="text-secondary">${countOntime} (${percent(countOntime)})</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Rata-rata Lebih Cepat</span><strong>${countLate ? formatDuration(totalLateSeconds / countLate) : '-'}</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Rata-rata Lebih Cepat</span><strong>${countEarly ? formatDuration(totalEarlySeconds / countEarly) : '-'}</strong></li>
+                    </ul>
+                </div>
+                `);
+            }
+
+
+
+
+            $('#reset-filters').on('click', function() {
+                $('#filter-user-type, #filter-user-kategori, #filter-keterangan-absen, #filter-sub-kelas, #filter-matapelajaran').val('');
+                // table.draw();
+                table.search('').columns().search('').draw();
+            });
+
+
+            $('#filter-user-type').on('change', function () {
+                const filterValue = $(this).val();
+                table.column(2).search(filterValue).draw(); // Column index 4 is 'user_type'
+            });
+
+            $('#filter-keterangan-absen').on('change', function () {
+                const filterValue = $(this).val();
+                table.column(7).search(filterValue).draw(); // Column index 4 is 'user_type'
+            });
+            
+            $('#filter-matapelajaran').on('change', function () {
+                const filterValue = $(this).val();
+                table.column(2).search(filterValue).draw(); // Column index 4 is 'user_type'
+            });
+            
+            $('#filter-sub-kelas').on('change', function () {
+                const filterValue = $(this).val();
+                table.column(3).search(filterValue).draw(); // Column index 4 is 'user_type'
+            });
+            
+            $('#filter-user-kategori').on('change', function () {
+                const filterValue = $(this).val();
+                table.column(7).search(filterValue).draw(); // Column index 4 is 'user_type'
+            });
+
+            $('#filter-user-type').on('change', function () {
+                // Apply both filters together when any filter is changed
+                table.draw();
+            });
+            $('#filter-keterangan-absen').on('change', function () {
+                // Apply both filters together when any filter is changed
+                table.draw();
+            });
+            $('#filter-user-kategori').on('change', function () {
+                // Apply both filters together when any filter is changed
+                table.draw();
+            });
+
+
+
+            showTahunAkademik();
+
+            $('#setTingkat').select2({
+                placeholder: 'Search options...',
+                dropdownParent: $('#modalSetTagihan'), // Replace #myModal with the actual modal ID
+                minimumInputLength: 0
+            });
+        
+        
+
+			let newpath = [];
+			function showTahunAkademik(){
+				axios.get('<?= api_url_core(); ?>api/master/tahun-akademik', {
+					headers: {
+						'Authorization': 'Bearer ' + localStorage.getItem('_token')
+					}
+				}).then(response => {
+					console.log(response.data);
+					response.data.map((mapping,i)=>{
+						newpath.push({
+							'tahun_mulai' : mapping.tanggal_mulai,
+							'tahun_selesai' : mapping.tanggal_selesai,
+							'tahun_akademik' : mapping.tahun_akademik,
+							'kode_tahun_akademik' : mapping.id,
+						})
+					});
+
+					// Convert tahun_mulai to date objects for comparison
+					newpath.sort((a, b) => {
+						const dateA = new Date(a.tahun_mulai);
+						const dateB = new Date(b.tahun_mulai);
+						return dateA - dateB;
+					});
+
+					newpath.map((mapping,i)=>{
+						const option = new Option(mapping.tahun_akademik, mapping.kode_tahun_akademik, true, true);
+						
+						// Append it to the select2 dropdown
+						$('#setTahunAkademik').append(option).trigger('change');
+					});
+
+
+					console.log(newpath);
+				})
+				.catch(error => {
+					console.error('Error fetching data:', error);
+				});
+			}
+
+			function showDetails(str){
+
+				$('#modalViewDetails').modal('toggle');
+
+				$('.puter').html('<div class="row"><div class="col-12 text-center">Loading...</div></div>');
+
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url_core(); ?>api/master/kategori-absen/'+str, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+						console.log(err.response);
+					});
+			
+					if (posts2.status == 200) {
+
+						tableColumn='';
+
+						console.log(posts2.data);
+						
+						tableColumn+=`
+							
+							<small>Kode</small><br/>
+								<h6 class="text-danger">${posts2.data.kode}</h6>
+							<p>
+								<small>Tanggal Terbuat</small><br/>
+								${moment(posts2.data.created_at).format('dddd, DD-MM-YYYY')}
+							</p>
+							<p>
+								<small>Jam Terbuat</small><br/>
+								${moment(posts2.data.created_at).format('HH:mm:ss')} WIB
+							</p>
+						`; 
+
+						tableColumn +='</table>';
+						$('.titledetail').html(posts2.data.name);
+						$('.puter').html(tableColumn);
+						
+					}
+				}
+				save2();
+
+				
+			}
+
+            let id_absen_keluar_kelas;
+
+            function getKategoriAbsen() {
+                axios.get('<?= api_url_core(); ?>api/master/kategori-absen', {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('_token')
+                    }
+                }).then(response => {
+                    const records = response.data;
+
+                    // Bersihkan dulu isi select (optional)
+                    // $('#filter-user-type-kat').empty().append('<option value="">-- Pilih Kategori --</option>');
+
+                    records.forEach(item => {
+                        if (item.name.toLowerCase().includes('keluar kelas')) {
+ 
+                            id_absen_keluar_kelas = item.id;
+                        }
+                    });
+
+                    // Toggle dropdown
+                    $('.dropdown-btn').on('click', function () {
+                        $(this).parent().toggleClass('open');
+                    });
+
+                    
+                }).catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+            }
+
+            
+
+			
+			function modalAddModify(mode){
+				modesett = mode;
+
+				if(mode!='add'){
+
+					const save2 = async () => {
+						const posts2 = await axios.get('<?= api_url_core(); ?>api/master/kategori-absen/'+mode, {
+							headers: {
+								'Authorization': 'Bearer ' + localStorage.getItem('_token')
+							}
+						}).catch((err) => {
+							console.log(err.response);
+						});
+				
+						if (posts2.status == 200) {
+
+							let semesterStrGet = posts2.data.name;
+							$('#namaKategori').val(semesterStrGet);
+						}
+					}
+					save2();
+				}
+				$('#modalSetTagihan').modal('toggle');
+			}
+
+			function procModifyKategoriAbsen(){
+				$('#submitBtnTagihan').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+				$('#submitBtnTagihan').attr('disabled', 'disabled');
+				$('#submitBtnTagihan').css('cursor', 'not-allowed');
+
+				let url = '';
+				if(modesett=='add'){
+					url = '<?= api_url_core(); ?>api/master/kategori-absen';
+				}else {
+					url = '<?= api_url_core(); ?>api/master/kategori-absen/'+modesett;
+				}
+
+
+				var namaKategori = $("#namaKategori").val();
+				
+				var form_data = new FormData();
+
+				form_data.append('name', namaKategori);
+				form_data.append('kode', "ABS - "+namaKategori);
+				
+				const save = async (str) => {
+					const posts = await axios.post(url,form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+							Toastify({
+								text: err.response.data.error,
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+
+							$('#submitBtnTagihan').html('Simpan');
+							$('#submitBtnTagihan').attr('disabled', false);
+							$('#submitBtnTagihan').css('cursor', 'pointer');
+
+							return false;
+					});
+
+					if (posts.status == 200||posts.status == 201) {
+						Toastify({
+							text: 'Berhasil tersimpan.',
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "successMessage",
+
+						}).showToast();
+						$('#modalSetTagihan').modal('toggle');
+						
+						idsett = '';
+						modesett = '';
+						
+						$('#submitBtnTagihan').html('Simpan');
+						$('#submitBtnTagihan').attr('disabled', false);
+						$('#submitBtnTagihan').css('cursor', 'pointer');
+
+						table.ajax.reload();
+
+					} else {
+
+					}
+				}
+				save(form_data);
+			}
+        </script>

@@ -4,8 +4,14 @@
 
 <script>
     var x = localStorage.getItem("struk");
+    var y = localStorage.getItem("strukconf");
 
     document.getElementById("pritnDIV").innerHTML = x;
 
-    window.print();
+    if(y){
+        window.print();
+    }else {
+        localStorage.setItem("strukconf","done");
+    }
+    
 </script>

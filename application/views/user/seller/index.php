@@ -7,8 +7,8 @@
 							<div class="d-flex align-items-center">
 								<div>
 									<p class="mb-0 text-secondary">Nama Kantin</p>
-									<h4 class="my-1 text-primary box1val" style="font-size:20px!important;"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
-                                    <p class="mb-0 font-13 box1val2">-</p>
+									<h4 class="my-1 text-primary box1valxx" style="font-size:20px!important;"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></h4>
+                                    <p class="mb-0 font-13 box1val2xx">-</p>
 								</div>
 							</div>
 						</div>
@@ -65,7 +65,7 @@
 					<div class="col-12">
 						<div class="card radius-10 w-100" style="overflow:hidden;">
 							<div class="row" >
-								<img src="<?=base_url();?>assets_oncard/images/bg_new.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/>
+								<img src="<?=base_url();?>assets_oncard/images/banner_new.webp" style="width:100%; object-fit:cover;object-position:center;height:200px;"/>
 							</div>
 						</div>
 					</div>
@@ -105,8 +105,8 @@
                         }else {
                             statusInstansi = 'Not set';
                         }
-                        $('.box1val').html(posts2.data.data[1]?.customers_name);
-                        $('.box1val2').html(statusInstansi);
+                        $('.box1valxx').html(posts2.data.data[1]?.customers_name);
+                        $('.box1val2xx').html(statusInstansi);
                         $('.box2val').html(posts2.data.data[1]?.instansi.nama);
                         $('.box4val').html(formatRupiah(posts2.data.data[0].balance??'0'));
 

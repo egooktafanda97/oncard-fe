@@ -1,3 +1,9 @@
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <style type="text/css">
     .invoice-card {
     display: flex;
@@ -131,7 +137,7 @@
 												<span class="text-secondary" id="saldo">Loading...</span>
 											</li>
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-												<h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Tanggal Join</h6>
+												<h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Bergabung</h6>
 												<span class="text-secondary" id="tglJoin">Loading...</span>
 											</li>
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -170,7 +176,7 @@
 									<div class="card-body">
                                         <div class="row mb-3">
                                             <div class="col-12">
-                                                <h5>Akun</h5>
+                                                <h5>Pengaturan Akun Instansi</h5>
                                                 <small class="text-muted">Konfigurasi informasi akun, Anda dapat mengubah informasi email / pin / foto profil melalui panel ini.</small>
                                             </div>
                                         </div>
@@ -217,6 +223,23 @@
                                 
                                 <div class="card">
 									<div class="card-body putKontenSpesifikUser">
+
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+									<div class="card-body putKontenSpesifikUser2">
+
+                                    <div class="card p-3 mb-3">
+                                    <label for="coordinateInput" class="form-label"><strong>Koordinat</strong></label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" id="coordinateInput" class="form-control" placeholder="Latitude, Longitude" >
+                                        <button id="getLocationBtn" class="btn btn-success">📍 Set Lokasi</button>
+                                    </div>
+                                    <input type="number" id="radius-input" value="1000" min="0" step="100"> <!-- Radius in meters -->
+                                    <div id="map" style="height: 400px;"></div>
+
+                                    </div>
 
                                     </div>
                                 </div>
@@ -421,6 +444,8 @@
 				save(form_data);
             }
 
+            let getKoord = '';
+
             function getAkunPengaturan(roleUserX,accountNumberX){
 
                 if(roleUserX=='agensi'){
@@ -444,6 +469,7 @@
                         roleUser = roleUserX;
                         
                         let html = '';
+                        let htmlcoord = '';
 
                         if(roleUser=='agensi'){
 							$('#norekBank').prop("disabled", false);
@@ -461,6 +487,15 @@
                             saldoUser = posts2.data.data[2].balance;
                             idAkun = posts2.data.data[2].id;
                             accountNumber = posts2.data.data[2].account_number;
+                            
+                            getKoord = posts2.data.data[0].instansi.koordinat;
+                            let radiusSet = posts2.data.data[0].instansi.radius_ontime;
+
+                            $('#coordinateInput').val(getKoord);
+                            $('#radius-input').val(radiusSet);
+
+                            initMapLeaflet(getKoord,radiusSet);
+
                             if(posts2.data.data[0].user.foto!=undefined  && posts2.data.data[0].user.foto!=null){
                                 $('.image-profile').attr('src','<?=base_url();?>app/assets/users/foto/'+posts2.data.data[0].user.foto);
                             }
@@ -468,13 +503,13 @@
                             html+=`
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <h5>Informasi</h5>
+                                    <h5>Informasi Umum</h5>
                                     <small class="text-muted">Pengaturan lainnya yang dapat Anda lakukan melalui panel ini.</small>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">Nama Lengkap</h6>
+                                    <h6 class="mb-0">Nama Resmi Instansi</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
                                     <input type="text" class="form-control" id="fullName" value="">
@@ -551,8 +586,7 @@
                             `;
                         }
                         $('.putKontenSpesifikUser').html(html);
-
-
+                        
                         
 
                         if(roleUser=='agensi'){
@@ -850,6 +884,7 @@
 				
 				var form_data = new FormData();
                 form_data.append('email', emailText);
+                // form_data.append('koordinat', '55,55');
 				if(roleUser=='seller'){
                     var noWA = $("#noWA").val();
                     form_data.append('nama_kantin', fullName);
@@ -940,6 +975,94 @@
 						$('#btnSettingAkunNext').html('<i class="bx bx-save"></i> Simpan');
 						$('#btnSettingAkunNext').attr('disabled', false);
 						$('#btnSettingAkunNext').css('cursor', 'pointer');
+					}
+
+				}
+
+				save(form_data);
+            }
+			
+            
+            
+            function saveKoordinatSetting(){
+                $('#btnSettingAkunNext2').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+				$('#btnSettingAkunNext2').attr('disabled', 'disabled');
+                $('#btnSettingAkunNext2').css('cursor', 'not-allowed');
+				
+                let radius = $('#radius-input').val();
+				var form_data = new FormData();
+                form_data.append('koordinat', coordsett);
+                form_data.append('radius_ontime', radius);
+				
+                const save = async (form_data) => {
+					const posts = await axios.post('<?= api_url(); ?>api/v1/agency/update', form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+
+						for (const key in err.response.data.error) {
+							Toastify({
+								text: err.response.data.error[key],
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+						
+						$('#btnSettingAkunNext2').html('<i class="bx bx-save"></i> Simpan');
+						$('#btnSettingAkunNext2').attr('disabled', false);
+						$('#btnSettingAkunNext2').css('cursor', 'pointer');
+					});
+					if (posts.status == 201||posts.status == 200) {
+
+                        showToast('success','Data berhasil di update!!');
+
+						// Toastify({
+						// 		text: 'Data berhasil di update!',
+						// 		duration: 3000,
+						// 		close: true,
+						// 		gravity: "top",
+						// 		position: "right",
+						// 		className: "successMessage",
+
+						// 	}).showToast();
+
+							getAkunPengaturan(roleUserX,accountNumberX);
+						$('#btnSettingAkunNext2').html('<i class="bx bx-save"></i> Simpan');
+						$('#btnSettingAkunNext2').attr('disabled', false);
+						$('#btnSettingAkunNext2').css('cursor', 'pointer');
+
+					}else if(posts.status==500){
+						
+						Toastify({
+							text: "Server dalam perbaikan!",
+							duration: 3000,
+							close: true,
+							gravity: "top",
+							position: "right",
+							className: "infoMessage",
+	
+						}).showToast();
+					} 
+					else {
+						posts.data.error.map((mapping, i) => {
+							Toastify({
+								text: 'Oops!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						});
+						$('#btnSettingAkunNext2').html('<i class="bx bx-save"></i> Simpan');
+						$('#btnSettingAkunNext2').attr('disabled', false);
+						$('#btnSettingAkunNext2').css('cursor', 'pointer');
 					}
 
 				}
@@ -1082,3 +1205,81 @@
 				save2();
 			}
         </script>
+
+
+        <script>
+        let map, marker,circle;
+
+        let coordsett = '';
+
+        
+
+        function initMapLeaflet(str, radiuss) {
+    const defaultCoords = str.split(',').map(parseFloat);
+    const defaultRadius = parseFloat(radiuss) || 1000;
+
+    map = L.map('map').setView(defaultCoords, 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    marker = L.marker(defaultCoords, { draggable: true }).addTo(map);
+
+    circle = L.circle(defaultCoords, {
+        radius: defaultRadius,
+        color: 'blue',
+        fillOpacity: 0.2
+    }).addTo(map);
+
+    updateCoordinateInput(defaultCoords);
+
+    marker.on('dragend', function () {
+        const { lat, lng } = marker.getLatLng();
+        updateCoordinateInput([lat, lng]);
+        circle.setLatLng([lat, lng]);
+    });
+
+    map.on('click', function (e) {
+        const { lat, lng } = e.latlng;
+        marker.setLatLng([lat, lng]);
+        updateCoordinateInput([lat, lng]);
+        circle.setLatLng([lat, lng]);
+    });
+
+    document.getElementById('radius-input').addEventListener('input', function () {
+        const newRadius = parseFloat(this.value);
+        if (!isNaN(newRadius)) {
+            circle.setRadius(newRadius);
+        }
+    });
+
+    document.getElementById('coordinateInput').addEventListener('input', function () {
+        const coords = this.value.split(',').map(parseFloat);
+        if (coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1])) {
+            marker.setLatLng(coords);
+            circle.setLatLng(coords);
+            map.setView(coords, 13);
+        }
+    });
+}
+
+
+
+        function updateCoordinateInput([lat, lng]) {
+            const coordStr = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            document.getElementById("coordinateInput").value = coordStr;
+            $('putKontenSpesifikUser2').val(`<input type="text" value="${coordStr}" readonly class="form-control">`);
+        }
+
+        // Get user's current location
+        document.getElementById("getLocationBtn").addEventListener("click", () => {
+            console.log('ok');
+            coordsett = $('#coordinateInput').val();
+            saveKoordinatSetting();
+        });
+
+        // Initialize map when page is ready
+        // document.addEventListener("DOMContentLoaded", initMapLeaflet);
+
+    </script>

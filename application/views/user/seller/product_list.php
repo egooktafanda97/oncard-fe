@@ -31,7 +31,9 @@
 										<th>No.</th>
 										<th>Nama produk</th>
 										<th>Kategori</th>
-										<th>Harga</th>
+										<th>Harga Modal</th>
+										<th>Harga Jual</th>
+										<th>Stok</th>
 										<th>Satuan</th>
 										<th>Detail</th>
 										<th>Aksi</th>
@@ -40,6 +42,18 @@
 								<tbody class="putContentHere">
 								</tbody>
 							</table>
+
+                            <!-- Pagination -->
+							<nav class="container mt-5"
+								id="siswa-pagination-container"
+								aria-label="Page navigation example">
+							</nav>
+
+							<!-- Pagination details -->
+							<div class="container mt-1 text-muted text-center">
+								<small id="siswa-pagination-details"></small>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -49,8 +63,9 @@
 		</div>
 
 		<script type="text/javascript">
+            let urlproduk = '<?= api_url(); ?>api/v1/produk';
 			$(document).ready(function () {
-                showData();
+                showData(urlproduk);
 				$("#floatingInput").on("keyup", function() {
 					let value = $(this).val().toLowerCase();
 					$(".putContentHere tr").filter(function() {
@@ -58,14 +73,14 @@
 					});
 				});
             });
-			function showData(){
+			function showData(str){
 				let num = 0;
 				let tableColumn = '';
 				tableColumn += `<tr><td colspan="7" class="text-center">Loading...</td></tr>`;
 				$('.putContentHere').html(tableColumn);
 				
 				const save2 = async () => {
-					const posts2 = await axios.get('<?= api_url(); ?>api/v1/produk', {
+					const posts2 = await axios.get(str, {
 						headers: {
 							'Authorization': 'Bearer ' + localStorage.getItem('_token')
 						}
@@ -93,13 +108,15 @@
 									</td>
 									<td>${mapping.nama_produk}</td>
 									<td>${mapping.kategori_produk}</td>
+									<td>Rp${formatRupiah(mapping.harga_modal.toString())}</td>
 									<td>Rp${formatRupiah(mapping.harga)}</td>
+									<td>${formatRupiah(mapping.stok.toString())}</td>
 									<td>${mapping.satuan}</td>
 									<td>${mapping.deskripsi}</td>
 									<td>
 										<div class="d-flex order-actions">
 											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/produkManage/${mapping.id}'" class=""><i class='bx bxs-edit'></i></a>
-											<a href="#/" onclick="underMaintanance();return false; openModalDelete('${mapping.uid}','kantin');" class="ms-3"><i class='bx bxs-trash'></i></a>
+											<!---<a href="#/" onclick="underMaintanance();return false; openModalDelete('${mapping.uid}','kantin');" class="ms-3"><i class='bx bxs-trash'></i></a>--->
 										</div>
 									</td>
 								</tr>
@@ -107,6 +124,7 @@
 							});
 							
 						$('.putContentHere').html(tableColumn);
+                        createPaginations(posts2.data.data, "siswa-pagination-container", "siswa-pagination-details", "showData");
 							
 					}
 				}

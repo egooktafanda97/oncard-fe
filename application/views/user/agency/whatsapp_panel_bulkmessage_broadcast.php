@@ -1,8 +1,48 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    /* Fullscreen overlay */
+.loading-overlay {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
+    text-align: center;
+    color: white;
+}
+/* Centering the spinner */
+.loading-spinner {
+        border: 9px solid #f3f3f3; /* Light grey */
+        border-top: 9px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        margin-bottom:15px;
+    }
+
+    /* Spinner animation */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
 <div class="page-wrapper">
 			<div class="page-content">
-            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Pesan Broadcast</div>
+                
+                <!-- <div id="loadingScreen" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                    <p id="progress">Processing, please wait...</p>
+                    <div class="progress" style="width:200px;">
+                        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+				</div> -->
+
+                <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Pesan Broadcast [1]</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
@@ -14,24 +54,34 @@
 					</div>
 				</div>
 				<div class="row">
+                    <div class="col-lg-6 mah">
+                        <div class="alert alert-success"><i class="bx bxs-circle me-3 text-success"></i>API Whatsapp sedang <b>ON</b></div>
+                    </div>
 					<div class="col-12">
 						<div class="card radius-10 w-100" >
 							
                                 <div class="card-body">
-                                    <div class="d-flex align-items-start">
+                                    <div class="row align-items-start">
+                                        <div class="col-lg-3 col-12 mb-4">
                                         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="setContent('v-pills-home');">Info Saldo Santri</button>
-                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab2" data-bs-toggle="pill" data-bs-target="#v-pills-home2" type="button" role="tab" aria-controls="v-pills-home2" aria-selected="true" onclick="setContent('v-pills-home2');">Info Saldo Guru/Staf</button>
-                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab3" data-bs-toggle="pill" data-bs-target="#v-pills-home3" type="button" role="tab" aria-controls="v-pills-home3" aria-selected="true" onclick="setContent('v-pills-home3');">Pengumuman Khusus Santri</button>
-                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab3" data-bs-toggle="pill" data-bs-target="#v-pills-home4" type="button" role="tab" aria-controls="v-pills-home4" aria-selected="true" onclick="setContent('v-pills-home4');">Pengumuman Khusus Guru/Staf</button>
+                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true" onclick="setContent('v-pills-home');">Info Saldo pelajar</button>
+                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab120" data-bs-toggle="pill" data-bs-target="#v-pills-home120" type="button" role="tab" aria-controls="v-pills-home120" aria-selected="true" onclick="setContent('v-pills-home120');">Info Akun On-Time General</button>
+                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab5" data-bs-toggle="pill" data-bs-target="#v-pills-home5" type="button" role="tab" aria-controls="v-pills-home5" aria-selected="true" onclick="setContent('v-pills-home5');">Info Transfer BRKS</button>
+                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab3" data-bs-toggle="pill" data-bs-target="#v-pills-home3" type="button" role="tab" aria-controls="v-pills-home3" aria-selected="true" onclick="setContent('v-pills-home3');">Pengumuman Khusus Ke Ortu</button>
+                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab100" data-bs-toggle="pill" data-bs-target="#v-pills-home100" type="button" role="tab" aria-controls="v-pills-home100" aria-selected="true" onclick="setContent('v-pills-home100');">Pengumuman Khusus Ke Ortu (Tanpa template)</button>
+                                            <button class="nav-link" style="text-align:left;" id="v-pills-home-tab3" data-bs-toggle="pill" data-bs-target="#v-pills-home4" type="button" role="tab" aria-controls="v-pills-home4" aria-selected="true" onclick="setContent('v-pills-home4');">Pengumuman Khusus General</button>
                                             
                                         </div>
+                                        </div>
+                                        <div class="col-lg-9 col-12">
                                         <div class="tab-content" id="v-pills-tabContent">
                                             <div class="tab-pane fade " id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">...</div>
-                                            <div class="tab-pane fade " id="v-pills-home2" role="tabpanel" aria-labelledby="v-pills-home-tab2">...</div>
+                                            <div class="tab-pane fade " id="v-pills-home120" role="tabpanel" aria-labelledby="v-pills-home-tab120">...</div>
+                                            <div class="tab-pane fade " id="v-pills-home5" role="tabpanel" aria-labelledby="v-pills-home-tab5">...</div>
                                             <div class="tab-pane fade " id="v-pills-home3" role="tabpanel" aria-labelledby="v-pills-home-tab3">...</div>
+                                            <div class="tab-pane fade " id="v-pills-home100" role="tabpanel" aria-labelledby="v-pills-home-tab100">...</div>
                                             <div class="tab-pane fade " id="v-pills-home4" role="tabpanel" aria-labelledby="v-pills-home-tab4">...</div>
-                                            
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -43,7 +93,7 @@
 			</div>
 		</div>
 
-        <div class="modal fade" id="modalSetSaldo" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="modalSetSaldo" tabindex="-1" aria-hidden="true"  data-bs-keyboard="false" data-bs-backdrop="static">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -61,7 +111,7 @@
 			</div>
 		</div>
         
-        <div class="modal fade" id="modalSetPIN" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="modalSetPIN" tabindex="-1" aria-hidden="true"  data-bs-keyboard="false" data-bs-backdrop="static">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -69,7 +119,18 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						Anda yakin akan mengirimkan pesan ini?
+						Anda yakin akan mengirimkan pesan ini?<br/>
+
+                        <strong class="mt-4">Silahkan isi inputan berikut dengan benar!</strong>
+                        <input type="password" class="form-control mt-1 mb-3" id="passGo" placeholder="Masukkan kata kunci rahasia..."/>
+
+                        <hr>
+                        <div class="row mt-2">
+                            <div class="col-2 text-center">
+                                <i class="bx bx-bell text-danger" style="font-size:30px;font-weight:bold;;"></i>
+                            </div>
+                            <div class="col-10 text-muted text-danger"><code>NB : Jangan refresh halaman atau tutup halaman ini apabila masih berstatus <b>Memproses...</b></code></div>
+                        </div>
 					</div>
 					<div class="modal-footer text-center">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -79,18 +140,57 @@
 			</div>
 		</div>
 
+        <!-- Progress Modal -->
+        <div id="progressModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="progressModalLabel" aria-hidden="true"  data-bs-keyboard="false" data-bs-backdrop="static">
+            <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="progressModalLabel">Progress</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p id="progressMessage">Sending messages...</p>
+                        <div class="progress">
+                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" 
+                                style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script type="text/javascript">
             let sessionSet = '';
             let endPointGetDataSiswa = '<?= api_url(); ?>api/v1/siswa';
 			let endPointGetDataSiswaSearch = '<?= api_url(); ?>api/v1/siswa/search?q=';
+            let totalAllTarget = 0;
+
+            let varrr1 = ['Assalamualaikum','Assalamualaikum warahmatullahi wabarakatuh','Salam sejahtera','Salam','Assalamualaikum w.r w.b'];
+            let varrr2 = ['Yth. Orangtua / Wali','Kami hormati Orangtua','Bapak','Ibu','Bapak/Ibu'];
+            let varrr3 = ['Saldo','Sisa uang','Sisa duit','Adapun saldo','Uang'];
+            let varrr4 = ['Saldo anak','Sisa uang ananda','Sisa duit anak','Adapun saldo ananda','Uang'];
+            let varrr5 = ['Pastikan selalu memantau perkembangan keuangan anak Bpk/Ibu agar selalu dipakai secara tepat oleh ananda','Selalu pantau keuangan ananda.','Terimakasih atas perhatian Bpk/Ibu','Abaikan pesan ini jika sudah mendapatkannya','Silahkan balas dengan Alhamdulillah.'];
 
             let numberSet ='';
             let namaSet = '';
 			var typingTimer;
+            let modeSett = '';
+
+            function showLoading() {
+				document.getElementById('loadingScreen').style.display = 'flex';
+				$('#loadingScreen').css('flex-direction','column');
+				$('#loadingScreen').css('align-items','center');
+				$('#loadingScreen').css('justify-content','center');
+			}
+
+			function hideLoading() {
+				document.getElementById('loadingScreen').style.display = 'none';
+			}
 			
             $(document).ready(function () {
 
-                getDataSession();
+                // getDataSession();
                 
 				$("#floatingInput").on("keyup", function() {
 					let value = $(this).val().toLowerCase();
@@ -260,34 +360,7 @@
 
             }
 
-            function getDataSession(){
-
-                axios.get('https://v3.gigades.id/rest/api/v1/wa/all-session').then((response) => {
-                    let dataHere = '';
-                    let periodeBerjalan = 0;
-                    let no = 0;
-                    let countWaiting = 0;
-                    let countActive = 0;
-                    if(response.data.length==0){
-                        alert('Tidak ada session yang aktif! Scan ulang device sekarang juga!');
-                    return false;
-                    }
-                    
-                    response.data.map((mapping,i)=>{
-                        console.log(mapping);
-                        if(mapping=='ppsrSess'){
-                            sessionSet = mapping;
-                            showData(endPointGetDataSiswa);
-                            return false;
-                        }else {
-                            // alert('Sambungkan ke nomor API ');
-                        }
-                    });
-
-                }).catch((error) => {
-                    console.log(error);
-                })
-            }
+            
 
 
             let arrayBaruBroadcast = [];
@@ -312,53 +385,29 @@
                         });
                 
                         if (posts2.status == 200) {
+
+                            modeSett = 'broadcastSaldoSiswa';
+
+                            let noortu = '';
+                            let countData = 1;
+
                             posts2.data.data.map((mapping,i)=>{
-
-                                if(mapping.telp_ortu!=null){
-                                    let noortu =mapping.telp_ortu;
-
-                                    let textBody = `Assalamu'alaikum warahmatullahi wabarakatuh,
-*Pusat Informasi ${mapping.instansi.nama}*
-
-Yth. Orangtua / Wali dari :
-Nama : *${mapping.nama_lengkap??'-'}*,
-TTL : *${moment(mapping.tanggal_lahir??'0000-00-00').format('DD MMMM YYYY')}*,
-Alamat : *${mapping.alamat_lengkap??'-'}*,
-
-Saldo terakhir anak Bpk/Ibu adalah : *Rp${formatRupiah(mapping.accounts.balance)}*
-
-_Pastikan selalu memantau perkembangan keuangan anak Bpk/Ibu agar selalu dipakai secara tepat oleh ananda._
-
-Terimakasih.`
-;
-                                    if(noortu.length>8 && noortu!='0'){
-                                        var strFirstThree = noortu.substring(0,3);
-                                        if(strFirstThree=='628' ){
-                                            arrayBaruBroadcast.push({
-                                                'to' : noortu,
-                                                'text' : textBody
-                                            })   
-                                        }
+                                noortu = mapping.telp_ortu??'';
+                                if(noortu.length>8 && noortu!='0'){
+                                    var strFirstThree = noortu.substring(0,3);
+                                    if(strFirstThree=='628' ){
+                                        countData++;
                                     }
                                 }
-
                             });
+
+                            totalAllTarget = countData;
                             
                             html += `
                                 <div class="row jumbotron">
                                     <div class="col-12">
                                         <div class="alert alert-success" role="alert">
-                                            Sistem akan mengirim broadcast kepada <b>${posts2.data.data.length}</b> nomor orangtua santri. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
-                                        </div>
-                                        <p>Contoh pesan :</p>
-                                        <div class="alert alert-secondary" role="alert" style="font-size:12px;">
-                                            <font>Yth. Orangtua / Wali<br/>
-[DETAIL SANTRI],<br/>
-Saldo terakhir anak Bpk/Ibu adalah : [NOMINAL SALDO]*<br/>
-<br/>
-Pastikan selalu memantau perkembangan keuangan anak Bpk/Ibu agar selalu dipakai secara tepat oleh ananda.<br/>
-<br/>
-Terimakasih.</font>
+                                            Sistem akan mengirim broadcast kepada <b>${countData}</b> nomor orangtua pelajar. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
                                         </div>
                                     </div>
                                     <div class="col-12 mt-1">
@@ -368,14 +417,75 @@ Terimakasih.</font>
                             `;
 
                             $('#'+idDIV).html(html);
+
+                            let modul = totalAllTarget/ 20;
+                            modul = Math.ceil(modul);
+
+                            console.log('total target : '+totalAllTarget, 'step : ' + modul);
                         }
                     }
                     save2();
 
-                }else if(idDIV=='v-pills-home2'){
+                }else if(idDIV=='v-pills-home5'){
 
                     arrayBaruBroadcast = [];
-                    
+
+                    $('#'+idDIV).html('');
+                    const save2 = async () => {
+                        const posts2 = await axios.get('<?= api_url(); ?>api/v1/siswa/get-inpaging', {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('_token')
+                            }
+                        }).catch((err) => {
+                            console.log(err.response);
+                        });
+
+                        if (posts2.status == 200) {
+
+                            modeSett = 'broadcastTransferBRKS';
+
+                            let noortu = '';
+                            let countData = 1;
+
+                            posts2.data.data.map((mapping,i)=>{
+                                noortu = mapping.telp_ortu??'';
+                                if(noortu.length>8 && noortu!='0'){
+                                    var strFirstThree = noortu.substring(0,3);
+                                    if(strFirstThree=='628' ){
+                                        countData++;
+                                    }
+                                }
+                            });
+
+                            totalAllTarget = countData;
+                            
+                            html += `
+                                <div class="row jumbotron">
+                                    <div class="col-12">
+                                        <div class="alert alert-success" role="alert">
+                                            Sistem akan mengirim broadcast kepada <b>${countData}</b> nomor orangtua pelajar. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" onclick="confirmSend();" class="btn btn-primary"><i class="bx bx-send"></i> KIRIM BROADCAST</button>
+                                    </div>
+                                </div>
+                            `;
+
+                            $('#'+idDIV).html(html);
+
+                            let modul = totalAllTarget/ 20;
+                            modul = Math.ceil(modul);
+
+                            console.log('total target : '+totalAllTarget, 'step : ' + modul);
+                        }
+                    }
+                    save2();
+
+                    }
+                else if(idDIV=='v-pills-home120'){
+
+                    arrayBaruBroadcast = [];
 
                     $('#'+idDIV).html('');
                     const save2 = async () => {
@@ -386,53 +496,31 @@ Terimakasih.</font>
                         }).catch((err) => {
                             console.log(err.response);
                         });
-                
+
                         if (posts2.status == 200) {
+
+                            modeSett = 'broadcastInisiasiAkunGeneral';
+
+                            let noortu = '';
+                            let countData = 1;
+
                             posts2.data.data.map((mapping,i)=>{
-
-                                let noortu =mapping.telpon;
-
-                                let textBody = `Assalamu'alaikum warahmatullahi wabarakatuh,
-*Pusat Informasi ${mapping.instansi.nama}*
-
-Yth. *${mapping.nama_lengkap}*,
-Saldo terakhir Bpk/Ibu adalah : *Rp${formatRupiah(mapping.accounts.balance)}*
-
-_Pastikan selalu memantau saldo kartu agar selalu aman dan nyaman dalam bertransaksi._
-
-Terimakasih.
-
-
-_Kode pesan : #${createRandom()}_`
-;
-
+                                noortu = mapping.telpon??'';
                                 if(noortu.length>8 && noortu!='0'){
                                     var strFirstThree = noortu.substring(0,3);
                                     if(strFirstThree=='628' ){
-                                        arrayBaruBroadcast.push({
-                                            'to' : noortu,
-                                            'text' : textBody
-                                        })   
+                                        countData++;
                                     }
                                 }
                             });
-                            console.log(arrayBaruBroadcast);
 
-
+                            totalAllTarget = countData;
+                            
                             html += `
                                 <div class="row jumbotron">
                                     <div class="col-12">
                                         <div class="alert alert-success" role="alert">
-                                            Sistem akan mengirim broadcast kepada <b>${posts2.data.data.length}</b> nomor guru/staf. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
-                                        </div>
-                                        <p>Contoh pesan :</p>
-                                        <div class="alert alert-secondary" role="alert" style="font-size:12px;">
-                                            <font>Yth.[NAMA USER],<br/>
-Saldo terakhir Bpk/Ibu adalah : [NOMINAL SALDO]*<br/>
-<br/>
-Pastikan selalu memantau saldo kartu agar selalu aman dan nyaman dalam bertransaksi.<br/>
-<br/>
-Terimakasih.</font>
+                                            Sistem akan mengirim broadcast kepada <b>${countData}</b> nomor orangtua pelajar. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
                                         </div>
                                     </div>
                                     <div class="col-12 mt-1">
@@ -442,12 +530,93 @@ Terimakasih.</font>
                             `;
 
                             $('#'+idDIV).html(html);
+
+                            let modul = totalAllTarget/ 20;
+                            modul = Math.ceil(modul);
+
+                            console.log('total target : '+totalAllTarget, 'step : ' + modul);
                         }
                     }
                     save2();
 
+                    }
+//                 else if(idDIV=='v-pills-home2'){
+
+//                     arrayBaruBroadcast = [];
+                    
+
+//                     $('#'+idDIV).html('');
+//                     const save2 = async () => {
+//                         const posts2 = await axios.get('<?= api_url(); ?>api/v1/general/get-inpaging', {
+//                             headers: {
+//                                 'Authorization': 'Bearer ' + localStorage.getItem('_token')
+//                             }
+//                         }).catch((err) => {
+//                             console.log(err.response);
+//                         });
                 
-                }else if(idDIV=='v-pills-home3'){
+//                         if (posts2.status == 200) {
+//                             posts2.data.data.map((mapping,i)=>{
+
+//                                 let noortu =mapping.telpon;
+
+//                                 let textBody = `Assalamu'alaikum warahmatullahi wabarakatuh,
+// *Pusat Informasi ${mapping.instansi.nama}*
+
+// Yth. *${mapping.nama_lengkap}*,
+// Saldo terakhir Bpk/Ibu adalah : *Rp${formatRupiah(mapping.accounts.balance)}*
+
+// _Pastikan selalu memantau saldo kartu agar selalu aman dan nyaman dalam bertransaksi._
+
+// Terimakasih.
+
+
+// _Kode pesan : #${createRandom()}_`
+// ;
+
+//                                 if(noortu.length>8 && noortu!='0'){
+//                                     var strFirstThree = noortu.substring(0,3);
+//                                     if(strFirstThree=='628' ){
+//                                         arrayBaruBroadcast.push({
+//                                             'to' : noortu,
+//                                             'text' : textBody
+//                                         })   
+//                                     }
+//                                 }
+//                             });
+//                             console.log(arrayBaruBroadcast);
+
+
+//                             html += `
+//                                 <div class="row jumbotron">
+//                                     <div class="col-12">
+//                                         <div class="alert alert-success" role="alert">
+//                                             Sistem akan mengirim broadcast kepada <b>${posts2.data.data.length}</b> nomor guru/staf. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
+//                                         </div>
+//                                         <p>Contoh pesan :</p>
+//                                         <div class="alert alert-secondary" role="alert" style="font-size:12px;">
+//                                             <font>Yth.[NAMA USER],<br/>
+// Saldo terakhir Bpk/Ibu adalah : [NOMINAL SALDO]*<br/>
+// <br/>
+// Pastikan selalu memantau saldo kartu agar selalu aman dan nyaman dalam bertransaksi.<br/>
+// <br/>
+// Terimakasih.</font>
+//                                         </div>
+//                                     </div>
+//                                     <div class="col-12 mt-1">
+//                                         <button type="button" onclick="confirmSend();" class="btn btn-primary"><i class="bx bx-send"></i> KIRIM BROADCAST</button>
+//                                     </div>
+//                                 </div>
+//                             `;
+
+//                             $('#'+idDIV).html(html);
+//                         }
+//                     }
+//                     save2();
+
+                
+//                 }
+                else if(idDIV=='v-pills-home3'){
                     
                     $('#'+idDIV).html('');
 
@@ -464,32 +633,123 @@ Terimakasih.</font>
                         });
                 
                         if (posts2.status == 200) {
+
+                            
+                            let countData = 1;
                           
+                            modeSett = 'sendSiswa';
+
+                            posts2.data.data.map((mapping,i)=>{
+                                let noortu = mapping.telp_ortu??'';
+                                if(noortu.length>8 && noortu!='0'){
+                                    var strFirstThree = noortu.substring(0,3);
+                                    if(strFirstThree=='628' ){
+                                        countData++;
+                                    }
+                                }
+                            });
+
+                            totalAllTarget = countData;
+                            
+
                             html += `
                                 <div class="row jumbotron">
                                     <div class="col-12">
                                         <div class="alert alert-success" role="alert">
-                                            Sistem akan mengirim broadcast kepada <b>${posts2.data.data.length}</b> nomor orangtua santri. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
+                                            Sistem akan mengirim broadcast kepada <b>${countData}</b> nomor orangtua pelajar. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
                                         </div>
                                         <p>Ketik isi pesan:</p>
                                         <textarea class="form-control mb-3 putPesanHereSiswa" rows="5" placeholder="Assalamu'alaikum warahmatullahi wabarakatuh,"></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" onclick="renderPengumumanSiswa();" class="btn btn-primary"><i class="bx bx-send"></i> KIRIM BROADCAST</button>
+                                        <button type="button" onclick="confirmSend();" class="btn btn-primary"><i class="bx bx-send"></i> KIRIM BROADCAST</button>
                                     </div>
                                 </div>
                             `;
 
                             $('#'+idDIV).html(html);
+
+                            let modul = totalAllTarget/ 20;
+
+                            modul = Math.ceil(modul);
+
+                            console.log('total target : '+totalAllTarget, 'step : ' + modul);
+                            
                         }
                     }
                     save2();
                 
-                }else if(idDIV=='v-pills-home4'){
+                }
+                
+                else if(idDIV=='v-pills-home100'){
+                    
                     $('#'+idDIV).html('');
 
                     arrayBaruBroadcast = [];
                     
+
+                    const save2 = async () => {
+                        const posts2 = await axios.get('<?= api_url(); ?>api/v1/siswa/get-inpaging', {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('_token')
+                            }
+                        }).catch((err) => {
+                            console.log(err.response);
+                        });
+                
+                        if (posts2.status == 200) {
+
+                            
+                            let countData = 1;
+                          
+                            modeSett = 'sendSiswaPlainTemplate';
+
+                            posts2.data.data.map((mapping,i)=>{
+                                let noortu = mapping.telp_ortu??'';
+                                if (noortu.startsWith('628')) {
+                                // if (noortu.startsWith('628') && noortu=='628526523633') {
+                                    countData++;
+                                }
+                            });
+
+                            totalAllTarget = countData;
+                            
+
+                            html += `
+                                <div class="row jumbotron">
+                                    <div class="col-12">
+                                        <div class="alert alert-success" role="alert">
+                                            Sistem akan mengirim broadcast kepada <b>${countData}</b> nomor orangtua pelajar. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
+                                        </div>
+                                        <p>Ketik isi pesan:</p>
+                                        <textarea class="form-control mb-3 putPesanHereSiswaPlain" rows="10" placeholder="Assalamu'alaikum warahmatullahi wabarakatuh,"></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" onclick="confirmSend();" class="btn btn-primary"><i class="bx bx-send"></i> KIRIM BROADCAST</button>
+                                    </div>
+                                </div>
+                            `;
+
+                            $('#'+idDIV).html(html);
+
+                            let modul = totalAllTarget/ 20;
+
+                            modul = Math.ceil(modul);
+
+                            console.log('total target : '+totalAllTarget, 'step : ' + modul);
+                            
+                        }
+                    }
+                    save2();
+                
+                }
+                else if(idDIV=='v-pills-home4'){
+                    
+                    $('#'+idDIV).html('');
+
+                    arrayBaruBroadcast = [];
+                    
+
                     const save2 = async () => {
                         const posts2 = await axios.get('<?= api_url(); ?>api/v1/general/get-inpaging', {
                             headers: {
@@ -500,23 +760,55 @@ Terimakasih.</font>
                         });
                 
                         if (posts2.status == 200) {
+
                             
+                            let countData = 1;
+                          
+                            modeSett = 'sendGeneral';
+
+                            posts2.data.data.map((mapping,i)=>{
+                                let noortu = mapping.telpon??'';
+                                
+                                
+                                // if(noortu=='6281320996169' || noortu=='6285259875754'){
+
+                                    if(noortu.length>8 && noortu!='0'){
+                                        var strFirstThree = noortu.substring(0,3);
+                                        if(strFirstThree=='628' ){
+                                            countData++;
+                                        }
+                                    }
+
+                                // }
+
+                            });
+
+                            totalAllTarget = countData;
+                            
+
                             html += `
                                 <div class="row jumbotron">
                                     <div class="col-12">
                                         <div class="alert alert-success" role="alert">
-                                            Sistem akan mengirim broadcast kepada <b>${posts2.data.data.length}</b> nomor guru/staf. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
+                                            Sistem akan mengirim broadcast kepada <b>${countData}</b> nomor  general. Klik tombol <b>KIRIM BROADCAST</b> dibawah ini untuk mengeksekusi pengiriman secara massal sekarang juga.
                                         </div>
                                         <p>Ketik isi pesan:</p>
                                         <textarea class="form-control mb-3 putPesanHereGeneral" rows="5" placeholder="Assalamu'alaikum warahmatullahi wabarakatuh,"></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" onclick="renderPengumumanGeneral();" class="btn btn-primary"><i class="bx bx-send"></i> KIRIM BROADCAST</button>
+                                        <button type="button" onclick="confirmSend();" class="btn btn-primary"><i class="bx bx-send"></i> KIRIM BROADCAST</button>
                                     </div>
                                 </div>
                             `;
 
                             $('#'+idDIV).html(html);
+
+                            let modul = totalAllTarget/ 20;
+
+                            modul = Math.ceil(modul);
+
+                            console.log('total target : '+totalAllTarget, 'step : ' + modul);
+                            
                         }
                     }
                     save2();
@@ -633,67 +925,128 @@ _Kode pesan : #${createRandom()}_
             }
 
             function confirmSend(){
+
+                console.log(modeSett);
                 $('#modalSetPIN').modal('toggle');
             }
 
-            function sendMessageNow(){
+            let renderTextMessage = '';
+
+            function sendMessageNow() {
+                // showLoading();
+
+                let pass = $('#passGo').val();
+
+                if (pass != 'pesantrenhebat!') {
+                    Toastify({
+                        text: 'Kode akses tidak benar!',
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        className: "errorMessage",
+                    }).showToast();
+                    return false;
+                }
 
                 $('#btnSubmitPesanKirim').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
-				$('#btnSubmitPesanKirim').attr('disabled', 'disabled');
+                $('#btnSubmitPesanKirim').attr('disabled', 'disabled');
                 $('#btnSubmitPesanKirim').css('cursor', 'not-allowed');
 
+                // Show the progress modal
+                $('#progressModal').modal('toggle');
 
-                let mmmmmmm = chunkArrayInGroups(arrayBaruBroadcast,10);
+                let rentang = 20; // 20 items per batch
+                let modul = Math.ceil(totalAllTarget / rentang); // Calculate total modules
+                let totalProgress = modul; // Total steps (example)
+                let currentProgress = 0; // Track progress
 
-                console.log(mmmmmmm);
-                
-                var interval = 100000;
-                mmmmmmm.forEach(function (el, index) {
-                setTimeout(function () {
-                    
-                    
-                    let arrayLengkap = {"session":sessionSet,"data":el,"delay":10000};
-                    
-                    axios.post("https://v3.gigades.id/rest/api/v1/wa/broadcast", arrayLengkap)
-                    .then((res) => {
-                        if (res.data.status === true) {
-                            arrayBaruBroadcast = [];
+                // for (let mx = 0; mx < 5; mx++) {
+                for (let mx = 0; mx < (rentang+1); mx++) {
+                    (function (mx) {
+                        window.setTimeout(function () {
+                            let minnn = 0;
+                            let maxxx = 0;
 
-                            Toastify({
-                                text: (index+1)+' dari '+ mmmmmmm.length+" group pesan telah dikirim...",
-                                duration: 3000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                className: "successMessage",
+                            if (mx == 0) {
+                                minnn = mx * rentang;
+                                maxxx = minnn + rentang;
+                            } else {
+                                minnn = mx * rentang + 1;
+                                maxxx = minnn - 1 + rentang;
+                            }
 
-                            }).showToast();
+                            console.log("range : ", minnn, maxxx);
 
-                        }
+                            let pesan = modeSett === 'sendGeneral'
+                            ? $('.putPesanHereGeneral').val()
+                            : modeSett === 'sendSiswaPlainTemplate'
+                                ? $('.putPesanHereSiswaPlain').val()
+                                : $('.putPesanHereSiswa').val();
+                                
 
-                    })
-                    .catch((err) => {
-                    });
-                    
-                    if(index==mmmmmmm.length-1){
+                            var form_data = new FormData();
+                            form_data.append('end', minnn);
+                            form_data.append('start', maxxx);
+                            form_data.append('endPoint', modeSett);
+                            form_data.append('pesan', pesan);
 
-                        $('#btnSubmitPesanKirim').html('KIRIM PESAN');
-                        $('#btnSubmitPesanKirim').attr('disabled', false);
-                        $('#btnSubmitPesanKirim').css('cursor', 'pointer');
+                            jQuery.ajax({
+                                type: "POST",
+                                url: "<?php echo base_url(); ?>" + "WebhookOncard/sendBroadcastBerkalaKustom/" + kodeInstansiX,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                data: form_data,
+                                dataType: 'json',
+                                success: function (e) {
+                                    if (e.status === "true") {
+                                        console.log(e.data);
+                                    } else {
+                                        console.error('Error sending message');
+                                        window.location.reload();
+                                    }
+                                }
+                            });
 
-                        $('#modalSetPIN').modal('toggle');
-                        console.log('close');
-                        console.log(mmmmmmm.length);
+                            console.log("step now :",mx, parseInt(modul - 1));
+                            // if (mx == parseInt(modul - 1)) {
+                            if (mx == parseInt(modul)) {
+                                $('#btnSubmitPesanKirim').html('KIRIM PESAN');
+                                $('#btnSubmitPesanKirim').attr('disabled', false);
+                                $('#btnSubmitPesanKirim').css('cursor', 'pointer');
+                                $('#modalSetPIN').modal('toggle');
 
-                        location.reload();
-                    }
-                }, index * interval);
-                });
+                                // hideLoading();
+
+                                currentProgress += 1;
+                                const progressPercentage = Math.ceil((currentProgress / totalProgress) * 100);
+                                $('#progressBar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+                                $('#progressMessage').text(`Processing... ${progressPercentage}%`);
+
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Tuntas Kirim Pesan',
+                                    text: 'Pesan telah terkirim ke seluruh nomor!',
+                                    showConfirmButton: true,
+                                });
+
+                                // Close the progress modal
+                                $('#progressModal').modal('toggle');
+                            }else {
+                                currentProgress += 1;
+                                const progressPercentage = Math.ceil((currentProgress / totalProgress) * 100);
+                                $('#progressBar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+                                $('#progressMessage').text(`Processing... ${progressPercentage}%`);
+                            }
+                        }, mx * 120000); // Set delay (0.5 minute)
+                    })(mx);
+                }
 
                 return false;
-                
-                
             }
+
 
             function createRandom(){
                 let result = '';
@@ -714,4 +1067,11 @@ _Kode pesan : #${createRandom()}_
             }
             return myArray;
             }
+
+            function renderTextMessageShow() {
+                localStorage.setItem("struk", renderTextMessage);
+                window.open("<?=base_url();?>CPanel_Admin/PrintStruk", '_blank', 'location=yes,height=570,width=220,scrollbars=yes,status=yes');
+            }
+
+
         </script>

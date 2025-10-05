@@ -191,6 +191,25 @@
                                 </div>
 
                                 <div class="col-12">
+
+                                    <div class="row mb-4">
+                                        <div class="col-9">
+                                        Secara <i>default</i>, data yang dimunculkan hanya 20 baris terbaru.<br/>
+                                        Lihat semua data? 
+                                        </div>
+                                        <div class="col-3">
+                                        <div class="form-check form-switch">
+											<input class="form-check-input form-toggle-showdata" type="checkbox" id="onoffpin" onchange="setValToggle();">
+                                            
+										</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="daterange">Rentang Tanggal</label>
+                                        <input type="text" class="form-control date-range" id="daterange" style="font-size:12px!important;"/>
+                                    </div>
+
                                     <div class="form-group mb-3">
                                         <label for="namaUser">Nama Siswa</label>
                                         <select class="form-select single-select inputFilterItem" id="namaUser" data-object='user_customers_name' style="border-radius:0px!important;">
@@ -205,10 +224,6 @@
                                         </select>
                                     </div>
                                     
-                                    <div class="form-group mb-3">
-                                        <label for="daterange">Rentang Tanggal</label>
-                                        <input type="text" class="form-control date-range" id="daterange" style="font-size:12px!important;"/>
-                                    </div>
                                     
                                 </div>
 
@@ -243,10 +258,13 @@
             let totalTabungan = 0;
             let filterTabungan = 0;
             let oldDateKeep = '';
+            let endPointGetDataSiswa = '<?= api_url(); ?>api/v1/trx/all-invoice?mutasi=true';
 
 			$(document).ready(function () {
-                showData();
+                showData(endPointGetDataSiswa);
                 getAccounts();
+
+                getAuthConf();
 
                 $('.single-select').select2({
                     theme: 'bootstrap4',
@@ -279,7 +297,7 @@
                         }else {
                             urlSetFromFilter = '<?= api_url(); ?>api/v1/trx/all-invoice?mutasi=true&date_from='+dateStr[0]+'&date_to='+dateStr[1];
                         }
-                        showData();
+                        showData(endPointGetDataSiswa);
                         oldDateKeep = dateStr;
                     }
                 });
@@ -305,7 +323,9 @@
 				const save2 = async () => {
 					const posts2 = await axios.get(url, {
 						headers: {
-							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+							'Authorization': 'Bearer ' + localStorage.getItem('_token'),
+                            'paginate' : statustoggle,
+                            // 'take' : 20
 						}
 					}).catch((err) => {
 						console.log(err.response);
@@ -316,16 +336,28 @@
 							tableColumn = '';
                             let j = 0;
 
+                            let mmm = posts2.data.data;
+                        
+                            if(statustoggle==false){
+                                mmm = posts2.data.data;
+                            }else {
+                                mmm = posts2.data.data.data;
+                            }
+
+                            // mmm = posts2.data.data;
+
+                            console.log(mmm);
+                            
                             filterTabungan = 0;
 
-                            if(posts2.data.data.data.length==0){
+                            if(mmm.length==0){
                                 filterTabungan = 0;
 								tableColumn +=`<tr><td colspan="9" class="text-center">Tidak ada data.</td></tr>`;
                                 $('.jmldt').html('0');
                                 $('.filterTabungan').html('0');
                                 $('.putContentHere').html(tableColumn);return false;
 							}
-							posts2.data.data.data.map((mapping,i)=>{
+							mmm.map((mapping,i)=>{
 
                             invoiceDataArray.push({
                                 invoice: mapping.invoice,
@@ -403,6 +435,62 @@
 				
 			}
 
+            function getAuthConf(){
+				const save2 = async () => {
+					const posts2 = await axios.get('<?= api_url(); ?>api/v2/usr', {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+
+                        if(err.response.data.message=='Too Many Attempts.'){
+                            Toastify({
+                                text: 'Terlalu banyak proses. Perlambat aktifitas Anda. Refresh 10 detik kemudian.',
+                                duration: 10000,
+                                close: true,
+                                gravity: "bottom",
+                                position: "right",
+                                className: "errorMessage",
+
+                            }).showToast();
+                            return false;
+                        }
+						Toastify({
+							text: 'Maaf. Sesi telah berakhir. Silahkan login kembali.',
+							duration: 30000,
+							close: true,
+							gravity: "bottom",
+							position: "right",
+							className: "errorMessage",
+
+						}).showToast();
+
+						setTimeout(function() {
+							Toastify({
+								text: 'Logout terlebih dahulu, lalu LOGIN kembali.',
+								duration: 28500,
+								close: true,
+								gravity: "bottom",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}, 1500);
+
+						return false;
+					});
+			
+					if (posts2.status == 200) {
+                        
+                        kantin_id = posts2.data.data.kantin.id;
+                        kantin_name = posts2.data.data.kantin.nama_kantin;
+                        kantin_address = posts2.data.data.kantin.alamat_lengkap;
+                        
+                    }
+				}
+				save2();
+			}
+
             function openInvoice(str){
                 let htmlx = '';
 
@@ -423,7 +511,7 @@
                         </div>
                         <div style="text-align:center; color:black!important; ">
                         <font style="font-weight:bolder;">${x['account_seller']}</font>
-                        <small style="display:block;color: rgba(0, 0, 0, 0.4); color:black!important;">Beringin Taluk, Kec. Kuantan Tengah, Kabupaten Kuantan Singingi, Riau 29566</small>
+                        <small style="display:block;color: rgba(0, 0, 0, 0.4); color:black!important;">${kantin_address}</small>
                         
                         </div>
                         
@@ -515,7 +603,7 @@
                 }
                 console.log(urlsets);
                 urlSetFromFilter = urlsets;
-                showData();
+                showData(endPointGetDataSiswa);
             });
 
             function resetFilter(){
@@ -528,7 +616,7 @@
                     $(inputs[i]).val('');
                 }
 
-                showData();
+                showData(endPointGetDataSiswa);
             }
 
             function pecahData(){
@@ -568,5 +656,20 @@
                         text : item.invoice 
                     }));
                 });
+            }
+
+            let statustoggle = true;
+
+            function setValToggle(){
+                let valx = $('.form-toggle-showdata').prop('checked');
+                console.log(valx);
+
+                if(valx==true){
+                    statustoggle = false;
+                }else {
+                    statustoggle = true;
+                }
+
+                showData();
             }
 		</script>

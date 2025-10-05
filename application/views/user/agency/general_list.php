@@ -1,3 +1,109 @@
+<style>
+    #keteranganCair {
+        position: relative;
+        height:30px;
+        -webkit-transition:all 0.1s linear 0s;
+    }
+    #keteranganCair:focus {
+        height:150px;
+    }
+</style>
+<style type="text/css">
+    .invoice-card {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 10px 2em;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    min-height: 25em;
+    width: 22em;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 10px 30px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .invoice-card > div {
+    margin: 5px 0;
+    }
+
+    .invoice-title {
+    flex: 3;
+    }
+
+    .invoice-title #date {
+    display: block;
+    /* margin: 8px 0; */
+    font-size: 12px;
+    }
+
+    .invoice-title #main-title {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0em;
+    }
+
+    .invoice-title #main-title h4 {
+    letter-spacing: 2.5px;
+    }
+
+    .invoice-title span {
+    color: rgba(0, 0, 0, 0.4);
+    }
+
+    .invoice-details {
+    flex: 1;
+    border-top: 0.5px dashed grey;
+    display: flex;
+    align-items: center;
+    }
+
+    .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+
+    .invoice-table thead tr td {
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: grey;
+    padding: 8px 0;
+    }
+
+    .invoice-table thead tr td:nth-last-child(1),
+    .row-data td:nth-last-child(1),
+    .calc-row td:nth-last-child(1)
+    {
+    text-align: right;
+    }
+
+    .invoice-table tbody tr td {
+        padding: 8px 0;
+        letter-spacing: 0;
+    }
+
+    .invoice-table .row-data #unit {
+    text-align: center;
+    }
+
+    .invoice-table .row-data span {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.6);
+    }
+
+    .invoice-footer {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    }
+
+    .invoice-footer #later {
+    margin-right: 5px;
+    }
+
+</style>
 <div class="page-wrapper">
 			<div class="page-content">
 				<!--breadcrumb-->
@@ -27,13 +133,13 @@
 						  </div>
 						</div>
 						<div class="table-responsive">
-						<button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
+						<!-- <button class="btn btn-sm btn-outline-primary me-2 mb-3" id="btnSave2PDF" onclick="save2PDF('tabelPrint');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export PDF</button>
 						<button class="btn btn-sm btn-outline-success me-2 mb-3" onclick="saveToExcel('tabelguru');" style="border-radius:0px;"><i class="bx bxs-file-export"></i> Export Excel</button>
-                        <a class="btn btn-sm btn-outline-secondary me-2 mb-3" href="<?=base_url();?>CPanel_Admin/GeneralAllRender" style="border-radius:0px;" target="_blank"><i class="bx bx-grid-small"></i> Lihat Semua Data</a>
+                        <a class="btn btn-sm btn-outline-secondary me-2 mb-3" href="<?=base_url();?>CPanel_Admin/GeneralAllRender" style="border-radius:0px;" target="_blank"><i class="bx bx-grid-small"></i> Lihat Semua Data</a> -->
 							<table class="table mb-0 tabelguru" id="tabelPrint">
 								<thead class="table-light">
 									<tr>
-										<th>Tipe</th>
+										<!-- <th>Tipe</th> -->
 										<th>Nama Pengguna</th>
 										<th>PIN</th>
 										<th>Koneksi Kartu</th>
@@ -126,13 +232,223 @@
 			</div>
 		</div>
 
+        <div class="modal fade" id="modalReleaseCard" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Lepaskan dari Kartu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">Dengan memilih tombol <b>Lepaskan</b> dibawah ini, Anda dengan bersedia bahwa data tersebut akan dilepas dengan kartu tersebut pada sistem.<br/>Yakin ingin melepaskan dengan kartu?</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" onclick="commitRelease();" class="btn btn-primary">Lepaskan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalReleaseCardNew" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                    <div class="badge bg-danger text-white">New Feature</div>    
+                    Lepaskan dari Kartu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info" role="alert">
+                    Setelah proses ini disetujui, Pengguna ini tetap dapat melakukan transaksi menggunakan mode darurat tanpa kartu hingga <b>kartu yang baru</b> berhasil dikoneksikan.
+                    </div>
+
+                    <label for="" class="form-label">Pilih mode pelepasan kartu : </label>
+                    <div id="releaseModes" class="d-flex flex-column gap-3 mb-4">
+                    <div class="mode-option p-3 border rounded" data-mode="hilang">
+                        <div class="fw-bold">Kartu Hilang</div>
+                        <small class="text-muted">Saldo minimal Rp35.000 diperlukan untuk melanjutkan proses kartu hilang.</small>
+                    </div>
+                    <div class="mode-option p-3 border rounded" data-mode="rusak">
+                        <div class="fw-bold">Kartu Rusak</div>
+                        <small class="text-muted">Saldo minimal Rp35.000 diperlukan untuk melanjutkan proses kartu rusak.</small>
+                    </div>
+                    <div class="mode-option p-3 border rounded" data-mode="malfungsi">
+                        <div class="fw-bold">Kartu Malfungsi</div>
+                        <small class="text-muted">Tidak memerlukan saldo tambahan. Proses dapat langsung dilanjutkan.</small>
+                    </div>
+                    </div>
+
+                    <div class="mb-3">
+                    <label for="noteInput" class="form-label">Catatan (Opsional)</label>
+                    <textarea id="noteInput" class="form-control" rows="3" placeholder="Tulis catatan di sini..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                    <label for="pinOto" class="form-label">Pin Otoritas</label>
+                    <input type="password" id="pinOto" class="form-control" placeholder="PIN harus benar..."/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" onclick="setModePelepasan();" id="cardIssueSubmitBTN" class="btn btn-primary">Lepaskan</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        .mode-option {
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .mode-option.selected {
+            background-color: #e7f1ff;
+            border-color: #0d6efd;
+        }
+        .mode-option .fw-bold {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .mode-option small {
+            font-size: 0.85rem;
+        }
+        </style>
+
+        <script>
+        let modesett_up = ""; // Untuk mode yang dipilih
+        let note = "";        // Untuk catatan
+        let saldo_user = 50000; // contoh saldo user, misal dapat dari server
+        let saldo_now = '';
+
+        const modeOptions = document.querySelectorAll('.mode-option');
+
+        modeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+            modeOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            modesett_up = this.dataset.mode;
+            console.log("Mode yang dipilih:", modesett_up); // Optional: debug
+            });
+        });
+
+        function setModePelepasan() {
+
+            let mxht = $('#pinOto').val();
+            if(mxht!=pjshsX){
+                Swal.fire({
+                    icon: "error",
+                    title: "Pin Otoritas Tidak Sesuai",
+                    text: "Anda harus memasukkan PIN Otoritas dengan benar untuk dapat melanjutkan proses berikutnya.",
+                    });
+                return false;
+            }
+
+            if(parseInt(saldo_now) < 150000){
+                Swal.fire({
+                    icon: "error",
+                    title: "Saldo tidak mencukupi",
+                    text: "Tidak dapat melanjutkan ke proses berikutnya karena saldo pada akun ini tidak mencukupi.",
+                    });
+                return false;
+            }
+            note = document.getElementById('noteInput').value.trim(); // Ambil isi textarea
+
+            if (!modesett_up) {
+                Toastify({
+                    text: 'Silahkan pilih salah satu dari pilihan tersebut!',
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    className: "errorMessage",
+
+                }).showToast();
+            return;
+            }
+
+            if ((modesett_up === "hilang" || modesett_up === "rusak") && saldo_user < 35000) {
+            alert("Saldo Anda kurang dari Rp35.000 untuk melanjutkan proses ini.");
+            return;
+            }
+
+            runCardIssue();
+
+            console.log("Proses release dengan mode:", modesett_up);
+            console.log("Catatan:", note);
+
+            // Di sini lanjutkan proses ke server
+        }
+        </script>
+
+        <div class="modal fade" id="wdMODAL" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" style="">
+                    <div class="modal-header">
+						<h5 class="modal-title">Pencairan Dana</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-value="="></button>
+					</div>
+					<div class="modal-body">
+                        <form id="mainx">
+                            <div class="mb-3">
+                                <label for="namaSiswa" class="form-label">Nama Pengguna</label>
+                                <font style="font-weight:bold;display:block;" id="namaPengguna">Loading...</font>
+                            </div>
+                            <div class="mb-3">
+                                <label for="namaSiswa" class="form-label">Sisa Saldo</label>
+                                <font style="font-weight:bold;display:block;" id="saldoPengguna">Loading...</font>
+                            </div>
+                            <div class="mb-3">
+                                <label for="namaSiswa" class="form-label">Saldo Dicairkan</label>
+                                <input type="text" class="form-control" id="saldoCair" oninput="setVal3(this.value);" placeholder="Ketikkan saldo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="keteranganCair" class="form-label">Keterangan</label>
+                                <textarea name="keteranganCair" class="form-control" id="keteranganCair" rows="1" placeholder="Bagian ini harus diisi..."></textarea>
+                            </div>
+                            <h5 class="mt-4">PIN Pengguna</h5>
+                            <div class="mb-3">
+                                <label for="pin" class="form-label">PIN</label>
+                                <input type="password" class="form-control" id="pin" placeholder="Ketikkan saldo">
+                            </div>
+                        </form>
+
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button type="button" id="btnSave" class="btn btn-primary" onclick="requestSecretPencairan();"><i class="bx bx-transfer-alt"></i> Cairkan Sekarang</button>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" style="background:transparent;border:none;">
+					<div class="modal-body">
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script type="text/javascript">
 			let idsett = '';
+            let modekartu = '';
 			let modescan = '';
             let secret_code= '';
+            let accountnumberS= '';
             let notelppublic = '';
 			let endPointGetDataGeneral = '<?= api_url(); ?>api/v1/general';
 			let endPointGetDataGeneralSearch = '<?= api_url(); ?>api/v1/general?search=';
+
+            let struk_invoice = '';
+            let struk_balance = '';
+            let struk_amount = '';
+            let struk_card_id = '';
+            let struk_created_at = '';
+            let struk_keterangan = '';
 
 			var typingTimer;
 
@@ -192,37 +508,54 @@
 							
 							console.log(posts2.data.data.data);
 							posts2.data.data.data.map((mapping,i)=>{
-							tableColumn +=`
-								<tr>
-									<td >
-										<h6 class="mb-0 font-14">${mapping.jabatan}</h6>
-									</td>
-									<td>${mapping.nama_lengkap} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}</td>
-                                    <td>${mapping.accounts.pin}</td>
-									<td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
-									<td >Rp${formatRupiah(mapping.accounts.balance)}</td>
-									<td ><button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="requestSecret();setSaldoManually('${mapping.nama_lengkap}','${mapping.nis}','${mapping.tanggal_lahir}','${mapping.accounts.card_id}','${mapping.accounts.balance}','${mapping.telpon}');" class="btn btn-warning btn-sm radius-30 px-4"><i class="bx bx-plus"></i> Saldo</button></td>
-									<td >
-											<div class="btn-group">
-												<button type="button" class="disabled btn btn-sm btn-outline-success">${(mapping.accounts.limit_trx=='1000000000')?'Maksimum':'Rp'+formatRupiah(mapping.accounts.limit_trx)}</button>
-												<button type="button" class="btn btn-sm btn-outline-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">	<span class="visually-hidden">Toggle Dropdown</span>
-												</button>
-												<ul class="dropdown-menu">
-													<li><a class="dropdown-item" href="#/" onclick="openModalSetLimitTrx('${mapping.nama_lengkap}','${mapping.tempat_lahir}','${mapping.tanggal_lahir}');idsett='${mapping.accounts.id}';"><i class='bx bxs-edit'></i> Update</a>
-													</li>
-												</ul>
-											</div>
-									</td>
-									<td>
-										<div class="d-flex order-actions">
-											<a href="#/" onclick="openmodalSetCard('connect');idsett='${mapping.accounts.account_number}';" class="me-3 "><i class='bx bx-link'></i></a>
-											<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/generalManage/${mapping.id}';" class=""><i class='bx bxs-edit'></i></a>
-											<a href="#/" onclick="openModalDeleteGeneral('${mapping.id}','general');" class="ms-3"><i class='bx bxs-trash'></i></a>
-										</div>
+
+								if(mapping.jabatan!='membership'){
+
+									let btncair = '';
+									if(mapping.accounts.debts_card==1){
+										modekartu = 'kredit';
+										btncair = `<button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="location.href='<?=base_url().$function;?>/creditManage/${mapping.accounts.card_id}/${mapping.accounts.id}';" class="btn btn-danger btn-sm radius-5 px-4"><i class="bx bx-book-open"></i> Buku Kredit</button>`;
+									}else {
+										modekartu = 'normal';
+										btncair = `<button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="openDialogWD(${mapping.accounts.account_number},'${mapping.nama_lengkap}','Rp${formatRupiah(mapping.accounts.balance)}');" class="btn btn-primary btn-sm radius-30 px-4"><i class="bx bx-transfer-alt"></i> Pencairan</button>`;
+									}
+
+									tableColumn +=`
+									<tr>
+										<td>${(modekartu=='kredit')?'<div class="badge bg-danger me-2" title="Katu ini bertipe : Kartu Kredit" >CC</div>':''}${mapping.nama_lengkap} ${(mapping.user.foto!='default.jpg')?'<i class="bx bxs-badge-check text-primary"></i>':'<i class="bx bxs-x-circle text-danger"></i>'}<br/>
+										<h6 class="mb-0 font-14 text-muted">${mapping.jabatan}</h6></td>
+										<td>${mapping.accounts.pin}</td>
+										<td>${(mapping.accounts.card_id==null)?`<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>NOT CONNECTED</div>`:`<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>CONNECTED</div>`}</td>
+										<td >${formatRupiahNew(mapping.accounts.balance)}</td>
+										<td >
+										<button type="button" ${(mapping.accounts.card_id==null)?'disabled':''} onclick="setSaldoManually('${mapping.accounts.account_number}','${mapping.nama_lengkap}','${mapping.nis}','${mapping.tanggal_lahir}','${mapping.accounts.card_id}','${mapping.accounts.balance}','${mapping.telpon}');" class="btn btn-warning btn-sm radius-30 px-4"><i class="bx bx-plus"></i> Saldo</button>
 										
-									</td>
-								</tr>
-							`;
+										${btncair}
+										
+										
+										</td>
+										<td >
+												<div class="btn-group">
+													<button type="button" class="disabled btn btn-sm btn-outline-success">${(mapping.accounts.limit_trx=='1000000000')?'Maksimum':'Rp'+formatRupiah(mapping.accounts.limit_trx??'0')}</button>
+													<button type="button" class="btn btn-sm btn-outline-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">	<span class="visually-hidden">Toggle Dropdown</span>
+													</button>
+													<ul class="dropdown-menu">
+														<li><a class="dropdown-item" href="#/" onclick="openModalSetLimitTrx('${mapping.nama_lengkap}','${mapping.tempat_lahir}','${mapping.tanggal_lahir}');idsett='${mapping.accounts.id}';"><i class='bx bxs-edit'></i> Update</a>
+														</li>
+													</ul>
+												</div>
+										</td>
+										<td>
+											<div class="d-flex order-actions">
+												${(mapping.accounts.card_id==null)?`<a href="#/" onclick="openmodalSetCard('connect');idsett='${mapping.accounts.account_number}';" class="me-3 "><i class='bx bx-link'></i></a>`:`<a href="#/" onclick="openmodalReleaseCard();useridsett='${mapping.user_id}';idsett='${mapping.accounts.account_number}';" class="me-3 text-danger"><i class='bx bx-unlink'></i></a>`} 
+												<a href="#/" onclick="window.location.href='<?=base_url().$function;?>/generalManage/${mapping.id}';" class=""><i class='bx bxs-edit'></i></a>
+												<a href="#/" onclick="openModalDeleteGeneral('${mapping.id}','general');" class="ms-3"><i class='bx bxs-trash'></i></a>
+											</div>
+											
+										</td>
+									</tr>
+								`;
+								}
 							});
 							
 						$('.putContentHere').html(tableColumn);
@@ -232,14 +565,30 @@
 				save2();
 			}
 
+            function openmodalReleaseCard(){
+				$('#modalReleaseCard').modal('toggle');
+			}
+            function openmodalReleaseCardNew(){
+				$('#modalReleaseCardNew').modal('toggle');
+			}
+
+            function openDialogWD(id, nama, saldo){
+                $('#wdMODAL').modal('toggle');
+				
+				idsett = id;
+                $('#namaPengguna').html(nama);
+                $('#saldoPengguna').html(saldo);
+            }
+
             let balancepublic = '';
 
-            function setSaldoManually(nama,nis,tgl,cardNumber, balance,telepon){
+            function setSaldoManually(accountnumber, nama,nis,tgl,cardNumber, balance,telepon){
 
                 idsett = cardNumber;
                 notelppublic = telepon;
                 balancepublic = balance;
-
+                accountnumberS = accountnumber;
+                
                 $('#modalSetSaldo .modal-body').html(`
                     <div class="row">
                         <div class="col-12 table-responsive">
@@ -257,6 +606,14 @@
                             </table>
                         </div>
                         <div class="col-12 mt-3">
+
+							<label for="setTipeKirimPesan" class="mb-1">Tipe Setor</label>
+                            <select class="form-control mb-2 setTipeKirimPesan" style="border-radius:100px;">
+                                <option value="">Pilih tipe setoran saldo...</option>
+                                <option value="setor_tunai">Setor tunai ke host</option>
+                                <option value="transfer_ortu">Transfer</option>
+                            </select>
+
                             <label for="saldoTambah" class="mb-1">Saldo</label>
                             <input type="text" id="saldoTambah" class="form-control mb-2" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
 
@@ -266,6 +623,9 @@
                     </div>
                 `);
                 $('#modalSetSaldo').modal('toggle');
+
+                requestSecret();
+
             }
 
 			function openmodalSetCard(mode){
@@ -362,6 +722,20 @@
 						if(modescan=='connect'){
 							setNomorKartuKeSiswa(valx);
 						}else {
+                            
+                            // Toastify({
+                            //     text: 'Maaf! Fitur ini masih dalam pengujian!',
+                            //     duration: 3000,
+                            //     close: true,
+                            //     gravity: "top",
+                            //     position: "right",
+                            //     className: "infoMessage",
+
+                            // }).showToast();
+                            // $('#textToCard').val('');
+
+                            // return false ;
+
 							searchSiswaByKartu(valx);
 						}
 					}
@@ -421,11 +795,16 @@
 
 						} else {
 								let msgg = '';
-								if(posts.data.response.data.error=='Card ID already exists in the database'){
+								if(posts.data?.response?.data?.error=='Card ID already exists in the database'){
 									msgg = 'Kartu ini sudah terkoneksi dengan akun lainnya!';
 								}else {
-									msgg = posts.data.response.data.error;
+									msgg = posts.data?.response?.data?.error;
 								}
+
+                                if(posts.data?.msg=='card error'){
+                                    msgg = 'Kartu ini tidak terdaftar dipusat data oncard.id!';
+                                }
+
 								Toastify({
 									text: msgg,
 									duration: 3000,
@@ -470,6 +849,7 @@
 				var card_id = idsett;
 				var saldo = $('#saldoTambah').val();
 				var pin = $('#pin').val();
+				var jenis = $('.setTipeKirimPesan').val();
 
                 saldo = saldo.split('.').join("");
 
@@ -478,6 +858,7 @@
 				form_data.append('amount', saldo);
 				form_data.append('pin', pin);
 				form_data.append('client_secret', secret_code);
+                form_data.append('description', jenis);
 				
 				const save = async (form_data) => {
 					const posts = await axios.post('<?= api_url(); ?>api/v1/trx/store-balance', form_data, {
@@ -497,7 +878,7 @@
 
                             }).showToast();
                         }else {
-                        requestSecret();
+                        // requestSecret();
 
 							Toastify({
 								text: 'Terjadi kesalahan pada server!',
@@ -520,7 +901,7 @@
 							
 							showData(endPointGetDataGeneral);
 
-                            $('#modalSetSaldo').modal('toggle');
+                            
 							$('#textToCard').val('');
 							Toastify({
 								text: 'Saldo berhasil ditambahkan pada akun tersebut!',
@@ -531,16 +912,38 @@
 								className: "successMessage",
 
 							}).showToast();
-							$('#btnSubmitSaldo').html('Masukkan Saldo Sekarang');
+
+                            $('#btnSubmitSaldo').html('Masukkan Saldo Sekarang');
                             $('#btnSubmitSaldo').attr('disabled', false);
                             $('#btnSubmitSaldo').css('cursor', 'pointer');
 
-                            if(notelppublic.length>8 && notelppublic!='0'){
-                                var strFirstThree = notelppublic.substring(0,3);
-                                if(strFirstThree=='628' ){
-                                    sendMessageSaldoSuccess(`${saldo}`,`${posts.data.data.customers_name}`);
-                                }
-                            }
+                            // $('#modalSetSaldo').modal('toggle');
+                            // $('#btnSubmitSaldo').html('Masukkan Saldo Sekarang');
+                            // $('#btnSubmitSaldo').attr('disabled', false);
+                            // $('#btnSubmitSaldo').css('cursor', 'pointer');
+
+                            // window.location.reload();
+                            // return false;
+
+                            // if(notelppublic.length>8 && notelppublic!='0'){
+                            //     var strFirstThree = notelppublic.substring(0,3);
+                            //     if(strFirstThree=='628' ){
+
+                            //         struk_invoice = posts.data.data.transaction.invoice;
+                            //         struk_balance = posts.data.data.transaction.balance;
+                            //         struk_amount = posts.data.data.transaction.credit_amount;
+                            //         struk_card_id = posts.data.data.card_id;
+                            //         struk_created_at = posts.data.data.created_at;
+                            //         struk_keterangan = posts.data.data.transaction.description;
+
+                            //         sendMessageSaldoSuccess(`${saldo}`,`${posts.data.data.customers_name}`);
+                            //     }
+                            // }else {
+                            //     // window.location.reload();
+                            //     openInvoice(posts.data.data.transaction.invoice, posts.data.data.transaction.balance, posts.data.data.transaction.credit_amount, posts.data.data.card_id, posts.data.data.created_at, posts.data.data.transaction.description);
+                            // }
+
+                                openInvoice(posts.data.data.transaction.invoice, posts.data.data.transaction.balance, posts.data.data.transaction.credit_amount, posts.data.data.card_id, posts.data.data.created_at, posts.data.data.transaction.description);
 
                             idsett='';
                             
@@ -594,16 +997,39 @@
                 let arrayBaru = [];
                 let totalSaldoAkhir = parseInt(saldo) + parseInt(balancepublic);
 
-                isiPesan += `Assalamu'alaikum warahmatullahi wabarakatuh,
-*SALDO Rp${formatRupiah(saldo)} BERHASIL DITAMBAHKAN*
-Selamat! Saldo Bpk/Ibu berhasil ditambahkan ke dalam sistem Kartu Elektronik Santri pada ${moment(moment()).format('Do MMMM YYYY HH:mm:ss')} WIB.
+                isiPesan += `*Pusat Informasi ${instansiNameX}*
+Assalamu'alaikum warahmatullahi wabarakatuh,
+*Rp${formatRupiah(saldo)} BERHASIL DITAMBAHKAN*
+Selamat! Saldo Bapak/Ibu *${nama}* berhasil ditambahkan ke dalam sistem Kartu Elektronik Pesantren.
 
 *===SALDO SAAT INI===*
         *Rp${formatRupiah(totalSaldoAkhir.toString())}*
 *===================*
 
-_Selalu pantau perkembangan saldo Bapak/Ibu agar selalu dapat digunakan sesuai dengan keperluannya._
+Bapak/Ibu dapat mengetahui informasi seputar keuangan Anda dengan mengirim /membalas pesan ke nomor ini dengan beberapa format dibawah ini :
+1. Ketik : *CekSaldo_${accountnumberS}*
+_Untuk mengetahui saldo terakhir_
 
+2. Ketik : *Belanja1_${accountnumberS}*
+_Untuk mendapatkan aktifitas belanja pada hari ini_
+
+3. Ketik : *Belanja2_${accountnumberS}*
+_Untuk mendapatkan aktifitas belanja dalam 3 hari yang lalu_
+
+4. Ketik : *Topup_${accountnumberS}*
+_Untuk melakukan topup menggunakan payment gateway yang telah disediakan_
+
+*⏰ INFO TERBARU KHUSUS WALI SANTRI*
+1. Disarankan kepada seluruh wali santri untuk *TIDAK* lagi memberikan uang tunai kepada santri pada saat kunjungan
+2. Uang belanja santri diharapkan untuk *transfer langsung* ke no. rekening Tabungan Belanja Santri
+
+_Apakah pesan ini membantu Bapak/Ibu?_
+_Kiranya Bapak/Ibu dapat membalas chat ini dengan mengatakan Ya._
+
+Terimakasih.
+
+_Selalu pantau perkembangan saldo Bapak/Ibu agar selalu dapat digunakan sesuai dengan keperluannya._
+_Dan silahkan abaikan pesan ini jika sudah pernah membacanya. _
 Terimakasih.
 `;
 
@@ -613,36 +1039,56 @@ isiPesan += `
 _Kode pesan : #${createRandom()}_
                             `;
 
-                arrayBaru.push(
-                    {"to" : notelppublic,
-                    "text" : isiPesan}
-                )
-
-                let arrayLengkap = {"session":"ppsrSess","data":arrayBaru,"delay":1000};
+                var form_data = new FormData();
+                form_data.append('noWA',notelppublic);
+                form_data.append('pesan',isiPesan);
+                form_data.append('kodeInstansi',kodeInstansiX);
                 
+                jQuery.ajax({
+                    type: "POST",
+                    // url: "<?php echo base_url(); ?>"+"CPanel_Admin/Wa",
+                    url: "<?php echo base_url(); ?>"+"WebhookOncard/sendMessageWatzap",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    dataType: 'json',  // what to expect back from the PHP script, if anything
+                    beforeSend: function() {
+                        
+                    },
+                    success : function(e){
 
-                axios.post("https://v3.gigades.id/rest/api/v1/wa/broadcast", arrayLengkap)
-                .then((res) => {
-                    if (res.data.status === true) {
-                        Toastify({
-                            text: 'Pemberitahuan juga terkirim ke Whatsapp Bpk/Ibu.',
-                            duration: 3000,
-                            close: true,
-                            gravity: "top",
-                            position: "right",
-                            className: "successMessage",
+                        openInvoice(struk_invoice, struk_balance, struk_amount, struk_card_id, struk_created_at, struk_keterangan);
+                        
+                        // if(e.status==true){
+                            
+                        //     Toastify({
+                        //         text: 'Pemberitahuan telah terkirim ke Whatsapp Orangtua Wali.',
+                        //         duration: 3000,
+                        //         close: true,
+                        //         gravity: "top",
+                        //         position: "right",
+                        //         className: "successMessage",
 
-                        }).showToast();
+                        //     }).showToast();
 
-                        idsett = '';
-                        notelppublic = '';
-                        balancepublic ='';
+                        //     idsett = '';
+                        //     notelppublic = '';
+                        //     balancepublic ='';
+
+                        //     window.location.reload();
+                            
+                            
+                        // }else {
+                        //     console.log('error mengirim pesan');
+                        //     window.location.reload();
+                        // }
+                        
+                        
                     }
-
-                })
-                .catch((err) => {
-                    console.log('error kirim pesan ke wa ortu');
+                
                 });
+
             }
 			
 			function commitLimitTrxUpdate() {
@@ -735,6 +1181,106 @@ _Kode pesan : #${createRandom()}_
 			save(form_data);
 
 			}
+
+            let useridsett = '';
+
+            function runCardIssue() {
+				$('#cardIssueSubmitBTN').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+				$('#cardIssueSubmitBTN').attr('disabled', 'disabled');
+				$('#cardIssueSubmitBTN').css('cursor', 'not-allowed');
+
+                let note = $('#noteInput').val();
+
+				var form_data = new FormData();
+				form_data.append('user_id', useridsett);
+				form_data.append('status_issue', modesett_up);
+				form_data.append('note_issue', note);
+				form_data.append('noted', 'Host '+userNameX+' melepaskan kartu');
+				
+				const save = async (form_data) => {
+					const posts = await axios.post('<?= api_url(); ?>api/v1/history-card/create-history-issue', form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+
+                        console.log(err.response.data);
+						
+						$('#limitTrx').val('');
+						$('#cardIssueSubmitBTN').html('Lepaskan');
+                        $('#cardIssueSubmitBTN').attr('disabled', false);
+                        $('#cardIssueSubmitBTN').css('cursor', 'pointer');
+					});
+					if (posts.status == 201||posts.status == 200) {
+						if (posts.data.status == true) {
+							
+							showData(endPointGetDataSiswa);
+                            
+                            Toastify({
+								text: 'Berhasil tersimpan',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "successMessage",
+
+							}).showToast();
+							
+							idsett ='';
+                            modesett_up = '';
+                            $('#noteInput').val('');
+                            $('#modalReleaseCardNew').modal('toggle');
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Pin Otoritas Tidak Sesuai",
+                                text: "Anda harus memasukkan PIN Otoritas dengan benar untuk dapat melanjutkan proses berikutnya.",
+                                });
+                            return false;
+
+							$('#cardIssueSubmitBTN').html('Lepaskan');
+                            $('#cardIssueSubmitBTN').attr('disabled', false);
+                            $('#cardIssueSubmitBTN').css('cursor', 'pointer');
+						} else {
+								
+								Toastify({
+									text: 'Error data [23402]',
+									duration: 3000,
+									close: true,
+									gravity: "top",
+									position: "right",
+									className: "errorMessage",
+
+								}).showToast();
+								$('#limitTrx').val('');
+								$('#cardIssueSubmitBTN').html('Lepaskan');
+                                $('#cardIssueSubmitBTN').attr('disabled', false);
+                                $('#cardIssueSubmitBTN').css('cursor', 'pointer');
+						}
+
+						
+					}
+					else {
+						
+							Toastify({
+								text: 'Terjadi kesalahan dalam menyimpan data!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+                            $('#cardIssueSubmitBTN').html('Lepaskan');
+                            $('#cardIssueSubmitBTN').attr('disabled', false);
+                            $('#cardIssueSubmitBTN').css('cursor', 'pointer');
+						$('#limitTrx').val('');
+					}
+				}
+
+			save(form_data);
+
+			}
 			
 			function searchSiswaByKartu(str){
 				
@@ -767,8 +1313,11 @@ _Kode pesan : #${createRandom()}_
                         $('#modalSetCard').modal('toggle');
 
                         idsett = str;
-                        requestSecret();
-
+                        accountnumberS = posts2.data.data.account_number;
+                        balancepublic = posts2.data.data.balance;
+                        notelppublic = posts2.data.data.general.telpon;
+                        // notelppublic = '6285264397615';
+                        
                         $('#modalSetSaldo .modal-body').html(`
                             <div class="row">
                                 <div class="col-12 table-responsive">
@@ -786,6 +1335,14 @@ _Kode pesan : #${createRandom()}_
                                     </table>
                                 </div>
                                 <div class="col-12 mt-3">
+
+									<label for="setTipeKirimPesan" class="mb-1">Tipe Setor</label>
+									<select class="form-control mb-2 setTipeKirimPesan" style="border-radius:100px;">
+										<option value="">Pilih tipe setoran saldo...</option>
+										<option value="setor_tunai">Setor tunai ke host</option>
+										<option value="transfer_ortu">Transfer</option>
+									</select>
+									
                                     <label for="saldoTambah" class="mb-1">Saldo</label>
                                     <input type="text" id="saldoTambah" class="form-control mb-2" oninput="setVal(this.value);" style="border-radius:100px;" placeholder="Jumlah saldo (Rp)"/>
 
@@ -805,7 +1362,9 @@ _Kode pesan : #${createRandom()}_
                             className: "successMessage",
 
                         }).showToast();
-                        console.log(posts2.data.data.data);
+                        console.log(posts2.data.data, "nama user:"+posts2.data.data.customers_name, "nohp:"+notelppublic,"akun:"+accountnumberS);
+
+                        requestSecret();
 
 					}else {
                         Toastify({
@@ -926,6 +1485,345 @@ _Kode pesan : #${createRandom()}_
             function setVal(str){
                 $('#saldoTambah').val(formatRupiah(str));
             }
+            function setVal3(str){
+                $('#saldoCair').val(formatRupiah(str));
+            }
 
+            function commitRelease(){
+                const save = async () => {
+                    const posts2 = await axios.get('<?= api_url(); ?>api/v1/account/sign-out?account_number='+idsett, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('_token')
+                        }
+                    }).catch((err) => { 
+
+                        if(err.error){
+                            Toastify({
+                                text: 'Maaf. Belum dapat memproses pelepasan kartu.',
+                                duration: 3000,
+                                close: true,
+                                gravity: "bottom",
+                                position: "left",
+                                className: "errorMessage",
+
+                            }).showToast();
+                            return false;
+                        }
+
+                        for (const key in err.response.data.error) {
+                                Toastify({
+                                    text: err.response.data.error[key],
+                                    duration: 3000,
+                                    close: true,
+                                    gravity: "bottom",
+                                    position: "left",
+                                    className: "errorMessage",
+
+                                }).showToast();
+                            }
+                    });
+
+                    if (posts2.status == 200) {
+
+                        if(posts2.data.status==false){
+                            Toastify({
+                                text: "Oops! Proses melepaskan kartu masih gagal!",
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+
+                            }).showToast();
+                            
+                        }else {
+
+                            Toastify({
+                                text: "Berhasil melepaskan kartu!",
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "successMessage",
+
+                            }).showToast();
+
+                        }
+
+                        
+
+                        showData(endPointGetDataGeneral);
+                        uidsett = '';
+                        tablesett = '';
+
+                        $('#modalReleaseCard').modal('toggle');
+
+
+                    } else {
+
+                    }
+                }
+
+			    save();
+                
+		    }
+
+            function requestSecretPencairan(){
+
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+                $('#btnSave').attr('disabled', 'disabled');
+                $('#btnSave').css('cursor', 'not-allowed');
+
+                const save2 = async () => {
+                    const posts2 = await axios.get('<?= api_url(); ?>api/v1/key/create', {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('_token')
+                        }
+                    }).catch((err) => {
+                        $('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
+                        $('#btnSave').attr('disabled', false);
+                        $('#btnSave').css('cursor', 'pointer');
+                        console.log(err.response);
+                    });
+
+                    if (posts2.status == 201) {
+                        secret_code = posts2.data.data.client_secret;
+
+                        prosCair();
+                    }else {
+                        $('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
+                        $('#btnSave').attr('disabled', false);
+                        $('#btnSave').css('cursor', 'pointer');
+                    }
+                }
+                save2();
+            }
+
+            function prosCair(){
+				
+				let value = $('#saldoCair').val();
+				let pin = $('#pin').val();
+				value = value.replace(/\D/g, "");
+                let keteranganCair = $('#keteranganCair').val();
+
+                if(keteranganCair==''){
+                    keteranganCair = 'withdrawal transactions';
+                }
+
+				if(value=='0'||value==''){
+
+					$('#btnSave').html('Selesai');
+					$('#btnSave').attr('disabled', false);
+					$('#btnSave').css('cursor', 'pointer');
+					Toastify({
+						text: 'Nominal harus diisi!',
+						duration: 3000,
+						close: true,
+						gravity: "top",
+						position: "right",
+						className: "errorMessage",
+
+					}).showToast();
+					return false;
+				}
+				
+            	var form_data = new FormData();
+				
+				form_data.append('amount', value);
+				form_data.append('account_number', idsett);
+				form_data.append('client_secret', secret_code);
+				form_data.append('pin', pin);
+				form_data.append('description', keteranganCair);
+
+				let url = '';
+				
+				const save = async (form_data) => {
+					const posts = await axios.post('<?= api_url(); ?>api/v1/wd', form_data, {
+						headers: {
+							'Authorization': 'Bearer ' + localStorage.getItem('_token')
+						}
+					}).catch((err) => {
+                        $('#btnSave').html('Selesai');
+						$('#btnSave').attr('disabled', false);
+						$('#btnSave').css('cursor', 'pointer');
+
+                        if(err.response.data.message=='your balance is not enough!'){
+                            Toastify({
+                                text: 'Saldo tidak cukup!',
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+
+                            }).showToast();
+                        }else if(err.response.data.message=='account not found!'){
+                            Toastify({
+                                text: 'PIN tidak benar!',
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                className: "errorMessage",
+
+                            }).showToast();
+                        }
+                        
+					});
+					if (posts.status == 201) {
+
+						if (posts.data.status == true) {
+							
+							Toastify({
+								text: posts.data.message,
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "successMessage",
+
+							}).showToast();
+
+							$('#wdMODAL').modal('toggle');
+
+                            showData(endPointGetDataGeneral);
+                            $('#keteranganCair').val('');
+                            
+						} else {
+							Toastify({
+								text: posts.data.message,
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						}
+
+						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
+						$('#btnSave').attr('disabled', false);
+						$('#btnSave').css('cursor', 'pointer');
+
+					}
+					else {
+						posts.data.error.map((mapping, i) => {
+							Toastify({
+								text: 'Oops!',
+								duration: 3000,
+								close: true,
+								gravity: "top",
+								position: "right",
+								className: "errorMessage",
+
+							}).showToast();
+						});
+						$('#btnSave').html('<i class="bx bx-transfer-alt"></i> Cairkan Sekarang');
+						$('#btnSave').attr('disabled', false);
+						$('#btnSave').css('cursor', 'pointer');
+					}
+				}
+				
+				save(form_data);				
+
+			}
 			
+
+            function openInvoice(invoice, balance, amount, card_id,created_at, keterangan){
+                let htmlx = '';
+                let desc = '';
+
+                $('#modalSetSaldo').modal('toggle');
+
+                let saldoawal = 0;
+                saldoawal = parseInt(balance)-parseInt(amount);
+
+                htmlx = `
+                        <div class="invoice-card" id="divToPRINT">
+                            <div class="invoice-title">
+                                <div id="main-title" style="display:block!important;">
+                                <h4 style="margin-bottom:0;padding-bottom:0px; color:black!important;background: black;text-align: center;color: white!important;padding: 7px;text-transform:uppercase;font-size:14px;">TOPUP SALDO</h4>
+                                <span style=" color:black!important; display:block; font-size:9px!important;">#${invoice}</span>
+                                </div>
+                                
+                                <span id="date" style=" color:black!important;">${moment(created_at).format('DD/MM/YYYY - HH:mm:ss')} WIB</span>
+                                <span style="font-size:11px; color:black!important;">- - -</span>
+                            </div>
+                            <div style="text-align:center;font-weight:bolder;">
+                            TOPUP<br/>${instansiNameX}
+                            </div>
+                            
+                            <div class="invoice-details">
+                                <table class="invoice-table" style="width:100%;">
+                                <tbody class="detailTabelInvoice">
+                                    <tr class="calc-row">
+                                    <td colspan="2">Saldo Sebelumnya</td>
+                                    <td>Rp${saldoawal}</td></tr>
+                                    <tr><td colspan="3">
+                                        <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                    </td></tr>
+                                    <tr class="calc-row">
+                                    <td colspan="2">Penambahan Saldo</td>
+                                    <td>Rp${amount}</td></tr>
+                                    <tr><td colspan="3">
+                                        <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey;"></div>
+                                    </td></tr>
+                                    <tr class="calc-row">
+                                    <td colspan="2"><b>Saldo Saat Ini</b></td>
+                                    <td>Rp${balance}</td>
+                                    </tr>
+                                    
+                                    <tr><td colspan="3">
+                                        <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                    </td></tr>
+                                    
+                                    <tr class="">
+                                    <td colspan="3"><b>Keterangan</b></td>
+                                    </tr>
+                                    <tr class="">
+                                    <td colspan="3" style="font-size:13px!important;">${removeHtmlTags(keterangan)}</td>
+                                    </tr>
+
+                                    <tr><td colspan="3">
+                                        <div style="width:100%; height:5px;border-bottom: 0.5px dashed grey; margin-top:15px;"></div>
+                                    </td></tr>
+
+                                </tbody>
+                                </table>
+                            </div>
+                            
+                            
+                        </div>
+
+                        <div class="invoice-card mt-4" style="min-height:auto!important;">
+                            <div class="invoice-footer">
+                                <button class="btn btn-sm btn-secondary" data-dismiss="modal" id="later" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
+                                <button class="btn btn-sm btn-primary" onclick="printDivNEW();"><i class="bx bx-printer"></i> CETAK BUKTI</button>
+                            </div>
+                        
+                        </div>
+                    `;
+                    
+
+                $('#invoiceModal .modal-body').html(htmlx);
+                $('#invoiceModal').modal('toggle');
+
+
+            
+
+            }
+
+
+            $('#invoiceModal').on('hidden.bs.modal', function () {
+                window.location.reload();
+            })
+
+			function formatRupiahNew(amount) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
+            }
+
 		</script>

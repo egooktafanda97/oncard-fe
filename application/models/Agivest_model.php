@@ -1,6 +1,9 @@
 <?php
 
 Class Agivest_model extends CI_Model {
+    function __construct(){
+        parent::__construct();
+    }
     //1. Login - Model ---------------------------------------------------------
    	function getData($username, $password){
 		$query = $this->db->query("select * from users where (username='$username' && password='$password')");
